@@ -141,7 +141,7 @@ install_fedora_packages() {
         pamixer \
         brightnessctl \
         playerctl \
-        polkit-gnome \
+        polkit-kde \
         pavucontrol \
         blueman \
         network-manager-applet \
