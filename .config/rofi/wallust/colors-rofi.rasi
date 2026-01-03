@@ -1,0 +1,49 @@
+ /* wallust template - colors-rofi */
+
+* {
+active-background: #625C58;
+active-foreground: #E3D6CD;
+normal-background: #141414;
+normal-foreground: #E3D6CD;
+urgent-background: #625C58;
+urgent-foreground: #E3D6CD;
+
+alternate-active-background: #625C58;
+alternate-active-foreground: #E3D6CD;
+alternate-normal-background: #141414;
+alternate-normal-foreground: #E3D6CD;
+alternate-urgent-background: #141414;
+alternate-urgent-foreground: #E3D6CD;
+
+selected-active-background: #625C58;
+selected-active-foreground: #E3D6CD;
+selected-normal-background: #625C58;
+selected-normal-foreground: #E3D6CD;
+selected-urgent-background: #625C58;
+selected-urgent-foreground: #E3D6CD;
+
+background-color: #141414;
+background: rgba(0,0,0,0.7);
+foreground: #E3D6CD;
+border-color: #625C58;
+
+color0: #3C3C3B;
+color1: #100F0E;
+color2: #151F22;
+color3: #494542;
+color4: #494542;
+color5: #4A4542;
+color6: #846754;
+color7: #CFBCAF;
+color8: #91837A;
+color9: #151413;
+color10: #1C292D;
+color11: #625C58;
+color12: #625C58;
+color13: #625C58;
+color14: #B08970;
+color15: #CFBCAF;
+
+
+}
+
