@@ -1,0 +1,214 @@
+/* HACKER MODE - Matrix Style */
+
+@define-color bg rgba(0, 0, 0, 0.85);
+@define-color bg-alt rgba(0, 15, 0, 0.9);
+@define-color fg #00ff00;
+@define-color fg-dim #005500;
+@define-color accent #00ff00;
+@define-color accent2 #33ff33;
+@define-color green #00ff00;
+@define-color yellow #99ff00;
+@define-color red #ff0000;
+@define-color surface rgba(0, 30, 0, 0.6);
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 600;
+    font-size: 18px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+    border: none;
+}
+
+button {
+    box-shadow: none;
+    text-shadow: 0 0 10px @fg;
+    border: none;
+    border-radius: 0;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: @bg;
+    border-radius: 0;
+    border: 1px solid @fg;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.1);
+    padding: 6px 12px;
+    margin: 0 6px;
+}
+
+#bluetooth.disabled,
+#bluetooth.off,
+#network.disconnected,
+#pulseaudio.muted {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    border: none;
+}
+
+#workspaces {
+    background: transparent;
+    padding: 0 4px;
+}
+
+#workspaces button {
+    color: @fg-dim;
+    padding: 0 8px;
+    margin: 6px 3px;
+    border-radius: 0;
+    background: transparent;
+    text-shadow: 0 0 8px @fg-dim;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    color: @accent;
+    background: @surface;
+    text-shadow: 0 0 15px @fg;
+}
+
+#workspaces button.active {
+    color: #000000;
+    background: @accent;
+    border-radius: 0;
+    padding: 0 12px;
+    text-shadow: none;
+    box-shadow: 0 0 20px @fg;
+}
+
+#workspaces button.urgent {
+    color: @bg;
+    background: @red;
+    animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+#clock {
+    color: @fg;
+    font-weight: 700;
+    padding: 0 20px;
+    text-shadow: 0 0 15px @fg;
+    letter-spacing: 2px;
+}
+
+#tray,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#battery {
+    color: @fg;
+    padding: 0 12px;
+    margin: 6px 3px;
+    border-radius: 0;
+    background: transparent;
+    text-shadow: 0 0 10px @fg;
+    transition: all 0.2s ease;
+}
+
+#tray {
+    padding: 0 8px;
+}
+
+#network:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover {
+    background: @surface;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+#network {
+    color: @accent;
+}
+
+#network.disconnected {
+    color: @red;
+    animation: blink 1s infinite;
+}
+
+#bluetooth {
+    color: @accent2;
+}
+
+#bluetooth.disabled {
+    color: @fg-dim;
+}
+
+#pulseaudio {
+    color: @yellow;
+}
+
+#pulseaudio.muted {
+    color: @fg-dim;
+}
+
+#custom-cava {
+    color: @accent;
+    padding: 0 4px;
+    margin: 6px 0;
+    font-family: monospace;
+    font-size: 16px;
+    min-width: 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px @fg;
+}
+
+#backlight {
+    color: @green;
+}
+
+#battery {
+    color: @green;
+}
+
+#battery.warning {
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+    animation: blink 0.5s infinite;
+}
+
+#battery.charging {
+    color: @green;
+}
+
+#custom-power {
+    color: @red;
+    padding: 0 14px;
+    margin: 6px 6px 6px 10px;
+    font-size: 18px;
+    text-shadow: 0 0 15px @red;
+}
+
+#custom-power:hover {
+    color: #000;
+    background: @red;
+    border-radius: 0;
+    box-shadow: 0 0 20px @red;
+}
+
+tooltip {
+    background: @bg;
+    border: 1px solid @fg;
+    border-radius: 0;
+    color: @fg;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+tooltip label {
+    color: @fg;
+    padding: 4px 8px;
+    text-shadow: 0 0 8px @fg;
+}

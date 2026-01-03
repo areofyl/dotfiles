@@ -1,0 +1,208 @@
+/* Minimal Clean Floating Style */
+
+@define-color bg rgba(17, 17, 27, 0.85);
+@define-color bg-alt rgba(30, 30, 46, 0.9);
+@define-color fg #cdd6f4;
+@define-color fg-dim #6c7086;
+@define-color accent #89b4fa;
+@define-color accent2 #f5c2e7;
+@define-color green #a6e3a1;
+@define-color yellow #f9e2af;
+@define-color red #f38ba8;
+@define-color surface rgba(49, 50, 68, 0.6);
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 500;
+    font-size: 18px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+    border: none;
+}
+
+/* Remove all default styling */
+button {
+    box-shadow: none;
+    text-shadow: none;
+    border: none;
+    border-radius: 0;
+}
+
+/* Module containers - each is its own island */
+.modules-left,
+.modules-center,
+.modules-right {
+    background: @bg;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 12px;
+    margin: 0 6px;
+}
+
+/* Collapsed empty modules */
+#bluetooth.disabled,
+#bluetooth.off,
+#network.disconnected,
+#pulseaudio.muted {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    border: none;
+}
+
+
+/* Workspaces */
+#workspaces {
+    background: transparent;
+    padding: 0 4px;
+}
+
+#workspaces button {
+    color: @fg-dim;
+    padding: 0 8px;
+    margin: 6px 3px;
+    border-radius: 10px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    color: @accent;
+    background: @surface;
+}
+
+#workspaces button.active {
+    color: @bg;
+    background: @accent;
+    border-radius: 10px;
+    padding: 0 12px;
+}
+
+#workspaces button.urgent {
+    color: @bg;
+    background: @red;
+}
+
+/* Clock - center piece */
+#clock {
+    color: @fg;
+    font-weight: 600;
+    padding: 0 20px;
+}
+
+/* Right side modules */
+#tray,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#battery {
+    color: @fg;
+    padding: 0 12px;
+    margin: 6px 3px;
+    border-radius: 10px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#tray {
+    padding: 0 8px;
+}
+
+#network:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover {
+    background: @surface;
+}
+
+/* Network */
+#network {
+    color: @accent;
+}
+
+#network.disconnected {
+    color: @fg-dim;
+}
+
+/* Bluetooth */
+#bluetooth {
+    color: @accent2;
+}
+
+#bluetooth.disabled {
+    color: @fg-dim;
+}
+
+/* Audio */
+#pulseaudio {
+    color: @yellow;
+}
+
+#pulseaudio.muted {
+    color: @fg-dim;
+}
+
+/* Cava visualizer */
+#custom-cava {
+    color: @accent;
+    padding: 0 4px;
+    margin: 6px 0;
+    font-family: monospace;
+    font-size: 16px;
+    min-width: 0;
+    letter-spacing: 2px;
+}
+
+/* Backlight */
+#backlight {
+    color: @green;
+}
+
+/* Battery */
+#battery {
+    color: @green;
+}
+
+#battery.warning {
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+#battery.charging {
+    color: @green;
+}
+
+/* Power button */
+#custom-power {
+    color: @red;
+    padding: 0 14px;
+    margin: 6px 6px 6px 10px;
+    font-size: 18px;
+}
+
+#custom-power:hover {
+    color: @fg;
+    background: @red;
+    border-radius: 10px;
+}
+
+/* Tooltip */
+tooltip {
+    background: @bg;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: @fg;
+}
+
+tooltip label {
+    color: @fg;
+    padding: 4px 8px;
+}

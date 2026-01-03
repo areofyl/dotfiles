@@ -1,0 +1,36 @@
+/* Minimal Aesthetic Bar */
+{
+"include": [
+  "$HOME/.config/waybar/Modules",
+  "$HOME/.config/waybar/ModulesWorkspaces",
+  "$HOME/.config/waybar/ModulesCustom",
+  "$HOME/.config/waybar/ModulesGroups",
+  "$HOME/.config/waybar/UserModules"
+  ],
+"layer": "top",
+"position": "top",
+"height": 34,
+"margin-top": 6,
+"margin-left": 10,
+"margin-right": 10,
+"spacing": 0,
+
+"modules-left": [
+	"custom/power",
+	"hyprland/workspaces#pacman"
+	],
+
+"modules-center": [
+	"clock"
+	],
+
+"modules-right": [
+	"tray",
+	"network",
+	"bluetooth",
+	"pulseaudio",
+	"custom/cava",
+	"backlight",
+	"battery"
+	]
+}
