@@ -1,31 +1,122 @@
 #!/bin/bash
 
-# Fedora Hyprland Dotfiles Install Script
-# Run this on a fresh Fedora install
+#  ╔═══════════════════════════════════════════════════════════════════════════╗
+#  ║                                                                           ║
+#  ║   ██╗  ██╗██╗   ██╗██████╗ ██████╗ ██╗      █████╗ ███╗   ██╗██████╗      ║
+#  ║   ██║  ██║╚██╗ ██╔╝██╔══██╗██╔══██╗██║     ██╔══██╗████╗  ██║██╔══██╗     ║
+#  ║   ███████║ ╚████╔╝ ██████╔╝██████╔╝██║     ███████║██╔██╗ ██║██║  ██║     ║
+#  ║   ██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══██╗██║     ██╔══██║██║╚██╗██║██║  ██║     ║
+#  ║   ██║  ██║   ██║   ██║     ██║  ██║███████╗██║  ██║██║ ╚████║██████╔╝     ║
+#  ║   ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝      ║
+#  ║                                                                           ║
+#  ║                    Fedora Dotfiles Install Script                         ║
+#  ║                                                                           ║
+#  ╚═══════════════════════════════════════════════════════════════════════════╝
 
 set -e
 
-echo "=== Fedora Hyprland Dotfiles Installer ==="
-echo ""
-
-# Colors
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                              Colors                                       │
+# └───────────────────────────────────────────────────────────────────────────┘
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                              Functions                                    │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header() {
+    echo ""
+    echo -e "${CYAN}╭───────────────────────────────────────────────────────────────╮${NC}"
+    echo -e "${CYAN}│${NC} ${BOLD}$1${NC}"
+    echo -e "${CYAN}╰───────────────────────────────────────────────────────────────╯${NC}"
+    echo ""
+}
+
+print_step() {
+    echo -e "${BLUE}  ▶${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}  ✓${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}  ⚠${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}  ✗${NC} $1"
+}
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                          Pre-flight Checks                                │
+# └───────────────────────────────────────────────────────────────────────────┘
+clear
+echo ""
+echo -e "${MAGENTA}"
+cat << "EOF"
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║                                                               ║
+    ║     ██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗     ║
+    ║     ██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝     ║
+    ║     ██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗       ║
+    ║     ██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝       ║
+    ║     ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗     ║
+    ║     ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝     ║
+    ║                                                               ║
+    ║              Hyprland + Waybar + Kitty + More                 ║
+    ║                                                               ║
+    ╚═══════════════════════════════════════════════════════════════╝
+EOF
+echo -e "${NC}"
+echo ""
 
 # Check if running on Fedora
 if ! grep -q "Fedora" /etc/os-release 2>/dev/null; then
-    echo -e "${RED}This script is designed for Fedora Linux${NC}"
+    print_error "This script is designed for Fedora Linux only!"
     exit 1
 fi
 
-# Get the directory where this script is located
+print_success "Fedora detected"
+
+# Get script directory
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+print_success "Dotfiles directory: $DOTFILES_DIR"
 
-echo -e "${YELLOW}Installing packages...${NC}"
+echo ""
+echo -e "${BOLD}This script will install:${NC}"
+echo ""
+echo "  Window Manager    : Hyprland + Hyprlock"
+echo "  Status Bar        : Waybar"
+echo "  Terminal          : Kitty"
+echo "  App Launcher      : Rofi"
+echo "  Notifications     : SwayNotificationCenter"
+echo "  File Manager      : Thunar"
+echo "  Browser           : Zen Browser"
+echo "  Editor            : Neovim"
+echo "  Shell             : Zsh + Oh-My-Zsh"
+echo "  And more..."
+echo ""
 
-# Core Hyprland packages
+read -p "$(echo -e ${YELLOW}"Proceed with installation? [y/N]: "${NC})" -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    print_warning "Installation cancelled"
+    exit 0
+fi
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Installing Packages                               │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Installing Core Packages"
+
+print_step "Installing Hyprland and core components..."
 sudo dnf install -y \
     hyprland \
     hyprlock \
@@ -40,9 +131,13 @@ sudo dnf install -y \
     wallust \
     cava \
     btop \
-    fastfetch
+    fastfetch \
+    --quiet
+print_success "Core packages installed"
 
-# Utilities
+print_header "Installing Utilities"
+
+print_step "Installing clipboard, screenshot, and media tools..."
 sudo dnf install -y \
     wl-clipboard \
     cliphist \
@@ -57,38 +152,91 @@ sudo dnf install -y \
     blueman \
     network-manager-applet \
     thunar \
-    thunar-archive-plugin
+    thunar-archive-plugin \
+    --quiet
+print_success "Utilities installed"
 
-# Theming
+print_header "Installing Theming Tools"
+
+print_step "Installing Qt and GTK theming tools..."
 sudo dnf install -y \
     qt5ct \
     qt6ct \
-    kvantum
-
-# Shell
-sudo dnf install -y \
-    zsh \
-    zsh-autosuggestions \
-    zsh-syntax-highlighting
-
-# nwg tools
-sudo dnf install -y \
+    kvantum \
     nwg-look \
-    nwg-displays
+    nwg-displays \
+    --quiet
+print_success "Theming tools installed"
 
-# Fonts (optional but recommended)
+print_header "Installing Fonts"
+
+print_step "Installing Nerd Fonts and icon fonts..."
 sudo dnf install -y \
     google-noto-sans-fonts \
     google-noto-sans-mono-fonts \
     jetbrains-mono-fonts-all \
-    fontawesome-fonts-all
+    fontawesome-fonts-all \
+    --quiet
+print_success "Fonts installed"
 
-echo ""
-echo -e "${YELLOW}Creating config backups and symlinks...${NC}"
+print_header "Installing Zsh"
 
-# Backup existing configs
+print_step "Installing Zsh and plugins..."
+sudo dnf install -y \
+    zsh \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting \
+    curl \
+    git \
+    --quiet
+print_success "Zsh installed"
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                       Installing Oh-My-Zsh                                │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Installing Oh-My-Zsh"
+
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    print_warning "Oh-My-Zsh already installed, skipping..."
+else
+    print_step "Downloading and installing Oh-My-Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    print_success "Oh-My-Zsh installed"
+fi
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                       Installing Zen Browser                              │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Installing Zen Browser"
+
+print_step "Checking for Flatpak..."
+if ! command -v flatpak &> /dev/null; then
+    print_step "Installing Flatpak..."
+    sudo dnf install -y flatpak --quiet
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+fi
+print_success "Flatpak ready"
+
+print_step "Installing Zen Browser from Flathub..."
+flatpak install -y flathub app.zen_browser.zen
+print_success "Zen Browser installed"
+
+print_step "Setting Zen as default browser..."
+xdg-settings set default-web-browser app.zen_browser.zen.desktop 2>/dev/null || true
+print_success "Zen set as default browser"
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Setting Up Configs                                │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Setting Up Configuration Files"
+
+# Create backup directory
 backup_dir="$HOME/.config-backup-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$backup_dir"
+print_step "Backup directory: $backup_dir"
+
+# Ensure .config exists
+mkdir -p "$HOME/.config"
 
 # List of configs to symlink
 configs=(
@@ -110,43 +258,105 @@ configs=(
     "gtk-3.0"
 )
 
+print_step "Symlinking config files..."
 for config in "${configs[@]}"; do
-    if [ -e "$HOME/.config/$config" ]; then
-        echo "Backing up existing $config..."
+    if [ -e "$HOME/.config/$config" ] && [ ! -L "$HOME/.config/$config" ]; then
         mv "$HOME/.config/$config" "$backup_dir/"
+        print_warning "Backed up existing $config"
     fi
 
     if [ -e "$DOTFILES_DIR/.config/$config" ]; then
-        echo "Symlinking $config..."
+        rm -rf "$HOME/.config/$config" 2>/dev/null || true
         ln -sf "$DOTFILES_DIR/.config/$config" "$HOME/.config/$config"
+        print_success "Linked $config"
     fi
 done
 
 # Symlink zsh configs
-if [ -e "$HOME/.zshrc" ]; then
+print_step "Setting up Zsh configuration..."
+if [ -e "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
     mv "$HOME/.zshrc" "$backup_dir/"
 fi
-if [ -e "$HOME/.zprofile" ]; then
+if [ -e "$HOME/.zprofile" ] && [ ! -L "$HOME/.zprofile" ]; then
     mv "$HOME/.zprofile" "$backup_dir/"
 fi
 
 ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/.zprofile" "$HOME/.zprofile"
+print_success "Zsh config linked"
 
-echo ""
-echo -e "${YELLOW}Setting zsh as default shell...${NC}"
-if [ "$SHELL" != "$(which zsh)" ]; then
-    chsh -s $(which zsh)
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Setting Up Wallpaper                              │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Setting Up Wallpaper"
+
+print_step "Creating wallpapers directory..."
+mkdir -p "$HOME/Pictures/wallpapers"
+
+if [ -d "$DOTFILES_DIR/wallpapers" ]; then
+    print_step "Copying wallpapers..."
+    cp -r "$DOTFILES_DIR/wallpapers/"* "$HOME/Pictures/wallpapers/" 2>/dev/null || true
+    print_success "Wallpapers copied to ~/Pictures/wallpapers"
 fi
 
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Setting Default Shell                             │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Setting Zsh as Default Shell"
+
+if [ "$SHELL" != "$(which zsh)" ]; then
+    print_step "Changing default shell to Zsh..."
+    chsh -s $(which zsh)
+    print_success "Default shell changed to Zsh"
+else
+    print_success "Zsh is already the default shell"
+fi
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
+# │                              Complete!                                    │
+# └───────────────────────────────────────────────────────────────────────────┘
 echo ""
-echo -e "${GREEN}=== Installation Complete ===${NC}"
+echo -e "${GREEN}"
+cat << "EOF"
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║                                                               ║
+    ║                  ✓ INSTALLATION COMPLETE ✓                    ║
+    ║                                                               ║
+    ╚═══════════════════════════════════════════════════════════════╝
+EOF
+echo -e "${NC}"
+
+echo -e "${BOLD}What was installed:${NC}"
 echo ""
-echo "Next steps:"
-echo "  1. Log out and select Hyprland from your display manager"
-echo "  2. If configs were backed up, they're in: $backup_dir"
+echo "  ✓ Hyprland window manager"
+echo "  ✓ Waybar status bar"
+echo "  ✓ Kitty terminal"
+echo "  ✓ Rofi app launcher"
+echo "  ✓ Zen Browser (set as default)"
+echo "  ✓ Oh-My-Zsh"
+echo "  ✓ All config files symlinked"
+echo "  ✓ Wallpapers copied"
 echo ""
-echo "Optional:"
-echo "  - Install Zen Browser: flatpak install flathub app.zen_browser.zen"
-echo "  - Install oh-my-zsh: sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
+
+echo -e "${BOLD}Next steps:${NC}"
+echo ""
+echo "  1. Log out of your current session"
+echo "  2. Select 'Hyprland' from your display manager"
+echo "  3. Enjoy your new setup!"
+echo ""
+
+if [ -d "$backup_dir" ] && [ "$(ls -A $backup_dir 2>/dev/null)" ]; then
+    echo -e "${YELLOW}Note:${NC} Your old configs were backed up to:"
+    echo "      $backup_dir"
+    echo ""
+fi
+
+echo -e "${CYAN}Keybinds to get started:${NC}"
+echo ""
+echo "  SUPER + Enter     : Open terminal"
+echo "  SUPER + D         : Open app launcher"
+echo "  SUPER + Q         : Close window"
+echo "  SUPER + 1-9       : Switch workspace"
+echo ""
+echo -e "${MAGENTA}Happy ricing!${NC}"
 echo ""
