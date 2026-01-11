@@ -7,7 +7,7 @@ mute=false          # Set to true to mute the system sounds.
 
 # Mute individual sounds here.
 muteScreenshots=false
-muteVolume=false
+muteVolume=true
 
 # Exit if the system sounds are muted.
 if [[ "$mute" = true ]]; then
