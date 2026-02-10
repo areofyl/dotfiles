@@ -1,0 +1,123 @@
+/* Catppuccin Mocha — Minimal Transparent Thunar */
+
+/* === WINDOW === */
+.thunar {
+    background: rgba(17, 17, 27, 0.75);
+    color: #cdd6f4;
+}
+
+/* === SIDEBAR — icon only, clean === */
+.thunar .sidebar {
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+}
+
+/* Hide text labels, keep icons visible */
+.thunar .sidebar treeview {
+    font-size: 0px;
+    -gtk-icon-size: 22px;
+}
+
+/* Sidebar rows */
+.thunar .sidebar row {
+    padding: 6px 0;
+    margin: 1px 6px;
+    border-radius: 10px;
+    min-height: 28px;
+}
+
+.thunar .sidebar row:selected {
+    background: rgba(180, 190, 254, 0.12);
+}
+
+.thunar .sidebar row:hover:not(:selected) {
+    background: rgba(205, 214, 244, 0.05);
+}
+
+/* === SEPARATOR === */
+.thunar paned separator {
+    min-width: 1px;
+    background: rgba(49, 50, 68, 0.3);
+}
+
+/* === CONTENT === */
+.thunar .view,
+.thunar iconview {
+    background: transparent;
+    color: #cdd6f4;
+}
+
+.thunar .view:selected,
+.thunar iconview:selected {
+    background: rgba(180, 190, 254, 0.12);
+    border-radius: 8px;
+}
+
+/* === TOOLBAR === */
+.thunar toolbar {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 2px 4px;
+}
+
+.thunar toolbar button {
+    background: transparent;
+    color: #6c7086;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+}
+
+.thunar toolbar button:hover {
+    background: rgba(205, 214, 244, 0.06);
+    color: #cdd6f4;
+}
+
+.thunar toolbar button:checked,
+.thunar toolbar button:active {
+    background: rgba(180, 190, 254, 0.12);
+    color: #b4befe;
+}
+
+/* === PATH BAR === */
+.thunar .path-bar button {
+    background: transparent;
+    color: #6c7086;
+    border: none;
+    border-radius: 6px;
+    padding: 2px 8px;
+}
+
+.thunar .path-bar button:hover {
+    background: rgba(205, 214, 244, 0.06);
+}
+
+.thunar .path-bar button:checked {
+    color: #b4befe;
+}
+
+/* === SCROLLBAR === */
+.thunar scrollbar slider {
+    min-width: 3px;
+    min-height: 3px;
+    border-radius: 99px;
+    background: rgba(108, 112, 134, 0.3);
+}
+
+.thunar scrollbar slider:hover {
+    background: rgba(108, 112, 134, 0.5);
+    min-width: 5px;
+}
+
+.thunar scrollbar trough {
+    background: transparent;
+}
+
+/* === HIDE MENUBAR === */
+.thunar menubar {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
