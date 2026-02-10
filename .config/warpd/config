@@ -1,0 +1,36 @@
+# Activation keys
+hint_activation_key: A-S-space
+normal_activation_key: A-S-c
+grid_activation_key: A-S-g
+
+# Movement speed
+speed: 300
+max_speed: 1600
+acceleration: 700
+
+# Hint mode appearance
+hint_bgcolor: #1e1e2e
+hint_fgcolor: #cdd6f4
+hint_border_color: #89b4fa
+hint_border_radius: 5
+hint_font: JetBrainsMono Nerd Font
+
+# Grid appearance
+grid_color: #89b4fa
+grid_border_color: #cba6f7
+grid_border_width: 2
+
+# Scroll
+scroll_speed: 100
+
+# Keys (vim-style)
+up: k
+down: j
+left: h
+right: l
+click: m
+middle_click: comma
+right_click: period
+scroll_up: r
+scroll_down: e
+exit: Escape
