@@ -6,15 +6,6 @@
 /* IMPORTANT, be mindful with , or ". else waybar will not start */
 
 {
-  "custom/cava": {
-    "exec": "~/.config/waybar/scripts/cava-waybar.sh",
-    "format": "{}",
-    "tooltip": false,
-    "on-click": "pavucontrol",
-    "layer": "top",
-    "output": "all"
-  },
-
   "bluetooth": {
     "format": "󰂯",
     "format-disabled": "",
