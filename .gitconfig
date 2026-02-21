@@ -1,6 +1,6 @@
 [user]
-	name = areofnull
-	email = areofnull@users.noreply.github.com
+	name = areofyl
+	email = areofyl@users.noreply.github.com
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
