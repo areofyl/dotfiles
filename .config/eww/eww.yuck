@@ -211,7 +211,121 @@
         (media-widget)
         (launch-widget)))))
 
-; ============ WINDOW ============
+; ============ POPUP VARIABLES ============
+
+(defpoll wifi_networks :interval "5s" :initial "[]"
+  "~/.config/eww/scripts/wifi.sh list")
+(defpoll wifi_info :interval "3s" :initial '{"ssid":"","enabled":false,"signal":0,"ip":""}'
+  "~/.config/eww/scripts/wifi.sh status")
+(defpoll bt_devices :interval "5s" :initial "[]"
+  "~/.config/eww/scripts/bluetooth.sh list")
+(defpoll bt_info :interval "3s" :initial '{"powered":false,"connected_count":0}'
+  "~/.config/eww/scripts/bluetooth.sh status")
+
+; ============ WIFI POPUP ============
+
+(defwidget wifi-header []
+  (box :class "popup-header" :orientation "h" :space-evenly false
+    (label :class "popup-title" :text "󰤨  Wi-Fi" :hexpand true :halign "start")
+    (button :class "popup-toggle ${wifi_info.enabled ? 'active' : ''}"
+      :onclick "~/.config/eww/scripts/wifi.sh toggle"
+      (label :text {wifi_info.enabled ? "On" : "Off"}))
+    (button :class "popup-close-btn" :onclick "eww close wifi-popup"
+      (label :text "󰅖"))))
+
+(defwidget wifi-current []
+  (box :class "popup-current" :orientation "v" :space-evenly false :spacing 4
+    :visible {wifi_info.ssid != ""}
+    (label :class "popup-current-name" :text {wifi_info.ssid} :halign "start")
+    (box :orientation "h" :space-evenly false :spacing 8
+      (label :class "popup-current-detail" :text {wifi_info.ip} :halign "start" :hexpand true)
+      (button :class "popup-action-btn" :onclick "~/.config/eww/scripts/wifi.sh disconnect '${wifi_info.ssid}'"
+        (label :text "Disconnect")))))
+
+(defwidget wifi-network [ssid signal security active]
+  (button :class "popup-item ${active ? 'active' : ''}"
+    :onclick {active ? "" : "~/.config/eww/scripts/wifi.sh connect '${ssid}' &"}
+    (box :orientation "h" :space-evenly false
+      (label :class "popup-item-icon" :text {
+        signal >= 80 ? "󰤨" :
+        signal >= 60 ? "󰤥" :
+        signal >= 40 ? "󰤢" :
+        signal >= 20 ? "󰤟" : "󰤯"})
+      (box :orientation "v" :space-evenly false :hexpand true
+        (label :class "popup-item-name" :text ssid :halign "start")
+        (label :class "popup-item-detail" :text {
+          active ? "Connected" :
+          security != "" && security != "--" ? "󰌾 Secured" : "Open"}
+          :halign "start"))
+      (label :class "popup-item-signal" :text "${signal}%"))))
+
+(defwidget wifi-list []
+  (box :class "popup-list" :orientation "v" :space-evenly false :spacing 0
+    (for net in wifi_networks
+      (wifi-network
+        :ssid {net.ssid}
+        :signal {net.signal}
+        :security {net.security}
+        :active {net.active}))))
+
+(defwidget wifi-popup-widget []
+  (box :class "popup-container" :orientation "v" :space-evenly false :spacing 0
+    (wifi-header)
+    (wifi-current)
+    (box :class "popup-scan-row" :orientation "h" :space-evenly false
+      :visible {wifi_info.enabled}
+      (button :class "popup-scan-btn" :onclick "~/.config/eww/scripts/wifi.sh scan &"
+        (label :text "󰑐  Scan"))
+      (box :hexpand true))
+    (scroll :class "popup-scroll" :vscroll true :height 300
+      :visible {wifi_info.enabled}
+      (wifi-list))))
+
+; ============ BLUETOOTH POPUP ============
+
+(defwidget bt-header []
+  (box :class "popup-header" :orientation "h" :space-evenly false
+    (label :class "popup-title" :text "󰂯  Bluetooth" :hexpand true :halign "start")
+    (button :class "popup-toggle ${bt_info.powered ? 'active' : ''}"
+      :onclick "~/.config/eww/scripts/bluetooth.sh toggle"
+      (label :text {bt_info.powered ? "On" : "Off"}))
+    (button :class "popup-close-btn" :onclick "eww close bluetooth-popup"
+      (label :text "󰅖"))))
+
+(defwidget bt-device [name mac connected]
+  (button :class "popup-item ${connected ? 'active' : ''}"
+    :onclick {connected ?
+      "~/.config/eww/scripts/bluetooth.sh disconnect '${mac}' '${name}' &" :
+      "~/.config/eww/scripts/bluetooth.sh connect '${mac}' '${name}' &"}
+    (box :orientation "h" :space-evenly false
+      (label :class "popup-item-icon" :text {connected ? "󰂱" : "󰂯"})
+      (box :orientation "v" :space-evenly false :hexpand true
+        (label :class "popup-item-name" :text name :halign "start")
+        (label :class "popup-item-detail"
+          :text {connected ? "Connected" : "Paired"}
+          :halign "start")))))
+
+(defwidget bt-list []
+  (box :class "popup-list" :orientation "v" :space-evenly false :spacing 0
+    (for dev in bt_devices
+      (bt-device
+        :name {dev.name}
+        :mac {dev.mac}
+        :connected {dev.connected}))))
+
+(defwidget bt-popup-widget []
+  (box :class "popup-container" :orientation "v" :space-evenly false :spacing 0
+    (bt-header)
+    (box :class "popup-scan-row" :orientation "h" :space-evenly false
+      :visible {bt_info.powered}
+      (button :class "popup-scan-btn" :onclick "~/.config/eww/scripts/bluetooth.sh scan &"
+        (label :text "󰑐  Scan"))
+      (box :hexpand true))
+    (scroll :class "popup-scroll" :vscroll true :height 250
+      :visible {bt_info.powered}
+      (bt-list))))
+
+; ============ WINDOWS ============
 
 (defwindow dashboard
   :monitor 0
@@ -220,3 +334,19 @@
   :exclusive false
   :focusable true
   (dashboard))
+
+(defwindow wifi-popup
+  :monitor 0
+  :geometry (geometry :x "-8px" :y "48px" :width "340px" :anchor "top right")
+  :stacking "overlay"
+  :exclusive false
+  :focusable true
+  (wifi-popup-widget))
+
+(defwindow bluetooth-popup
+  :monitor 0
+  :geometry (geometry :x "-8px" :y "48px" :width "340px" :anchor "top right")
+  :stacking "overlay"
+  :exclusive false
+  :focusable true
+  (bt-popup-widget))

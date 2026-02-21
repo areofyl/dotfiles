@@ -379,3 +379,164 @@ tooltip {
   color: $fg;
   padding: 6px 10px;
 }
+
+// ============ POPUP DROPDOWNS ============
+
+$popup-bg: rgba(17, 17, 17, 0.93);
+$popup-accent: #C4977D;
+$popup-accent-dim: #8B6B57;
+$popup-text: #F0E6DF;
+$popup-text-dim: #5a524b;
+$popup-surface: rgba(255, 255, 255, 0.05);
+$popup-hover: rgba(255, 255, 255, 0.04);
+
+.popup-container {
+  background: $popup-bg;
+  border-radius: 16px;
+  padding: 0;
+}
+
+.popup-header {
+  padding: 16px 20px 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.popup-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: $popup-accent;
+  letter-spacing: 0.5px;
+}
+
+.popup-toggle {
+  padding: 4px 14px;
+  border-radius: 10px;
+  background: $popup-surface;
+  color: $popup-text-dim;
+  font-size: 11px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.active {
+    background: rgba(196, 151, 125, 0.2);
+    color: $popup-accent;
+  }
+}
+
+.popup-close-btn {
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: transparent;
+  color: $popup-text-dim;
+  font-size: 14px;
+  margin-left: 8px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: $popup-text;
+  }
+}
+
+.popup-current {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.popup-current-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $popup-text;
+}
+
+.popup-current-detail {
+  font-size: 11px;
+  color: $popup-text-dim;
+}
+
+.popup-action-btn {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: $popup-text-dim;
+  font-size: 11px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: $popup-text;
+  }
+}
+
+.popup-scan-row {
+  padding: 8px 20px;
+}
+
+.popup-scan-btn {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: $popup-text-dim;
+  font-size: 11px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: $popup-text;
+  }
+}
+
+.popup-scroll {
+  padding: 0;
+}
+
+.popup-list {
+  padding: 0;
+}
+
+.popup-item {
+  padding: 12px 20px;
+  background: transparent;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: $popup-hover;
+  }
+
+  &.active {
+    .popup-item-name {
+      color: $popup-text;
+    }
+    .popup-item-detail {
+      color: $popup-accent-dim;
+    }
+  }
+}
+
+.popup-item-icon {
+  font-size: 16px;
+  color: $popup-text-dim;
+  min-width: 28px;
+  margin-right: 8px;
+
+  .popup-item.active & {
+    color: $popup-accent;
+  }
+}
+
+.popup-item-name {
+  font-size: 12px;
+  color: $popup-text-dim;
+}
+
+.popup-item-detail {
+  font-size: 10px;
+  color: rgba(90, 82, 75, 0.7);
+  margin-top: 1px;
+}
+
+.popup-item-signal {
+  font-size: 10px;
+  color: $popup-text-dim;
+  min-width: 30px;
+}
