@@ -101,3 +101,4 @@ else
 fi
 
 echo "$new_layout" > "$layout_file"
+pkill -SIGRTMIN+9 waybar

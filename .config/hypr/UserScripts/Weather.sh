@@ -7,7 +7,7 @@ city=""
 
 # if city is blank, use https://ipapi.co/json to get location from IP
 if [ -z "$city" ]; then
-    city=$(curl -fsS https://ipapi.co/json | grep city | cut -f4 -d'"')
+    city=$(curl -fsS --connect-timeout 3 --max-time 8 https://ipapi.co/json | grep city | cut -f4 -d'"')
 fi
 
 
@@ -52,16 +52,16 @@ now=$(date +%s)
 cacheage=$(( now - mtime ))
 if [ $cacheage -gt 1740 ] || [ ! -s "$cachedir/$cachefile" ]; then
     # Prefer structured format for reliable parsing (3 lines: location, condition, temperature)
-    mapfile -t sdata < <(curl -fsS "https://wttr.in/${encoded_city}?format=%25l%0A%25C%0A%25t&lang=en" 2>/dev/null || true)
+    mapfile -t sdata < <(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25l%0A%25C%0A%25t&lang=en" 2>/dev/null || true)
     if [ ${#sdata[@]} -ge 3 ]; then
         printf "%s\n" "${sdata[0]}" > "$cachedir/$cachefile"
         printf "%s\n" "${sdata[1]}" >> "$cachedir/$cachefile"
         printf "%s\n" "${sdata[2]}" >> "$cachedir/$cachefile"
     else
         # Try fetching each field separately if combined format is flaky
-        loc=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25l&lang=en" 2>/dev/null || true)
-        cond_only=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25C&lang=en" 2>/dev/null || true)
-        temp_only=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25t" 2>/dev/null || true)
+        loc=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25l&lang=en" 2>/dev/null || true)
+        cond_only=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25C&lang=en" 2>/dev/null || true)
+        temp_only=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25t" 2>/dev/null || true)
         if [ -n "$loc" ] && [ -n "$cond_only" ] && [ -n "$temp_only" ]; then
             printf "%s\n" "$loc" > "$cachedir/$cachefile"
             printf "%s\n" "$cond_only" >> "$cachedir/$cachefile"
@@ -69,7 +69,7 @@ if [ $cacheage -gt 1740 ] || [ ! -s "$cachedir/$cachefile" ]; then
         else
         # Fallback: try ASCII output and extract best-effort fields
         url="https://en.wttr.in/${encoded_city}?1"
-        mapfile -t data < <(curl -fsS "$url" 2>/dev/null || true)
+        mapfile -t data < <(curl -fsS --connect-timeout 3 --max-time 8 "$url" 2>/dev/null || true)
         if [ ${#data[@]} -ge 3 ] && ! echo "${data[0]}" | grep -qi 'not found\|unknown location'; then
             loc=$(echo "${data[0]}" | sed -E 's/^.*: *//')
             # Attempt to pull condition and temperature hints from nearby lines
@@ -92,16 +92,16 @@ mapfile -t weather < "$cachedir/$cachefile"
 # If cache is still empty or invalid, emit a single error JSON and exit to avoid double-prints
 if [ ${#weather[@]} -lt 3 ] || ! echo "${weather[2]}" | grep -qE '[-+0-9].*°'; then
     # Last-chance: try live structured fetch and populate cache and runtime weather
-    mapfile -t sdata < <(curl -fsS "https://wttr.in/${encoded_city}?format=%25l%0A%25C%0A%25t&lang=en" 2>/dev/null || true)
+    mapfile -t sdata < <(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25l%0A%25C%0A%25t&lang=en" 2>/dev/null || true)
     if [ ${#sdata[@]} -ge 3 ]; then
         weather=("${sdata[@]}")
         printf "%s\n" "${sdata[0]}" > "$cachedir/$cachefile"
         printf "%s\n" "${sdata[1]}" >> "$cachedir/$cachefile"
         printf "%s\n" "${sdata[2]}" >> "$cachedir/$cachefile"
     else
-        loc=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25l&lang=en" 2>/dev/null || true)
-        cond_only=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25C&lang=en" 2>/dev/null || true)
-        temp_only=$(curl -fsS "https://wttr.in/${encoded_city}?format=%25t" 2>/dev/null || true)
+        loc=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25l&lang=en" 2>/dev/null || true)
+        cond_only=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25C&lang=en" 2>/dev/null || true)
+        temp_only=$(curl -fsS --connect-timeout 3 --max-time 8 "https://wttr.in/${encoded_city}?format=%25t" 2>/dev/null || true)
         if [ -n "$loc" ] && [ -n "$cond_only" ] && [ -n "$temp_only" ]; then
             weather=("$loc" "$cond_only" "$temp_only")
             printf "%s\n" "$loc" > "$cachedir/$cachefile"
