@@ -409,6 +409,16 @@ configs=(
     "qt6ct"
     "Kvantum"
     "gtk-3.0"
+    "gtk-4.0"
+    "custom-lock"
+    "swappy"
+    "nwg-look"
+    "nwg-displays"
+    "nwg-panel"
+    "xsettingsd"
+    "warpd"
+    "quickshell"
+    "org.gnome.Ptyxis"
 )
 
 print_step "Symlinking config files..."
@@ -425,18 +435,19 @@ for config in "${configs[@]}"; do
     fi
 done
 
-# Symlink zsh configs
-print_step "Setting up Zsh configuration..."
-if [ -e "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
-    mv "$HOME/.zshrc" "$backup_dir/"
-fi
-if [ -e "$HOME/.zprofile" ] && [ ! -L "$HOME/.zprofile" ]; then
-    mv "$HOME/.zprofile" "$backup_dir/"
-fi
-
-ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-ln -sf "$DOTFILES_DIR/.zprofile" "$HOME/.zprofile"
-print_success "Zsh config linked"
+# Symlink home-level dotfiles
+print_step "Setting up shell and home dotfiles..."
+home_dotfiles=(".zshrc" ".zprofile" ".bashrc" ".bash_profile" ".gitconfig" ".gtkrc-2.0")
+for dotfile in "${home_dotfiles[@]}"; do
+    if [ -e "$HOME/$dotfile" ] && [ ! -L "$HOME/$dotfile" ]; then
+        mv "$HOME/$dotfile" "$backup_dir/"
+        print_warning "Backed up existing $dotfile"
+    fi
+    if [ -e "$DOTFILES_DIR/$dotfile" ]; then
+        ln -sf "$DOTFILES_DIR/$dotfile" "$HOME/$dotfile"
+        print_success "Linked $dotfile"
+    fi
+done
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
 # │                         Setting Up Wallpaper                              │
