@@ -25,11 +25,12 @@
 	],
 
 "modules-right": [
+	"custom/glance",
+	"privacy",
 	"tray",
-	"network",
 	"bluetooth",
 	"pulseaudio",
-	"backlight",
+	"power-profiles-daemon",
 	"battery"
 	]
 }

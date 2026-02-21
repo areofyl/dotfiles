@@ -158,9 +158,18 @@ button {
     letter-spacing: 2px;
 }
 
-/* Backlight */
-#backlight {
+/* Power Profiles */
+#power-profiles-daemon {
     color: @green;
+    padding: 0 12px;
+    margin: 6px 3px;
+    border-radius: 10px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#power-profiles-daemon:hover {
+    background: @surface;
 }
 
 /* Battery */
@@ -192,6 +201,40 @@ button {
     color: @fg;
     background: @red;
     border-radius: 10px;
+}
+
+/* Glance */
+#custom-glance {
+    color: @accent2;
+    padding: 0 12px;
+    margin: 6px 3px;
+    border-radius: 10px;
+    background: @surface;
+    transition: all 0.3s ease;
+}
+
+#custom-glance.empty {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-size: 0;
+}
+
+#custom-glance.active:hover {
+    background: rgba(49, 50, 68, 0.9);
+}
+
+/* Privacy */
+#privacy {
+    padding: 0 8px;
+    margin: 6px 3px;
+    font-size: 14px;
+}
+
+#privacy-item {
+    color: @red;
 }
 
 /* Tooltip */

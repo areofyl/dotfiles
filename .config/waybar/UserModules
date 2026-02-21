@@ -55,6 +55,16 @@
     "smooth-scrolling-threshold": 1
   },
 
+  "custom/glance": {
+    "return-type": "json",
+    "exec": "$HOME/.local/bin/glance status",
+    "interval": 5,
+    "on-click": "$HOME/.local/bin/glance menu",
+    "on-click-right": "$HOME/.local/bin/glance copy",
+    "on-scroll-up": "$HOME/.local/bin/glance scroll up",
+    "on-scroll-down": "$HOME/.local/bin/glance scroll down"
+  },
+
   "tray": {
     "icon-size": 18,
     "spacing": 8
