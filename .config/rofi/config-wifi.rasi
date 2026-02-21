@@ -1,0 +1,114 @@
+/* WiFi dropdown panel */
+
+@import "~/.config/rofi/0-shared-fonts.rasi"
+@theme "~/.config/rofi/wallust/colors-rofi.rasi"
+
+* {
+    bg:          #111111ee;
+    bg-item:     transparent;
+    bg-sel:      #ffffff0d;
+    accent:      #C4977D;
+    accent-dim:  #8B6B57;
+    text:        #F0E6DF;
+    text-dim:    #5a524b;
+    sep:         #ffffff08;
+    background-color: transparent;
+    text-color:  @text;
+}
+
+configuration {
+    show-icons: false;
+    hover-select: true;
+    me-select-entry: "MouseSecondary";
+    me-accept-entry: "MousePrimary";
+}
+
+window {
+    transparency:    "real";
+    location:        north east;
+    anchor:          north east;
+    width:           340px;
+    x-offset:        -8px;
+    y-offset:        48px;
+    border:          0px;
+    border-radius:   16px;
+    background-color: @bg;
+}
+
+mainbox {
+    spacing:          0px;
+    padding:          16px 0px;
+    background-color: transparent;
+    children:         [ "message", "listview" ];
+}
+
+inputbar { enabled: false; }
+
+message {
+    padding:          0px 24px 12px 24px;
+    background-color: transparent;
+    border:           0px 0px 1px 0px;
+    border-color:     @sep;
+}
+
+textbox {
+    padding:          0px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: transparent;
+    text-color:       @accent;
+    font:             "JetBrainsMono Nerd Font SemiBold 10";
+    horizontal-align: 0.0;
+}
+
+listview {
+    columns:      1;
+    lines:        10;
+    fixed-height: false;
+    dynamic:      true;
+    scrollbar:    false;
+    spacing:      0px;
+    padding:      4px 0px 0px 0px;
+    background-color: transparent;
+}
+
+element {
+    spacing:          0px;
+    padding:          12px 24px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: @bg-item;
+    text-color:       @text-dim;
+    cursor:           pointer;
+}
+
+element normal.normal {
+    background-color: @bg-item;
+    text-color:       @text-dim;
+}
+
+element selected.normal {
+    background-color: @bg-sel;
+    text-color:       @text;
+}
+
+element alternate.normal {
+    background-color: @bg-item;
+    text-color:       @text-dim;
+}
+
+element-icon { size: 0%; }
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    font:             "JetBrainsMono Nerd Font 11";
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+}
+
+error-message {
+    padding:          12px 24px;
+    background-color: #1a1215;
+    text-color:       @text;
+}
