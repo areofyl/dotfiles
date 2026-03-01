@@ -1,15 +1,15 @@
 /* Minimal Clean Floating Style */
 
-@define-color bg rgba(17, 17, 27, 0.85);
-@define-color bg-alt rgba(30, 30, 46, 0.9);
-@define-color fg #cdd6f4;
-@define-color fg-dim #6c7086;
-@define-color accent #89b4fa;
-@define-color accent2 #f5c2e7;
-@define-color green #a6e3a1;
-@define-color yellow #f9e2af;
-@define-color red #f38ba8;
-@define-color surface rgba(49, 50, 68, 0.6);
+@define-color bg rgba(40, 40, 40, 0.85);
+@define-color bg-alt rgba(60, 56, 54, 0.9);
+@define-color fg #ebdbb2;
+@define-color fg-dim #928374;
+@define-color accent #bdae93;
+@define-color accent2 #a89984;
+@define-color green #a89984;
+@define-color yellow #bdae93;
+@define-color red #d5c4a1;
+@define-color surface rgba(80, 73, 69, 0.6);
 
 * {
     font-family: "JetBrainsMono Nerd Font";
@@ -37,7 +37,7 @@ button {
 .modules-right {
     background: @bg;
     border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(235, 219, 178, 0.08);
     padding: 6px 12px;
     margin: 0 6px;
 }
@@ -223,7 +223,7 @@ button {
 }
 
 #custom-glance.active:hover {
-    background: rgba(49, 50, 68, 0.9);
+    background: rgba(80, 73, 69, 0.9);
 }
 
 /* Privacy */
@@ -240,7 +240,7 @@ button {
 /* Tooltip */
 tooltip {
     background: @bg;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(235, 219, 178, 0.1);
     border-radius: 8px;
     color: @fg;
 }
