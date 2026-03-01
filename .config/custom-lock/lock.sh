@@ -10,7 +10,7 @@ BLURRED="/tmp/lockscreen_blurred.png"
 
 if [ -f "$WALLPAPER" ]; then
     if [ ! -f "$BLURRED" ] || [ "$WALLPAPER" -nt "$BLURRED" ]; then
-        magick "$WALLPAPER" -resize 1920x1080\> -blur 0x3 -brightness-contrast -15x0 "$BLURRED" 2>/dev/null &
+        magick "$WALLPAPER" -resize 1920x1080\> -blur 0x2 -brightness-contrast -5x0 "$BLURRED" 2>/dev/null &
     fi
 fi
 
