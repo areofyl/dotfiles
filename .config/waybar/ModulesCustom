@@ -151,10 +151,10 @@
     
 "custom/power": {
 	"format": " ⏻ ",
-	"on-click": "$HOME/.config/hypr/scripts/Wlogout.sh",
-	"on-click-right": "$HOME/.config/hypr/scripts/ChangeBlur.sh",
+	"on-click": "$HOME/.config/hypr/scripts/PowerMenu.sh",
+	"on-click-right": "$HOME/.config/hypr/scripts/Wlogout.sh",
 	"tooltip": true,
-	"tooltip-format": "Left Click: Logout Menu\nRight Click: Change Blur",
+	"tooltip-format": "Left Click: Power Menu\nRight Click: Full Logout Screen",
 },
 
 "custom/reboot": {
