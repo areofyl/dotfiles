@@ -450,6 +450,25 @@ for dotfile in "${home_dotfiles[@]}"; do
 done
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Setting Up Cursor Theme                          │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Setting Up Cursor Theme"
+
+if [ -d "$DOTFILES_DIR/.local/share/icons/macOS-Tahoe" ]; then
+    print_step "Installing macOS-Tahoe cursor theme..."
+    mkdir -p "$HOME/.local/share/icons"
+    cp -r "$DOTFILES_DIR/.local/share/icons/macOS-Tahoe" "$HOME/.local/share/icons/"
+    print_success "macOS-Tahoe cursor theme installed"
+fi
+
+if [ -f "$DOTFILES_DIR/.icons/default/index.theme" ]; then
+    print_step "Setting default X11 cursor..."
+    mkdir -p "$HOME/.icons/default"
+    cp "$DOTFILES_DIR/.icons/default/index.theme" "$HOME/.icons/default/index.theme"
+    print_success "Default cursor set to macOS-Tahoe"
+fi
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
 # │                         Setting Up Wallpaper                              │
 # └───────────────────────────────────────────────────────────────────────────┘
 print_header "Setting Up Wallpaper"
