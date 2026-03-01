@@ -20,17 +20,17 @@ gi.require_version('Gtk4LayerShell', '1.0')
 from gi.repository import Gtk, Gdk, GLib
 from gi.repository import Gtk4LayerShell as LayerShell
 
-# Catppuccin Mocha colors
+# Gruvbox Dark colors (matching waybar accent)
 COLORS = {
-    'bg': 'rgba(17, 17, 27, 0.8)',
-    'fg': '#cdd6f4',
-    'fg_dim': '#6c7086',
-    'accent': '#89b4fa',
-    'green': '#a6e3a1',
-    'red': '#f38ba8',
-    'yellow': '#f9e2af',
-    'surface': 'rgba(30, 30, 46, 0.95)',
-    'outer': 'rgba(137, 180, 250, 0.5)',
+    'bg': 'rgba(40, 40, 40, 0.8)',
+    'fg': '#ebdbb2',
+    'fg_dim': '#a89984',
+    'accent': '#bdae93',
+    'green': '#a89984',
+    'red': '#fb4934',
+    'yellow': '#d5c4a1',
+    'surface': 'rgba(50, 48, 47, 0.95)',
+    'outer': 'rgba(189, 174, 147, 0.5)',
 }
 
 _libc = ctypes.CDLL("libc.so.6")
@@ -219,8 +219,8 @@ class LockScreen(Gtk.Application):
                 subprocess.run([
                     'magick', self.wallpaper_path,
                     '-resize', '1920x1080>',
-                    '-blur', '0x3',
-                    '-brightness-contrast', '-15x0',
+                    '-blur', '0x2',
+                    '-brightness-contrast', '-5x0',
                     blurred_path
                 ], capture_output=True, timeout=10)
                 if os.path.exists(blurred_path):
@@ -432,11 +432,11 @@ class LockScreen(Gtk.Application):
     def apply_css(self):
         css = f"""
         .fallback-bg {{
-            background-color: rgb(17, 17, 27);
+            background-color: rgb(40, 40, 40);
         }}
 
         .dark-overlay {{
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.15);
         }}
 
         .top-text {{
@@ -510,7 +510,7 @@ class LockScreen(Gtk.Application):
         }}
 
         entry.password-entry > text > selection {{
-            background-color: rgba(137, 180, 250, 0.3);
+            background-color: rgba(189, 174, 147, 0.3);
         }}
 
         entry.password-entry > text > cursor {{
@@ -730,7 +730,7 @@ class LockScreen(Gtk.Application):
             return
         text = entry.get_text()
         # Resize all entries to fit content (extra padding for letter-spacing)
-        chars = max(len(text) + len(text) // 2 + 2, 8)
+        chars = max(len(text) + len(text) // 2, 8)
         self._syncing = True
         for e in self.password_entries:
             e.set_width_chars(chars)
