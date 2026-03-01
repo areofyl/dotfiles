@@ -1,40 +1,39 @@
-/* wlogout custom style */
-/* Original backed up to style.css.bak */
+/* wallust-wlogout */
 
 /* Importing wallust colors */
 @import '../../.config/waybar/wallust/colors-waybar.css';
 
 window {
     font-size: 14pt;
-    font-family: "JetBrains Mono", "Fira Code", monospace;
     color: @foreground;
-    background-color: rgba(20, 20, 20, 0.4);
+    background-color: rgba(20, 20, 30, 0.5);
 }
 
 button {
     background-repeat: no-repeat;
     background-position: center 40%;
-    background-size: 25%;
-    background-color: rgba(30, 30, 30, 0.3);
+    background-size: 28%;
+    background-color: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 20px;
-    margin: 10px;
+    margin: 14px;
     outline: none;
-    color: alpha(@foreground, 0.7);
-    transition: all 0.2s ease;
+    color: rgba(235, 219, 178, 0.6);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 button:focus {
-    background-size: 25%;
+    background-size: 28%;
     border: 1px solid rgba(255, 255, 255, 0.06);
     outline: none;
 }
 
 button:hover {
-    background-color: alpha(@color6, 0.2);
-    border: 1px solid alpha(@color6, 0.4);
-    background-size: 25%;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(235, 219, 178, 0.15);
     color: @foreground;
+    background-size: 32%;
+    margin: 8px;
     border-radius: 20px;
     outline: none;
 }
@@ -44,6 +43,7 @@ button span {
     font-weight: 500;
     letter-spacing: 1px;
 }
+
 
 #lock {
     background-image: image(url("./icons/lock.png"));
