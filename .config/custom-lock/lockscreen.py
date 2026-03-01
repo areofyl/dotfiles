@@ -129,6 +129,9 @@ class LockScreen(Gtk.Application):
         self._dpms_timeout_id = None
         self.quote = self.get_quote()
         self.windows = []
+        self.overlays = []
+        self.dark_overlays = []
+        self.content_boxes = []
         self.revealers = []
         self.date_labels = []
         self.battery_labels = []
@@ -280,6 +283,7 @@ class LockScreen(Gtk.Application):
         dark_overlay.set_vexpand(True)
         dark_overlay.set_hexpand(True)
         overlay.add_overlay(dark_overlay)
+        self.dark_overlays.append(dark_overlay)
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         main_box.set_valign(Gtk.Align.FILL)
@@ -290,6 +294,8 @@ class LockScreen(Gtk.Application):
         view = self.create_lock_view()
         main_box.append(view)
         overlay.add_overlay(main_box)
+        self.content_boxes.append(main_box)
+        self.overlays.append(overlay)
 
         win.set_child(overlay)
 
@@ -431,8 +437,12 @@ class LockScreen(Gtk.Application):
 
     def apply_css(self):
         css = f"""
+        window {{
+            background-color: #282828;
+        }}
+
         .fallback-bg {{
-            background-color: rgb(40, 40, 40);
+            background-color: #282828;
         }}
 
         .dark-overlay {{
@@ -570,6 +580,19 @@ class LockScreen(Gtk.Application):
             font-family: "JetBrainsMono Nerd Font";
             font-size: 14px;
             color: {COLORS['fg_dim']};
+        }}
+
+        @keyframes door-fade {{
+            0%   {{ opacity: 1; }}
+            100% {{ opacity: 0; }}
+        }}
+
+        .door-fade-fast {{
+            animation: door-fade 0.2s ease-in forwards;
+        }}
+
+        .door-fade-bg {{
+            animation: door-fade 0.35s ease-in forwards;
         }}
         """
 
@@ -768,7 +791,8 @@ class LockScreen(Gtk.Application):
         if success:
             self.unlock_count += 1
             self._save_stats()
-            self.quit()
+            self._play_door_open()
+            return False
         else:
             self._fail_count += 1
             delay = min(2 ** (self._fail_count - 1), 30) if self._fail_count > 1 else 0
@@ -789,6 +813,52 @@ class LockScreen(Gtk.Application):
                 entry.set_text("")
             self._syncing = False
         return False
+
+    def _play_door_open(self):
+        """Zoom into the door — content fades, bg zooms forward, reveals desktop."""
+        # Fade UI content quickly (time, password, etc.)
+        for box in self.content_boxes:
+            box.add_css_class('door-fade-fast')
+        # Fade dark overlay
+        for dark in self.dark_overlays:
+            dark.add_css_class('door-fade-bg')
+        # Animate background: zoom in toward the door + fade out
+        self._anim_start = None
+        self._anim_duration = 0.35  # seconds
+        for overlay in self.overlays:
+            bg = overlay.get_child()
+            if bg and isinstance(bg, Gtk.Picture):
+                # Start the zoom-in tick animation
+                bg.add_tick_callback(self._zoom_tick)
+            elif bg:
+                bg.add_css_class('door-fade-bg')
+        # Release keyboard so desktop is usable immediately
+        for win in self.windows:
+            LayerShell.set_keyboard_mode(win, LayerShell.KeyboardMode.NONE)
+        GLib.timeout_add(400, self.quit)
+
+    def _zoom_tick(self, widget, clock):
+        """Tick callback: zoom bg picture into the door center + fade out."""
+        now = clock.get_frame_time() / 1_000_000  # microseconds to seconds
+        if self._anim_start is None:
+            self._anim_start = now
+            self._orig_margins = (
+                widget.get_margin_top(), widget.get_margin_bottom(),
+                widget.get_margin_start(), widget.get_margin_end(),
+            )
+        t = min((now - self._anim_start) / self._anim_duration, 1.0)
+        # Ease-in curve
+        t_ease = t * t
+        # Zoom in by applying negative margins (expands the picture beyond bounds)
+        # This simulates the camera moving forward into the door
+        zoom = t_ease * 300  # pixels to "zoom in" by
+        widget.set_margin_top(int(-zoom))
+        widget.set_margin_bottom(int(-zoom))
+        widget.set_margin_start(int(-zoom))
+        widget.set_margin_end(int(-zoom))
+        # Fade out
+        widget.set_opacity(1.0 - t_ease)
+        return t < 1.0  # stop when done
 
     def _start_lockout_countdown(self):
         if self._lockout_timer_id:
