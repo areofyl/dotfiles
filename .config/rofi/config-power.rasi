@@ -1,0 +1,93 @@
+/* Power Menu Dropdown */
+
+@import "~/.config/rofi/0-shared-fonts.rasi"
+@theme "~/.config/rofi/wallust/colors-rofi.rasi"
+
+* {
+    bg-dark:        #282828ee;
+    bg-card:        #3c3836f5;
+    bg-hover:       #504945;
+    accent:         #d79921;
+    accent-dim:     #b57614;
+    text-main:      #ebdbb2;
+    text-dim:       #928374;
+    border-subtle:  #504945;
+
+    background-color: transparent;
+    text-color:       @text-main;
+}
+
+configuration {
+    show-icons: false;
+    hover-select: true;
+    me-select-entry: "MouseSecondary";
+    me-accept-entry: "MousePrimary";
+}
+
+window {
+    transparency:    "real";
+    location:        north west;
+    anchor:          north west;
+    width:           220px;
+    x-offset:        40px;
+    y-offset:        0px;
+    border:          1px solid;
+    border-radius:   8px;
+    border-color:    @border-subtle;
+    background-color: @bg-dark;
+}
+
+mainbox {
+    spacing:          0px;
+    padding:          0px;
+    background-color: transparent;
+    children:         [ "listview" ];
+}
+
+inputbar { enabled: false; }
+
+listview {
+    columns:      1;
+    lines:        5;
+    fixed-height: false;
+    dynamic:      true;
+    scrollbar:    false;
+    spacing:      0px;
+    padding:      6px 0px;
+    background-color: transparent;
+}
+
+element {
+    spacing:          0px;
+    padding:          10px 20px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: transparent;
+    text-color:       @text-dim;
+    cursor:           pointer;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @text-dim;
+}
+
+element selected.normal {
+    background-color: @bg-hover;
+    text-color:       @text-main;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @text-dim;
+}
+
+element-icon { size: 0%; }
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    font:             "JetBrainsMono Nerd Font 11";
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+}
