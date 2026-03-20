@@ -29,6 +29,7 @@
 	"privacy",
 	"tray",
 	"bluetooth",
+	"network",
 	"pulseaudio",
 	"power-profiles-daemon",
 	"battery"
