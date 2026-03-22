@@ -15,7 +15,7 @@
     "tooltip-format": "{device_alias}",
     "tooltip-format-connected": "{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias} 󰂄{device_battery_percentage}%",
-    "on-click": "kitty --class tuictl-float --title Bluetooth -- /home/aarav/tuictl/tuictl bluetooth"
+    "on-click": "kitty --class tuictl-float --title Bluetooth -- tuictl bluetooth"
   },
 
   "network": {
@@ -30,8 +30,8 @@
     "tooltip-format-disconnected": "Disconnected",
     "max-length": 30,
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
-    "on-click": "kitty --class tuictl-float --title WiFi -- /home/aarav/tuictl/tuictl wifi",
-    "on-click-right": "kitty --class tuictl-float --title WiFi -- /home/aarav/tuictl/tuictl wifi"
+    "on-click": "kitty --class tuictl-float --title WiFi -- tuictl wifi",
+    "on-click-right": "kitty --class tuictl-float --title WiFi -- tuictl wifi"
   },
 
   "pulseaudio": {
@@ -48,7 +48,7 @@
       "default": ["", "", "󰕾", ""]
     },
     "scroll-step": 5.0,
-    "on-click": "kitty --class tuictl-float --title Audio -- /home/aarav/tuictl/tuictl audio",
+    "on-click": "kitty --class tuictl-float --title Audio -- tuictl audio",
     "on-click-right": "pavucontrol -t 3",
     "on-scroll-up": "$HOME/.config/hypr/scripts/Volume.sh --inc",
     "on-scroll-down": "$HOME/.config/hypr/scripts/Volume.sh --dec",
