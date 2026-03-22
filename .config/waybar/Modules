@@ -92,7 +92,7 @@
 	"tooltip-format-connected": "{device_enumerate}",
 	"tooltip-format-enumerate-connected": " {device_alias} 󰂄{device_battery_percentage}%",
 	"tooltip": true,
-	"on-click": "blueman-manager",
+	"on-click": "kitty --class tuictl-float --title Bluetooth -- /home/aarav/tuictl/tuictl bluetooth",
 },
 
 "clock": {
@@ -281,7 +281,8 @@
 	"format-icons": [
 		"󰤯", "󰤟", "󰤢", "󰤥", "󰤨"
 	],
-	"on-click-right": "$HOME/.config/hypr/scripts/WaybarScripts.sh --nmtui"
+	"on-click": "kitty --class tuictl-float --title WiFi -- /home/aarav/tuictl/tuictl wifi",
+	"on-click-right": "kitty --class tuictl-float --title WiFi -- /home/aarav/tuictl/tuictl wifi"
 },
 
 "network#speed": {
@@ -333,7 +334,7 @@
 		],
 	},
 	"scroll-step": 5.0,
-	"on-click": "$HOME/.config/hypr/scripts/Volume.sh --toggle",
+	"on-click": "kitty --class tuictl-float --title Audio -- /home/aarav/tuictl/tuictl audio",
 	"on-click-right": "pavucontrol -t 3",
 	"on-scroll-up": "$HOME/.config/hypr/scripts/Volume.sh --inc",
 	"on-scroll-down": "$HOME/.config/hypr/scripts/Volume.sh --dec",
