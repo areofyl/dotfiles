@@ -330,6 +330,7 @@ echo "  Browser           : Zen Browser (Flatpak)"
 echo "  Editor            : Neovim"
 echo "  Shell             : Zsh + Oh-My-Zsh"
 echo "  Theming           : Qt5ct, Qt6ct, Kvantum, nwg-look"
+echo "  System Control    : tuictl (TUI for wifi, bluetooth, audio, etc)"
 echo "  Utilities         : Screenshot, clipboard, media controls"
 echo "  And more..."
 echo ""
@@ -483,6 +484,42 @@ if [ -d "$DOTFILES_DIR/wallpapers" ]; then
 fi
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
+# │                         Installing tuictl                                 │
+# └───────────────────────────────────────────────────────────────────────────┘
+print_header "Installing tuictl (TUI System Control Panel)"
+
+if command -v tuictl &> /dev/null; then
+    print_success "tuictl already installed, updating..."
+fi
+
+# Install ncurses dev library (build dependency)
+print_step "Installing ncurses development library..."
+if [ "$DISTRO" = "fedora" ]; then
+    sudo dnf install -y ncurses-devel gcc make pkg-config --quiet
+elif [ "$DISTRO" = "arch" ]; then
+    sudo pacman -S --needed --noconfirm ncurses gcc make pkg-config
+fi
+
+# Clone or update tuictl
+if [ -d "$HOME/tuictl" ]; then
+    print_step "Updating tuictl..."
+    git -C "$HOME/tuictl" pull --quiet
+else
+    print_step "Cloning tuictl..."
+    git clone https://github.com/areofyl/tuictl.git "$HOME/tuictl"
+fi
+
+# Build and install
+print_step "Building tuictl..."
+make -C "$HOME/tuictl" clean > /dev/null 2>&1
+make -C "$HOME/tuictl" > /dev/null 2>&1
+
+print_step "Installing tuictl to ~/.local/bin..."
+mkdir -p "$HOME/.local/bin"
+install -m 755 "$HOME/tuictl/tuictl" "$HOME/.local/bin/tuictl"
+print_success "tuictl installed"
+
+# ┌───────────────────────────────────────────────────────────────────────────┐
 # │                         Setting Default Shell                             │
 # └───────────────────────────────────────────────────────────────────────────┘
 print_header "Setting Zsh as Default Shell"
@@ -517,6 +554,7 @@ echo "  ✓ Kitty terminal"
 echo "  ✓ Rofi app launcher"
 echo "  ✓ Zen Browser (set as default)"
 echo "  ✓ Oh-My-Zsh"
+echo "  ✓ tuictl system control panel"
 echo "  ✓ All config files symlinked"
 echo "  ✓ Wallpapers copied"
 echo ""
