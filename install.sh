@@ -119,6 +119,7 @@ install_fedora_packages() {
         kitty \
         rofi-wayland \
         neovim \
+        emacs \
         SwayNotificationCenter \
         swww \
         wlogout \
@@ -206,6 +207,7 @@ install_arch_packages() {
         waybar \
         kitty \
         neovim \
+        emacs \
         swaync \
         cava \
         btop \
@@ -326,8 +328,8 @@ echo "  Terminal          : Kitty"
 echo "  App Launcher      : Rofi"
 echo "  Notifications     : SwayNotificationCenter"
 echo "  File Manager      : Thunar"
-echo "  Browser           : Zen Browser (Flatpak)"
-echo "  Editor            : Neovim"
+echo "  Browser           : Ungoogled Chromium (Flatpak)"
+echo "  Editors           : Neovim, Emacs"
 echo "  Shell             : Zsh + Oh-My-Zsh"
 echo "  Theming           : Qt5ct, Qt6ct, Kvantum, nwg-look"
 echo "  System Control    : tuictl (TUI for wifi, bluetooth, audio, etc)"
@@ -367,17 +369,19 @@ else
 fi
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
-# │                       Installing Zen Browser                              │
+# │                    Installing Ungoogled Chromium                          │
 # └───────────────────────────────────────────────────────────────────────────┘
-print_header "Installing Zen Browser"
+print_header "Installing Ungoogled Chromium"
 
-print_step "Installing Zen Browser from Flathub..."
-flatpak install -y flathub app.zen_browser.zen
-print_success "Zen Browser installed"
+print_step "Installing Ungoogled Chromium from Flathub..."
+flatpak install -y flathub io.github.ungoogled_software.ungoogled_chromium
+print_success "Ungoogled Chromium installed"
 
-print_step "Setting Zen as default browser..."
-xdg-settings set default-web-browser app.zen_browser.zen.desktop 2>/dev/null || true
-print_success "Zen set as default browser"
+# Set up Chromium flags
+if [ -f "$DOTFILES_DIR/.config/chromium-flags.conf" ]; then
+    cp "$DOTFILES_DIR/.config/chromium-flags.conf" "$HOME/.config/chromium-flags.conf"
+    print_success "Chromium flags configured"
+fi
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
 # │                         Setting Up Configs                                │
@@ -417,7 +421,6 @@ configs=(
     "nwg-displays"
     "nwg-panel"
     "xsettingsd"
-    "warpd"
     "quickshell"
     "org.gnome.Ptyxis"
 )
@@ -449,6 +452,18 @@ for dotfile in "${home_dotfiles[@]}"; do
         print_success "Linked $dotfile"
     fi
 done
+
+# Emacs config (lives in ~/.emacs.d, not ~/.config)
+if [ -d "$DOTFILES_DIR/.emacs.d" ]; then
+    print_step "Setting up Emacs config..."
+    if [ -d "$HOME/.emacs.d" ] && [ ! -L "$HOME/.emacs.d" ]; then
+        mv "$HOME/.emacs.d" "$backup_dir/"
+        print_warning "Backed up existing .emacs.d"
+    fi
+    rm -rf "$HOME/.emacs.d" 2>/dev/null || true
+    ln -sf "$DOTFILES_DIR/.emacs.d" "$HOME/.emacs.d"
+    print_success "Linked .emacs.d"
+fi
 
 # ┌───────────────────────────────────────────────────────────────────────────┐
 # │                         Setting Up Cursor Theme                          │
@@ -552,7 +567,8 @@ echo "  ✓ Hyprland window manager + Hyprlock + Hypridle"
 echo "  ✓ Waybar status bar"
 echo "  ✓ Kitty terminal"
 echo "  ✓ Rofi app launcher"
-echo "  ✓ Zen Browser (set as default)"
+echo "  ✓ Ungoogled Chromium"
+echo "  ✓ Emacs + config"
 echo "  ✓ Oh-My-Zsh"
 echo "  ✓ tuictl system control panel"
 echo "  ✓ All config files symlinked"
