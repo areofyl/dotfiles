@@ -185,14 +185,8 @@
 		"title<.*amazon.*>": " ",
 		"title<.*reddit.*>": " ",
 
-		"class<firefox|org.mozilla.firefox|librewolf|floorp|mercury-browser|[Cc]achy-browser>": " ",
-		"class<zen>": "󰰷 ",
-		"class<waterfox|waterfox-bin>": " ",
-		"class<microsoft-edge>": " ",
-		"class<Chromium|Thorium|[Cc]hrome>": " ",
-		"class<brave-browser>": "🦁 ",
-		"class<tor browser>": " ",
-		"class<firefox-developer-edition>": "🦊 ",
+		"class<firefox|org.mozilla.firefox>": " ",
+		"class<Chromium|ungoogled.chromium|org.chromium.Chromium>": " ",
 
 		"class<kitty|konsole|[Aa]lacritty>": " ",
 		"class<kitty-dropterm>": " ",
