@@ -12,6 +12,9 @@ configuration {
     hover-select:               true;
     me-select-entry:            "MouseSecondary";
     me-accept-entry:            "MousePrimary";
+    matching:                   "fuzzy";
+    sort:                       true;
+    sorting-method:             "fzf";
 }
 
 /* ---- Load wallust colors ---- */
@@ -19,22 +22,24 @@ configuration {
 
 /*****----- Global Properties -----*****/
 * {
-    /* Core colors - refined palette */
-    bg-dark:                     #0d0d0dee;
-    bg-lighter:                  #181818f0;
-    bg-card:                     #1e1e1ef5;
-    bg-hover:                    #2a2a2a;
-    accent:                      #C4977D;
-    accent-glow:                 #C4977D40;
-    accent-dim:                  #8B6B57;
-    text-main:                   #F0E6DF;
-    text-dim:                    #7A7067;
-    border-subtle:               #3a3632;
+    /* Gruvbox warm palette - matches waybar/kitty/hyprland */
+    bg-dark:                     #282828e6;
+    bg-lighter:                  #3c3836f0;
+    bg-card:                     #3c3836f5;
+    bg-hover:                    #504945;
+    accent:                      #bdae93;
+    accent-glow:                 #bdae9330;
+    accent-dim:                  #a89984;
+    text-main:                   #ebdbb2;
+    text-dim:                    #665c54;
+    text-mid:                    #928374;
+    border-subtle:               rgba(235, 219, 178, 0.08);
+    border-accent:               #bdae9348;
 
     /* Apply colors */
     background-color:            transparent;
     text-color:                  @text-main;
-    font:                        "JetBrainsMono Nerd Font 18";
+    font:                        "JetBrainsMono Nerd Font 13";
 }
 
 /*****----- Main Window -----*****/
@@ -43,12 +48,12 @@ window {
     location:                    center;
     anchor:                      center;
     fullscreen:                  false;
-    width:                       1000px;
+    width:                       900px;
     x-offset:                    0px;
-    y-offset:                    0px;
+    y-offset:                    -40px;
     enabled:                     true;
-    border:                      2px solid;
-    border-radius:               28px;
+    border:                      1px solid;
+    border-radius:               14px;
     border-color:                @border-subtle;
     background-color:            @bg-dark;
     cursor:                      "default";
@@ -57,19 +62,19 @@ window {
 /*****----- Main Box -----*****/
 mainbox {
     enabled:                     true;
-    spacing:                     24px;
-    padding:                     48px;
+    spacing:                     0px;
+    padding:                     0px;
     background-color:            transparent;
-    children:                    [ "inputbar", "listview", "mode-switcher" ];
+    children:                    [ "inputbar", "listview" ];
 }
 
 /*****----- Inputbar -----*****/
 inputbar {
     enabled:                     true;
-    spacing:                     16px;
-    padding:                     24px 32px;
-    border:                      2px solid;
-    border-radius:               20px;
+    spacing:                     14px;
+    padding:                     22px 28px;
+    border:                      0px 0px 1px 0px;
+    border-radius:               0px;
     border-color:                @border-subtle;
     background-color:            @bg-card;
     text-color:                  @text-main;
@@ -80,10 +85,10 @@ textbox-prompt-colon {
     enabled:                     true;
     expand:                      false;
     str:                         "";
-    padding:                     0px 16px 0px 0px;
+    padding:                     2px 12px 0px 0px;
     background-color:            transparent;
     text-color:                  @accent;
-    font:                        "JetBrainsMono Nerd Font 22";
+    font:                        "JetBrainsMono Nerd Font 18";
 }
 
 entry {
@@ -91,15 +96,16 @@ entry {
     background-color:            transparent;
     text-color:                  @text-main;
     cursor:                      text;
-    placeholder:                 "Search...";
+    placeholder:                 "Type to search...";
     placeholder-color:           @text-dim;
+    font:                        "JetBrainsMono Nerd Font 14";
 }
 
 /*****----- Listview -----*****/
 listview {
     enabled:                     true;
     columns:                     1;
-    lines:                       8;
+    lines:                       9;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;
@@ -107,8 +113,8 @@ listview {
     reverse:                     false;
     fixed-height:                true;
     fixed-columns:               true;
-    spacing:                     8px;
-    padding:                     16px 0px 0px 0px;
+    spacing:                     0px;
+    padding:                     8px;
     background-color:            transparent;
     cursor:                      "default";
 }
@@ -116,36 +122,37 @@ listview {
 /*****----- Elements -----*****/
 element {
     enabled:                     true;
-    spacing:                     24px;
-    padding:                     18px 24px;
+    spacing:                     16px;
+    padding:                     14px 24px;
     border:                      0px;
-    border-radius:               16px;
+    border-radius:               10px;
     background-color:            transparent;
-    text-color:                  @text-dim;
+    text-color:                  @text-mid;
     cursor:                      pointer;
 }
 
 element normal.normal {
     background-color:            transparent;
-    text-color:                  @text-dim;
+    text-color:                  @text-mid;
 }
 
 element selected.normal {
     background-color:            @bg-hover;
     text-color:                  @text-main;
-    border:                      2px solid;
-    border-color:                @accent-dim;
+    border:                      0px 0px 0px 3px;
+    border-color:                @accent;
+    border-radius:               10px;
 }
 
 element alternate.normal {
     background-color:            transparent;
-    text-color:                  @text-dim;
+    text-color:                  @text-mid;
 }
 
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        48px;
+    size:                        44px;
     cursor:                      inherit;
 }
 
@@ -155,28 +162,24 @@ element-text {
     cursor:                      inherit;
     vertical-align:              0.5;
     horizontal-align:            0.0;
+    font:                        "JetBrainsMono Nerd Font 13";
 }
 
 /*****----- Mode Switcher -----*****/
 mode-switcher {
-    enabled:                     true;
-    spacing:                     16px;
-    padding:                     16px 0px 0px 0px;
-    background-color:            transparent;
+    enabled:                     false;
 }
 
 button {
-    padding:                     16px 32px;
-    border:                      2px solid;
-    border-radius:               14px;
-    border-color:                transparent;
+    padding:                     12px 24px;
+    border:                      0px;
+    border-radius:               10px;
     background-color:            transparent;
     text-color:                  @text-dim;
     cursor:                      pointer;
 }
 
 button selected {
-    border-color:                @border-subtle;
     background-color:            @bg-card;
     text-color:                  @accent;
 }
@@ -189,10 +192,9 @@ message {
 }
 
 textbox {
-    padding:                     24px 32px;
-    border:                      2px solid;
-    border-radius:               16px;
-    border-color:                @border-subtle;
+    padding:                     20px 28px;
+    border:                      0px;
+    border-radius:               10px;
     background-color:            @bg-card;
     text-color:                  @text-main;
     vertical-align:              0.5;
@@ -200,10 +202,10 @@ textbox {
 }
 
 error-message {
-    padding:                     24px 32px;
-    border:                      2px solid;
-    border-radius:               16px;
-    border-color:                #9D4E5A;
-    background-color:            #1a1215;
+    padding:                     20px 28px;
+    border:                      1px solid;
+    border-radius:               10px;
+    border-color:                #cc241d;
+    background-color:            #3c3836;
     text-color:                  @text-main;
 }
