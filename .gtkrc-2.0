@@ -2,8 +2,8 @@
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
 include "/home/aarav/.gtkrc-2.0.mine"
-gtk-theme-name="Flat-Remix-GTK-Blue-Dark"
-gtk-icon-theme-name="AdwaitaLegacy"
+gtk-theme-name="Colloid-Dark-Catppuccin"
+gtk-icon-theme-name="Colloid-Catppuccin"
 gtk-font-name="Adwaita Sans 11"
 gtk-cursor-theme-name="Bibata-Modern-Ice"
 gtk-cursor-theme-size=24
