@@ -28,7 +28,7 @@ if [[ "$1" == "--btop" ]]; then
 elif [[ "$1" == "--nvtop" ]]; then
     $term --title nvtop sh -c 'nvtop'
 elif [[ "$1" == "--nmtui" ]]; then
-    $term nmtui
+    kitty --class nmtui-dropdown --title "WiFi" -o initial_window_width=400 -o initial_window_height=460 nmtui-edit
 elif [[ "$1" == "--term" ]]; then
     $term &
 elif [[ "$1" == "--files" ]]; then
