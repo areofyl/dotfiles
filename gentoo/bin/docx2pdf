@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# Convert .docx to PDF and open in zathura
+set -euo pipefail
+
+if [ $# -eq 0 ]; then
+    echo "Usage: docx2pdf <file.docx>"
+    exit 1
+fi
+
+INPUT="$(realpath "$1")"
+BASENAME="$(basename "$INPUT" .docx)"
+TMPDIR=$(mktemp -d)
+HTML="$TMPDIR/${BASENAME}.html"
+PDF="$TMPDIR/${BASENAME}.pdf"
+VENV="/home/aarav/.local/share/docx-viewer/bin/python3"
+
+# Convert docx to styled HTML
+"$VENV" -c "
+from docx import Document
+from docx.table import Table
+from docx.text.paragraph import Paragraph
+from lxml import etree
+
+doc = Document('$INPUT')
+html = ['<html><head><meta charset=\"utf-8\"><style>']
+html.append('body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }')
+html.append('table { border-collapse: collapse; width: 100%; margin: 1em 0; }')
+html.append('td, th { border: 1px solid #999; padding: 8px; }')
+html.append('h1 { font-size: 1.8em; } h2 { font-size: 1.4em; } h3 { font-size: 1.2em; }')
+html.append('ul, ol { margin: 0.5em 0; padding-left: 2em; }')
+html.append('</style></head><body>')
+
+def render_runs(para):
+    text = ''
+    for run in para.runs:
+        t = run.text.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+        if run.bold: t = '<b>' + t + '</b>'
+        if run.italic: t = '<i>' + t + '</i>'
+        if run.underline: t = '<u>' + t + '</u>'
+        text += t
+    return text
+
+def render_para(para):
+    style = para.style.name.lower()
+    text = render_runs(para)
+    if 'heading 1' in style: return f'<h1>{text}</h1>'
+    elif 'heading 2' in style: return f'<h2>{text}</h2>'
+    elif 'heading 3' in style: return f'<h3>{text}</h3>'
+    elif text.strip(): return f'<p>{text}</p>'
+    return ''
+
+def render_table(table):
+    out = '<table>'
+    for i, row in enumerate(table.rows):
+        out += '<tr>'
+        tag = 'th' if i == 0 else 'td'
+        for cell in row.cells:
+            cell_html = ''.join(render_runs(p) for p in cell.paragraphs)
+            out += f'<{tag}>{cell_html}</{tag}>'
+        out += '</tr>'
+    out += '</table>'
+    return out
+
+ns = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+for element in doc.element.body:
+    if element.tag == f'{ns}p':
+        html.append(render_para(Paragraph(element, doc)))
+    elif element.tag == f'{ns}tbl':
+        html.append(render_table(Table(element, doc)))
+
+html.append('</body></html>')
+with open('$HTML', 'w') as f:
+    f.write('\n'.join(html))
+"
+
+# Convert HTML to PDF via weasyprint
+"$VENV" -m weasyprint "$HTML" "$PDF" 2>/dev/null
+
+# Open in zathura
+zathura "$PDF" &

@@ -1,0 +1,40 @@
+{
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["clock#date", "clock#time"],
+    "modules-right": ["network", "custom/bluetooth", "battery"],
+    "tooltip": false,
+    "sway/workspaces": {
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": []
+        },
+        "disable-scroll": true
+    },
+    "clock#date": {
+        "format": "{:%Y-%m-%d}"
+    },
+    "clock#time": {
+        "format": "{:%I:%M %p}"
+    },
+    "battery": {
+        "format": "{capacity}%-",
+        "format-charging": "{capacity}%+",
+        "interval": 30
+    },
+    "custom/bluetooth": {
+        "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"󰂯 '\"$dev\"'\", \"class\": \"connected\"}'; else echo '{\"text\": \"󰂯\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"󰂲\", \"class\": \"off\"}'; fi",
+        "return-type": "json",
+        "interval": 5
+    },
+"network": {
+        "format-wifi": "{essid}",
+        "format-disconnected": "disconnected",
+        "format-ethernet": "ethernet"
+    }
+}

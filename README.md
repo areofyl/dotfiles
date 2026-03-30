@@ -1,8 +1,25 @@
 # dotfiles
 
-My Hyprland rice on Fedora / Arch Linux.
+Config files for my setups, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-## What's included
+## Setups
+
+### gentoo — Sway on Asahi Linux (Apple Silicon)
+
+| Category | Software |
+|---|---|
+| Window Manager | Sway |
+| Status Bar | Waybar |
+| Terminal | Kitty |
+| App Launcher | wmenu |
+| Notifications | Mako |
+| Editor | Neovim |
+| Shell | Zsh (standalone plugins) |
+| File Manager | Thunar |
+| Browser | Firefox |
+| Lock | swaylock + swayidle |
+
+### fedora — Hyprland on Fedora
 
 | Category | Software |
 |---|---|
@@ -19,51 +36,12 @@ My Hyprland rice on Fedora / Arch Linux.
 | Theming | Qt5ct, Qt6ct, Kvantum, nwg-look, Wallust |
 | Extras | Cava, Btop, Fastfetch, Wlogout, Swappy |
 
-## Configs
-
-```
-.config/
-  hypr/          # Hyprland, Hypridle, keybinds, window rules
-  waybar/        # Status bar modules and styling
-  kitty/         # Terminal config
-  rofi/          # App launcher, bluetooth, wifi menus
-  nvim/          # Neovim (Lazy plugin manager)
-  swaync/        # Notification center
-  eww/           # EWW widgets and scripts
-  cava/          # Audio visualizer
-  btop/          # System monitor
-  fastfetch/     # System info fetch
-  wlogout/       # Logout screen
-  wallust/       # Color theming from wallpaper
-  gtk-3.0/       # GTK3 theme settings
-  gtk-4.0/       # GTK4 theme settings
-  qt5ct/         # Qt5 theme settings
-  qt6ct/         # Qt6 theme settings
-  Kvantum/       # Kvantum Qt theme
-  nwg-look/      # GTK theme switcher
-  nwg-displays/  # Display config
-  nwg-panel/     # Panel config
-  swappy/        # Screenshot editor
-  warpd/         # Keyboard-driven pointer
-  quickshell/    # Quickshell config
-  xsettingsd/    # X settings daemon
-```
-
-## Installation
+## Usage
 
 ```bash
 git clone https://github.com/areofyl/dotfiles ~/dotfiles
 cd ~/dotfiles
-./install.sh
+stow gentoo    # or: stow fedora
 ```
 
-The install script will:
-1. Detect your distro (Fedora or Arch)
-2. Install all required packages
-3. Set up Oh-My-Zsh
-4. Install Zen Browser via Flatpak
-5. Back up your existing configs
-6. Symlink everything into place
-7. Set Zsh as your default shell
-
-After installing, log out and select **Hyprland** from your display manager.
+The fedora setup also has an install script (`fedora/install.sh`) that handles package installation.

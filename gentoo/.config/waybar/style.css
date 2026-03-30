@@ -1,0 +1,55 @@
+* {
+    font-family: "FantasqueSansM Nerd Font Mono";
+    font-size: 18px;
+}
+
+window#waybar {
+    background: #333333;
+    color: #ffffff;
+}
+
+#workspaces button {
+    color: #888888;
+    padding: 0 8px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+    border-right: 1px solid #888888;
+}
+
+#workspaces button:last-child {
+    border-right: none;
+}
+
+#workspaces button.focused {
+    color: #ffffff;
+}
+
+#mode {
+    color: #e0c080;
+    padding: 0 12px;
+    border-left: 1px solid #888888;
+}
+
+#clock.date {
+    padding: 0 12px;
+    border-right: 1px solid #888888;
+}
+
+#clock.time {
+    padding: 0 12px;
+}
+
+#network {
+    padding-right: 12px;
+    border-right: 1px solid #888888;
+    margin-right: 12px;
+}
+
+#custom-bluetooth {
+    padding-right: 12px;
+    border-right: 1px solid #888888;
+    margin-right: 12px;
+}
