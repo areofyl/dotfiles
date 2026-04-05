@@ -1,0 +1,54 @@
+* {
+    font-family: "FantasqueSansM Nerd Font Mono";
+    font-size: 18px;
+}
+
+window#waybar {
+    background: #1a1510;
+    color: #d4c4b0;
+}
+
+#custom-tags {
+    color: #7a6e62;
+    padding: 0 8px;
+    background: transparent;
+}
+
+#clock {
+    color: #d4c4b0;
+    padding: 0 12px;
+}
+
+#wireplumber {
+    color: #d4c4b0;
+    padding-right: 12px;
+    border-right: none;
+    margin-right: 12px;
+}
+
+#network {
+    color: #a0b89a;
+    padding-right: 12px;
+    border-right: none;
+    margin-right: 12px;
+}
+
+#custom-bluetooth {
+    color: #9a9ab8;
+    padding-right: 12px;
+    border-right: none;
+    margin-right: 12px;
+}
+
+#battery {
+    color: #d4c4b0;
+    padding-right: 12px;
+}
+
+#battery.charging {
+    color: #a0b89a;
+}
+
+#battery.warning:not(.charging) {
+    color: #c08060;
+}
