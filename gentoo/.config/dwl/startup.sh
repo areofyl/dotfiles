@@ -9,11 +9,12 @@ sleep 1
 # wallpaper
 swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
-# idle + lock
-swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' &
+# idle + lock + lock before suspend (lid close)
+swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' \
+    before-sleep '/home/aarav/.config/custom-lock/lock.sh' &
 
-# listen for power button / loginctl lock-session
-/home/aarav/.config/custom-lock/lock-listener.sh &
+# listen for power button / loginctl lock-session (delay for session registration)
+(sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
 
 # status bar
 waybar > /dev/null 2>&1 &
