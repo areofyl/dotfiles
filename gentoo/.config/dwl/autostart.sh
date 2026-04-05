@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# cursor theme
+export XCURSOR_THEME=macOS-Tahoe
+export XCURSOR_SIZE=24
+
 # clean up stale state
 pkill -f 'tail.*dwl-status' 2>/dev/null
 pkill -f 'cat /tmp/dwl-status' 2>/dev/null
