@@ -1,11 +1,22 @@
 return {
+  -- Use custom nimbus colorscheme (in colors/nimbus.lua)
+  -- No plugin needed, just set it on startup
   {
-    "ellisonleao/gruvbox.nvim",
+    "nvim-lualine/lualine.nvim",
+    optional = true,
+    opts = function(_, opts)
+      -- lualine auto-detects from vim.g.colors_name
+      opts.options = opts.options or {}
+      opts.options.theme = "auto"
+    end,
+  },
+  {
+    dir = ".",
+    name = "nimbus",
+    lazy = false,
     priority = 1000,
-    opts = {},
-    config = function(_, opts)
-      require("gruvbox").setup(opts)
-      vim.cmd.colorscheme("gruvbox")
+    config = function()
+      vim.cmd.colorscheme("nimbus")
     end,
   },
 }
