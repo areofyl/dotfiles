@@ -69,7 +69,7 @@ return {
               table.insert(lines, "aarav | neovim")
               return lines
             end,
-            opts = { position = "center", hl = "GruvboxYellow" },
+            opts = { position = "center", hl = "NimbusHeader" },
           },
         },
         opts = { margin = 0, noautocmd = false },
@@ -100,7 +100,7 @@ return {
         vim.api.nvim_buf_clear_namespace(alpha_buf, ns, 0, -1)
         for i, line in ipairs(lines) do
           if #line > 0 then
-            vim.api.nvim_buf_add_highlight(alpha_buf, ns, "GruvboxYellow", i - 1, 0, -1)
+            vim.api.nvim_buf_add_highlight(alpha_buf, ns, "NimbusHeader", i - 1, 0, -1)
           end
         end
       end
