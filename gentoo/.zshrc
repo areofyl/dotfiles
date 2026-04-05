@@ -55,6 +55,7 @@ export NO_AT_BRIDGE=1
 
 wifi() {
   sudo nmcli dev wifi connect "$1" password "$2"
+  sudo nmcli con modify "$1" ipv4.dns "1.1.1.1 1.0.0.1" ipv4.ignore-auto-dns yes
 }
 
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin:$PATH"
