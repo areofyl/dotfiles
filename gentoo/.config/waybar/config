@@ -31,12 +31,14 @@
     },
     "memory": {
         "format": "{used:0.1f}G",
-        "interval": 5
+        "interval": 2,
+        "on-click": "kitty btop"
     },
     "custom/power": {
         "exec": "awk '{w=$1/1000000; if(w<0)w=-w; if(w>=10) printf \"{\\\"text\\\":\\\"%dW\\\"}\\n\",w; else printf \"{\\\"text\\\":\\\"%.1fW\\\"}\\n\",w}' /sys/class/power_supply/macsmc-battery/power_now",
         "return-type": "json",
-        "interval": 5
+        "interval": 2,
+        "on-click": "kitty btop"
     },
     "network": {
         "format-wifi": "{essid}",
