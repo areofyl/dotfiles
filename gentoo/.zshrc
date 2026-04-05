@@ -58,4 +58,6 @@ wifi() {
   sudo nmcli con modify "$1" ipv4.dns "1.1.1.1 1.0.0.1" ipv4.ignore-auto-dns yes
 }
 
+export XCURSOR_THEME=macOS-Tahoe
+export XCURSOR_SIZE=24
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin:$PATH"
