@@ -1,0 +1,37 @@
+{
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["custom/tags"],
+    "modules-center": ["clock"],
+    "modules-right": ["wireplumber", "network", "custom/bluetooth", "battery"],
+    "tooltip": false,
+    "custom/tags": {
+        "exec": "tail -f /tmp/dwl-status | ~/.config/dwl/waybar-tags.sh",
+        "return-type": "json",
+        "format": "{}",
+        "markup": true,
+        "exec-on-event": false
+    },
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "format-alt": "{:%Y-%m-%d}"
+    },
+    "battery": {
+        "format": "{capacity}%-",
+        "format-charging": "{capacity}%+",
+        "interval": 30
+    },
+    "custom/bluetooth": {
+        "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"󰂯 '\"$dev\"'\", \"class\": \"connected\"}'; else echo '{\"text\": \"󰂯\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"󰂲\", \"class\": \"off\"}'; fi",
+        "return-type": "json",
+        "interval": 5
+    },
+    "wireplumber": {
+        "format": "{volume}%"
+    },
+    "network": {
+        "format-wifi": "{essid}",
+        "format-disconnected": "disconnected",
+        "format-ethernet": "ethernet"
+    }
+}
