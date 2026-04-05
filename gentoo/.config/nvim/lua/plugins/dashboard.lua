@@ -5,7 +5,7 @@ return {
     config = function()
       local alpha = require("alpha")
 
-      local macaroni_dir = vim.fn.expand("~/.emacs.d/macaroni")
+      local macaroni_dir = vim.fn.expand("~/macaroni")
       local num_frames = 13
       local frame_idx = 0
       local timer = nil
