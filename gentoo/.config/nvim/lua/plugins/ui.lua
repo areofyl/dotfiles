@@ -1,26 +1,42 @@
 return {
-  -- Statusline
+  -- Status line
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("lualine").setup({
-        options = {
-          theme = "gruvbox",
-        },
-      })
-    end,
+    event = "VeryLazy",
+    opts = {
+      options = {
+        globalstatus = true,
+      },
+    },
   },
 
-  -- Which-key
+  -- Keybinding hints
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    config = function()
-      require("which-key").setup({
-        delay = 300,
-      })
-    end,
+    opts = {},
+  },
+
+  -- Fuzzy finder
+  {
+    "nvim-telescope/telescope.nvim",
+    branch = "master",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "Telescope",
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+      { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
+    },
+    opts = {
+      defaults = {
+        layout_strategy = "horizontal",
+        layout_config = { prompt_position = "top" },
+        sorting_strategy = "ascending",
+      },
+    },
   },
 
   -- Indent guides
@@ -28,29 +44,36 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("ibl").setup({
-        indent = { char = "│" },
-        scope = { enabled = true },
-      })
-    end,
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = true, show_start = false, show_end = false },
+    },
   },
 
-  -- Git signs
+  -- Git signs in the gutter
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("gitsigns").setup()
-    end,
+    opts = {},
   },
 
-  -- Autopairs
+  -- File explorer
   {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    config = function()
-      require("nvim-autopairs").setup()
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Oil",
+    opts = {
+      default_file_explorer = true,
+      view_options = {
+        show_hidden = true,
+      },
+    },
+    init = function()
+      vim.api.nvim_create_user_command("F", function(args)
+        local path = args.args ~= "" and args.args or "."
+        require("oil").open(path)
+      end, { nargs = "?", complete = "dir" })
+      vim.cmd("cnoreabbrev f F")
     end,
   },
 }
