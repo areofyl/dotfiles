@@ -1,4 +1,4 @@
-PROMPT='%~ %# '
+PROMPT='%1~ $ '
 
 # plugins (standalone, no framework)
 ZSH_PLUGINS="$HOME/.zsh/plugins"
@@ -28,7 +28,6 @@ alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 
-# Workaround: sudo can't read from /dev/tty in kitty on Wayland/Asahi
 alias sudo='sudo -S'
 
 # suppress accessibility bus (no screen reader needed)
