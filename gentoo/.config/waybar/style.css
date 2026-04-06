@@ -11,7 +11,7 @@ window#waybar {
 
 #custom-tags {
     color: #7a6e62;
-    padding: 0 8px;
+    padding: 0 8px 0 12px;
     background: transparent;
 }
 
