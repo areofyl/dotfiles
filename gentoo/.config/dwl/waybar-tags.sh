@@ -8,6 +8,10 @@ while read -r line; do
             occ=$3
             sel=$4
             urg=$6
+            # if all tags selected (view all), just highlight tag 1
+            if [ "$sel" -eq 511 ] || [ "$sel" -eq 63 ]; then
+                sel=1
+            fi
             out=""
             for i in 1 2 3 4 5 6; do
                 bit=$((1 << (i - 1)))
