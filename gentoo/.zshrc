@@ -29,6 +29,7 @@ alias la='ls -a'
 alias lla='ls -la'
 
 alias sudo='sudo -S'
+alias kasa-debug='cd ~/flick && python3 debug_kasa.py'
 
 # full system update
 update() {
