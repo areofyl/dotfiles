@@ -1,4 +1,4 @@
-# appearance
+# appearance — Nimbus palette, source of truth: ~/.config/nimbus/palette.sh
 color=1a1510
 font=FantasqueSansM Nerd Font Mono
 font-size=22
