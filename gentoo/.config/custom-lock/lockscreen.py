@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Minimal custom lock screen for DWL / wlroots compositors."""
+"""Minimal custom lock screen for DWL / wlroots compositors.
+
+Nimbus palette — source of truth: ~/.config/nimbus/palette.sh
+The COLORS dict below is the canonical origin of the Nimbus scheme;
+palette.sh is kept in sync with these values.
+"""
 
 import gi
 import subprocess
