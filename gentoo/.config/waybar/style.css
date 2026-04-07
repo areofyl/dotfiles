@@ -8,20 +8,16 @@
 * {
     font-family: "FantasqueSansM Nerd Font Mono";
     font-size: 18px;
-    /* kill default padding/margins from every widget */
     min-height: 0;
 }
 
-/* Bar: no container. The bar background is fully transparent, so the
- * "shape" of the bar is whatever the individual modules draw. Each module
- * gets its own solid background below, turning the bar into a disjoint
- * strip of floating chips over the wallpaper. Not a rectangle, not mac
- * glass (no blur/translucency), reads as a terminal HUD. */
+/* Flush top bar, flat, full-width, solid Nimbus bg. No curves, no float. */
 window#waybar {
-    background: transparent;
+    background: #1a1510;
     color: #d4c4b0;
 }
 
+/* Tooltips */
 tooltip {
     background: #1a1510;
     border: 1px solid #4a3f34;
@@ -35,21 +31,22 @@ tooltip label {
     padding: 6px 8px;
 }
 
-/* Left: dwl tags — one pill per tag */
+/* ===== Left: dwl tag pills ===== */
+
 #custom-tag1, #custom-tag2, #custom-tag3,
 #custom-tag4, #custom-tag5, #custom-tag6,
 #custom-tag7, #custom-tag8, #custom-tag9, #custom-tag10 {
     padding: 0 10px;
     margin: 3px 1px;
     border-radius: 4px;
-    background: #1a1510;
+    background: transparent;
     color: #d4c4b0;
     min-width: 12px;
 }
 
 #custom-tag1 { margin-left: 8px; }
 
-/* Hidden tags: collapse completely (any tag with no windows) */
+/* Hidden: any tag with no windows (except tag 1, handled in the reader) */
 #custom-tag1.hidden, #custom-tag2.hidden, #custom-tag3.hidden,
 #custom-tag4.hidden, #custom-tag5.hidden, #custom-tag6.hidden,
 #custom-tag7.hidden, #custom-tag8.hidden,
@@ -60,7 +57,7 @@ tooltip label {
     opacity: 0;
 }
 
-/* Currently selected tag — rust on bg_soft. All other visible tags use the base fg. */
+/* Selected: rust on bg_soft */
 #custom-tag1.selected, #custom-tag2.selected, #custom-tag3.selected,
 #custom-tag4.selected, #custom-tag5.selected, #custom-tag6.selected,
 #custom-tag7.selected, #custom-tag8.selected, #custom-tag9.selected, #custom-tag10.selected {
@@ -68,33 +65,15 @@ tooltip label {
     background: #2a231c;
 }
 
-/* Center: clock */
+/* ===== Center: clock ===== */
+
 #clock {
     color: #d4c4b0;
     padding: 0 14px;
-    border-radius: 4px;
 }
 
-#clock:hover {
-    background: #2a231c;
-}
+/* ===== Right: flat modules, thin divider between each ===== */
 
-/* ===== Right-side groups ===== *
- * system group: cpu + memory + power
- * audio/net group: volume + network + bluetooth
- * battery stands alone
- * Grouping is achieved with matched padding + a subtle bg_soft pill on hover,
- * plus slightly larger gaps between groups via the first/last-in-group rules.
- */
-
-#clock {
-    padding: 0 10px;
-    border-radius: 4px;
-    margin: 3px 1px;
-    background: #1a1510;
-}
-
-/* Right side: one attached block, no gaps between modules */
 #cpu,
 #memory,
 #custom-power,
@@ -102,41 +81,45 @@ tooltip label {
 #network,
 #custom-bluetooth,
 #battery {
-    padding: 0 10px;
-    margin: 3px 0;
-    background: #1a1510;
-    border-radius: 0;
+    padding: 0 12px;
+    border-right: 1px solid #4a3f34;
+    background: transparent;
 }
 
-/* Outer corners only */
-#cpu     { border-radius: 4px 0 0 4px; }
-#battery { border-radius: 0 4px 4px 0; margin-right: 8px; }
+#battery {
+    border-right: none;
+    padding-right: 12px;
+}
 
 /* Semantic colors (match lockscreen state mapping) */
-#cpu            { color: #c08060; }   /* accent — load-ish */
-#memory         { color: #c08060; }
-#custom-power   { color: #a0b89a; }   /* sage — power/good */
-#wireplumber    { color: #d4c4b0; }
-#network        { color: #a0b89a; }
+#cpu              { color: #c08060; }
+#memory           { color: #c08060; }
+#custom-power     { color: #a0b89a; }
+#wireplumber      { color: #d4c4b0; }
+#network          { color: #a0b89a; }
 #custom-bluetooth { color: #9a9ab8; }
-#battery        { color: #d4c4b0; }
-
-/* Hover: subtle raise via bg_soft */
-#cpu:hover,
-#memory:hover,
-#custom-power:hover,
-#wireplumber:hover,
-#network:hover,
-#custom-bluetooth:hover,
-#battery:hover {
-    background: #2a231c;
-}
+#battery          { color: #d4c4b0; }
 
 /* State overrides */
-#wireplumber.muted            { color: #7a6e62; }
-#custom-bluetooth.off         { color: #7a6e62; }
-#custom-bluetooth.connected   { color: #9a9ab8; }
-#network.disconnected         { color: #7a6e62; }
-
-#battery.charging             { color: #a0b89a; }
+#wireplumber.muted              { color: #7a6e62; }
+#custom-bluetooth.off           { color: #7a6e62; }
+#custom-bluetooth.connected     { color: #9a9ab8; }
+#network.disconnected           { color: #7a6e62; }
+#battery.charging               { color: #a0b89a; }
 #battery.warning:not(.charging) { color: #c08060; }
+
+/* glance widget — nimbus themed */
+#custom-glance {
+    padding: 0 12px;
+    border-right: 1px solid #4a3f34;
+    color: #d4c4b0;
+}
+
+#custom-glance.active {
+    color: #c08060;
+}
+
+#custom-glance.empty {
+    padding: 0;
+    border-right: none;
+}
