@@ -1,65 +1,113 @@
+/*
+ * Nimbus palette — source of truth: ~/.config/nimbus/palette.sh
+ *   bg      #1a1510    fg       #d4c4b0    dim      #7a6e62
+ *   green   #a0b89a    lavender #9a9ab8    orange   #c08060
+ *   bg_soft #2a231c    border   #4a3f34
+ */
+
 * {
     font-family: "FantasqueSansM Nerd Font Mono";
     font-size: 18px;
+    /* kill default padding/margins from every widget */
+    min-height: 0;
 }
 
+/* Bar: attached at top edge, only the bottom floats away */
 window#waybar {
     background: #1a1510;
     color: #d4c4b0;
-    padding: 2px 0;
+    border: 1px solid #4a3f34;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding-bottom: 2px;
 }
 
+tooltip {
+    background: #1a1510;
+    border: 1px solid #4a3f34;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: #d4c4b0;
+    padding: 4px 6px;
+}
+
+/* Left: dwl tags — pill to match the right side */
 #custom-tags {
     color: #7a6e62;
-    padding: 0 8px 0 12px;
+    padding: 0 12px;
+    margin: 2px 1px 2px 8px;
+    border-radius: 8px;
     background: transparent;
 }
 
+#custom-tags:hover {
+    background: #2a231c;
+}
+
+/* Center: clock */
 #clock {
     color: #d4c4b0;
     font-size: 20px;
-    padding: 0 12px;
+    padding: 0 14px;
+    border-radius: 8px;
 }
 
-#memory {
-    color: #c08060;
-    padding: 0 12px;
-    border-right: 1px solid #4a3f34;
+#clock:hover {
+    background: #2a231c;
 }
 
-#custom-power {
-    color: #a0b89a;
-    padding: 0 12px;
-    border-right: 1px solid #4a3f34;
-}
+/* ===== Right-side groups ===== *
+ * system group: cpu + memory + power
+ * audio/net group: volume + network + bluetooth
+ * battery stands alone
+ * Grouping is achieved with matched padding + a subtle bg_soft pill on hover,
+ * plus slightly larger gaps between groups via the first/last-in-group rules.
+ */
 
-#wireplumber {
-    color: #d4c4b0;
-    padding: 0 12px;
-    border-right: 1px solid #4a3f34;
-}
-
-#network {
-    color: #a0b89a;
-    padding: 0 12px;
-    border-right: 1px solid #4a3f34;
-}
-
-#custom-bluetooth {
-    color: #9a9ab8;
-    padding: 0 12px;
-    border-right: 1px solid #4a3f34;
-}
-
+#cpu,
+#memory,
+#custom-power,
+#wireplumber,
+#network,
+#custom-bluetooth,
 #battery {
-    color: #d4c4b0;
-    padding: 0 12px;
+    padding: 0 10px;
+    border-radius: 8px;
+    margin: 2px 1px;
 }
 
-#battery.charging {
-    color: #a0b89a;
+/* Group separation: a bit more breathing room at the start of each group */
+#cpu          { margin-left: 6px; }
+#wireplumber  { margin-left: 6px; }
+#battery      { margin-left: 6px; margin-right: 8px; }
+
+/* Semantic colors (match lockscreen state mapping) */
+#cpu            { color: #c08060; }   /* accent — load-ish */
+#memory         { color: #c08060; }
+#custom-power   { color: #a0b89a; }   /* sage — power/good */
+#wireplumber    { color: #d4c4b0; }
+#network        { color: #a0b89a; }
+#custom-bluetooth { color: #9a9ab8; }
+#battery        { color: #d4c4b0; }
+
+/* Hover: subtle raise via bg_soft */
+#cpu:hover,
+#memory:hover,
+#custom-power:hover,
+#wireplumber:hover,
+#network:hover,
+#custom-bluetooth:hover,
+#battery:hover {
+    background: #2a231c;
 }
 
-#battery.warning:not(.charging) {
-    color: #c08060;
-}
+/* State overrides */
+#wireplumber.muted            { color: #7a6e62; }
+#custom-bluetooth.off         { color: #7a6e62; }
+#custom-bluetooth.connected   { color: #9a9ab8; }
+#network.disconnected         { color: #7a6e62; }
+
+#battery.charging             { color: #a0b89a; }
+#battery.warning:not(.charging) { color: #c08060; }
