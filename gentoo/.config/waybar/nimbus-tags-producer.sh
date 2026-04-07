@@ -7,21 +7,41 @@
 
 state_file=/tmp/nimbus-tags-state
 sig=RTMIN+8
+# Linux realtime signal number for RTMIN+8 (glibc RTMIN=34, so 34+8=42).
+signum=42
 
 : > "$state_file"
 
-# Wait for waybar to be up and have its signal handlers installed before
-# sending RTMIN+8. Otherwise the default action for an unhandled RT signal
-# is to terminate waybar, which races on startup.
-waybar_ready() {
-    for pid in $(pgrep -x waybar); do
-        state=$(awk '/^State:/ {print $2}' /proc/"$pid"/status 2>/dev/null)
-        [ -n "$state" ] && [ "$state" != "Z" ] && return 0
+# Check whether *every* live waybar process has signal $signum in its
+# caught-signal set (SigCgt in /proc/PID/status). If yes, it's safe to
+# send the signal — otherwise we'd kill a half-started waybar, because
+# the default action for an uncaught realtime signal is terminate.
+waybar_signal_ready() {
+    pids=$(pgrep -x waybar) || return 1
+    [ -z "$pids" ] && return 1
+    for pid in $pids; do
+        sigcgt=$(awk '/^SigCgt:/ {print $2}' /proc/"$pid"/status 2>/dev/null)
+        [ -z "$sigcgt" ] && return 1
+        # Bit (signum-1) of the SigCgt hex mask must be 1.
+        bit=$(( (0x$sigcgt >> (signum - 1)) & 1 ))
+        [ "$bit" -eq 1 ] || return 1
     done
-    return 1
+    return 0
 }
-while ! waybar_ready; do sleep 0.1; done
-sleep 1
+
+# Send the signal only if safe. Poll briefly so we don't drop an update,
+# but also don't hang if waybar is genuinely gone.
+notify_waybar() {
+    i=0
+    while [ $i -lt 30 ]; do
+        if waybar_signal_ready; then
+            pkill -"$sig" waybar 2>/dev/null
+            return 0
+        fi
+        sleep 0.1
+        i=$((i + 1))
+    done
+}
 
 tail -n 0 -F /tmp/dwl-status 2>/dev/null | while read -r line; do
     case "$line" in
@@ -36,7 +56,7 @@ tail -n 0 -F /tmp/dwl-status 2>/dev/null | while read -r line; do
                 sel=1
             fi
             printf '%s %s %s\n' "$occ" "$sel" "$urg" > "$state_file"
-            pkill -"$sig" waybar 2>/dev/null
+            notify_waybar
             ;;
     esac
 done
