@@ -12,46 +12,67 @@
     min-height: 0;
 }
 
-/* Bar: attached at top edge, only the bottom floats away */
+/* Bar: no container. The bar background is fully transparent, so the
+ * "shape" of the bar is whatever the individual modules draw. Each module
+ * gets its own solid background below, turning the bar into a disjoint
+ * strip of floating chips over the wallpaper. Not a rectangle, not mac
+ * glass (no blur/translucency), reads as a terminal HUD. */
 window#waybar {
-    background: #1a1510;
+    background: transparent;
     color: #d4c4b0;
-    border: 1px solid #4a3f34;
-    border-top: none;
-    border-radius: 0 0 12px 12px;
-    padding-bottom: 2px;
 }
 
 tooltip {
     background: #1a1510;
     border: 1px solid #4a3f34;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 tooltip label {
     color: #d4c4b0;
-    padding: 4px 6px;
+    font-family: "FantasqueSansM Nerd Font Mono";
+    font-size: 14px;
+    padding: 6px 8px;
 }
 
-/* Left: dwl tags — pill to match the right side */
-#custom-tags {
-    color: #7a6e62;
-    padding: 0 12px;
-    margin: 2px 1px 2px 8px;
-    border-radius: 8px;
-    background: transparent;
+/* Left: dwl tags — one pill per tag */
+#custom-tag1, #custom-tag2, #custom-tag3,
+#custom-tag4, #custom-tag5, #custom-tag6,
+#custom-tag7, #custom-tag8, #custom-tag9, #custom-tag10 {
+    padding: 0 10px;
+    margin: 3px 1px;
+    border-radius: 4px;
+    background: #1a1510;
+    color: #d4c4b0;
+    min-width: 12px;
 }
 
-#custom-tags:hover {
+#custom-tag1 { margin-left: 8px; }
+
+/* Hidden tags: collapse completely (any tag with no windows) */
+#custom-tag1.hidden, #custom-tag2.hidden, #custom-tag3.hidden,
+#custom-tag4.hidden, #custom-tag5.hidden, #custom-tag6.hidden,
+#custom-tag7.hidden, #custom-tag8.hidden,
+#custom-tag9.hidden, #custom-tag10.hidden {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    opacity: 0;
+}
+
+/* Currently selected tag — rust on bg_soft. All other visible tags use the base fg. */
+#custom-tag1.selected, #custom-tag2.selected, #custom-tag3.selected,
+#custom-tag4.selected, #custom-tag5.selected, #custom-tag6.selected,
+#custom-tag7.selected, #custom-tag8.selected, #custom-tag9.selected, #custom-tag10.selected {
+    color: #c08060;
     background: #2a231c;
 }
 
 /* Center: clock */
 #clock {
     color: #d4c4b0;
-    font-size: 20px;
     padding: 0 14px;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 #clock:hover {
@@ -66,6 +87,14 @@ tooltip label {
  * plus slightly larger gaps between groups via the first/last-in-group rules.
  */
 
+#clock {
+    padding: 0 10px;
+    border-radius: 4px;
+    margin: 3px 1px;
+    background: #1a1510;
+}
+
+/* Right side: one attached block, no gaps between modules */
 #cpu,
 #memory,
 #custom-power,
@@ -74,14 +103,14 @@ tooltip label {
 #custom-bluetooth,
 #battery {
     padding: 0 10px;
-    border-radius: 8px;
-    margin: 2px 1px;
+    margin: 3px 0;
+    background: #1a1510;
+    border-radius: 0;
 }
 
-/* Group separation: a bit more breathing room at the start of each group */
-#cpu          { margin-left: 6px; }
-#wireplumber  { margin-left: 6px; }
-#battery      { margin-left: 6px; margin-right: 8px; }
+/* Outer corners only */
+#cpu     { border-radius: 4px 0 0 4px; }
+#battery { border-radius: 0 4px 4px 0; margin-right: 8px; }
 
 /* Semantic colors (match lockscreen state mapping) */
 #cpu            { color: #c08060; }   /* accent — load-ish */
