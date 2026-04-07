@@ -19,6 +19,9 @@ swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' \
 # nimbus tags producer (writes /tmp/nimbus-tags-state, signals waybar)
 ~/.config/waybar/nimbus-tags-producer.sh &
 
+# glance file watcher (transient waybar widget for new screenshots/downloads)
+~/.local/bin/glance watch &
+
 # status bar
 waybar > /dev/null 2>&1 &
 
