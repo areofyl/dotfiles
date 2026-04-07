@@ -1,48 +1,80 @@
 {
     "layer": "top",
     "position": "top",
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
     "modules-left": ["custom/tags"],
     "modules-center": ["clock"],
-    "modules-right": ["memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
-    "tooltip": false,
+    "modules-right": ["cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
+
     "custom/tags": {
         "exec": "tail -f /tmp/dwl-status | ~/.config/dwl/waybar-tags.sh",
         "return-type": "json",
         "format": "{}",
         "markup": true,
-        "exec-on-event": false
+        "exec-on-event": false,
+        "tooltip": false
     },
+
     "clock": {
         "format": "{:%I:%M %p}",
-        "format-alt": "{:%Y-%m-%d}"
+        "format-alt": "{:%Y-%m-%d}",
+        "tooltip-format": "<tt>{calendar}</tt>"
     },
-    "battery": {
-        "format": "{capacity}%-",
-        "format-charging": "{capacity}%+",
-        "interval": 30
+
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "interval": 2,
+        "tooltip": true,
+        "on-click": "kitty btop"
     },
+
+    "memory": {
+        "format": "󰍛 {used:0.1f}G",
+        "interval": 2,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+        "on-click": "kitty btop"
+    },
+
+    "custom/power": {
+        "exec": "awk '{w=$1/1000000; if(w<0)w=-w; if(w>=10) printf \"{\\\"text\\\":\\\"󱐋 %dW\\\"}\\n\",w; else printf \"{\\\"text\\\":\\\"󱐋 %.1fW\\\"}\\n\",w}' /sys/class/power_supply/macsmc-battery/power_now",
+        "return-type": "json",
+        "interval": 2,
+        "tooltip": false,
+        "on-click": "kitty btop"
+    },
+
+    "wireplumber": {
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁 muted",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+        "tooltip": false
+    },
+
+    "network": {
+        "format-wifi": "󰖩 {essid}",
+        "format-ethernet": "󰈁 ethernet",
+        "format-disconnected": "󰖪 offline",
+        "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+        "tooltip-format-disconnected": "no connection"
+    },
+
     "custom/bluetooth": {
         "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"󰂯 '\"$dev\"'\", \"class\": \"connected\"}'; else echo '{\"text\": \"󰂯\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"󰂲\", \"class\": \"off\"}'; fi",
         "return-type": "json",
-        "interval": 5
+        "interval": 5,
+        "tooltip": false
     },
-    "wireplumber": {
-        "format": "{volume}%"
-    },
-    "memory": {
-        "format": "{used:0.1f}G",
-        "interval": 2,
-        "on-click": "kitty btop"
-    },
-    "custom/power": {
-        "exec": "awk '{w=$1/1000000; if(w<0)w=-w; if(w>=10) printf \"{\\\"text\\\":\\\"%dW\\\"}\\n\",w; else printf \"{\\\"text\\\":\\\"%.1fW\\\"}\\n\",w}' /sys/class/power_supply/macsmc-battery/power_now",
-        "return-type": "json",
-        "interval": 2,
-        "on-click": "kitty btop"
-    },
-    "network": {
-        "format-wifi": "{essid}",
-        "format-disconnected": "disconnected",
-        "format-ethernet": "ethernet"
+
+    "battery": {
+        "format": "{capacity}%-",
+        "format-charging": "{capacity}%+",
+        "interval": 30,
+        "tooltip-format": "{capacity}%  {time}"
     }
 }
