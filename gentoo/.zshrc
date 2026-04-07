@@ -7,6 +7,7 @@ source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # fzf
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+[ -f ~/.config/nimbus/fzf.sh ] && source ~/.config/nimbus/fzf.sh
 source <(fzf --zsh)
 
 # history
