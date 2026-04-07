@@ -16,6 +16,9 @@ swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' \
 # listen for power button / loginctl lock-session (delay for session registration)
 (sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
 
+# nimbus tags producer (writes /tmp/nimbus-tags-state, signals waybar)
+~/.config/waybar/nimbus-tags-producer.sh &
+
 # status bar
 waybar > /dev/null 2>&1 &
 
