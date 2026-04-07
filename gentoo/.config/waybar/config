@@ -7,7 +7,19 @@
     "margin-bottom": 0,
     "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
     "modules-center": ["clock"],
-    "modules-right": ["cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
+    "modules-right": ["custom/glance", "cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
+
+    "custom/glance": {
+        "exec": "/home/aarav/.local/bin/glance status",
+        "return-type": "json",
+        "interval": 5,
+        "signal": 9,
+        "on-click": "/home/aarav/.local/bin/glance menu",
+        "on-click-right": "/home/aarav/.local/bin/glance copy",
+        "on-scroll-up": "/home/aarav/.local/bin/glance scroll up",
+        "on-scroll-down": "/home/aarav/.local/bin/glance scroll down",
+        "tooltip": false
+    },
 
     "custom/tag1":  { "exec": "~/.config/waybar/nimbus-tag.sh 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
     "custom/tag2":  { "exec": "~/.config/waybar/nimbus-tag.sh 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
