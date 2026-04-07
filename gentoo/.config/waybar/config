@@ -5,23 +5,36 @@
     "margin-left": 0,
     "margin-right": 0,
     "margin-bottom": 0,
-    "modules-left": ["custom/tags"],
+    "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
     "modules-center": ["clock"],
     "modules-right": ["cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
 
-    "custom/tags": {
-        "exec": "tail -f /tmp/dwl-status | ~/.config/dwl/waybar-tags.sh",
-        "return-type": "json",
-        "format": "{}",
-        "markup": true,
-        "exec-on-event": false,
-        "tooltip": false
-    },
+    "custom/tag1":  { "exec": "~/.config/waybar/nimbus-tag.sh 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag2":  { "exec": "~/.config/waybar/nimbus-tag.sh 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag3":  { "exec": "~/.config/waybar/nimbus-tag.sh 3",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag4":  { "exec": "~/.config/waybar/nimbus-tag.sh 4",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag5":  { "exec": "~/.config/waybar/nimbus-tag.sh 5",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag6":  { "exec": "~/.config/waybar/nimbus-tag.sh 6",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag7":  { "exec": "~/.config/waybar/nimbus-tag.sh 7",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag8":  { "exec": "~/.config/waybar/nimbus-tag.sh 8",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag9":  { "exec": "~/.config/waybar/nimbus-tag.sh 9",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
 
     "clock": {
         "format": "{:%I:%M %p}",
         "format-alt": "{:%Y-%m-%d}",
-        "tooltip-format": "<tt>{calendar}</tt>"
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#d4c4b0'><b>{}</b></span>",
+                "days":     "<span color='#d4c4b0'>{}</span>",
+                "weekdays": "<span color='#7a6e62'>{}</span>",
+                "today":    "<span color='#c08060'><b><u>{}</u></b></span>"
+            }
+        }
     },
 
     "cpu": {
