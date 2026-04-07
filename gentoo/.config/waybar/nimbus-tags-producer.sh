@@ -10,6 +10,19 @@ sig=RTMIN+8
 
 : > "$state_file"
 
+# Wait for waybar to be up and have its signal handlers installed before
+# sending RTMIN+8. Otherwise the default action for an unhandled RT signal
+# is to terminate waybar, which races on startup.
+waybar_ready() {
+    for pid in $(pgrep -x waybar); do
+        state=$(awk '/^State:/ {print $2}' /proc/"$pid"/status 2>/dev/null)
+        [ -n "$state" ] && [ "$state" != "Z" ] && return 0
+    done
+    return 1
+}
+while ! waybar_ready; do sleep 0.1; done
+sleep 1
+
 tail -n 0 -F /tmp/dwl-status 2>/dev/null | while read -r line; do
     case "$line" in
         *" tags "*)
