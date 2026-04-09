@@ -1,5 +1,6 @@
 -- Nimbus colorscheme
--- Matches the system palette: bg #1a1510, fg #d4c4b0, sage, lavender, orange, dim
+-- Matches the system palette: bg #10141a, fg #c4ccd4, sage, lavender, accent, dim
+-- Source of truth: ~/.config/nimbus/palette.sh
 
 vim.cmd("hi clear")
 if vim.fn.exists("syntax_on") then vim.cmd("syntax reset") end
@@ -7,22 +8,22 @@ vim.o.termguicolors = true
 vim.g.colors_name = "nimbus"
 
 local c = {
-  bg      = "#1a1510",
-  bg1     = "#221c15",
-  bg2     = "#2c2519",
-  bg3     = "#3a3128",
-  bg4     = "#4a3f34",
-  fg      = "#d4c4b0",
-  fg1     = "#c0b09c",
-  dim     = "#7a6e62",
-  sage    = "#a0b89a",
-  lavender = "#9a9ab8",
-  orange  = "#c08060",
-  red     = "#c07070",
-  yellow  = "#c8b070",
-  cyan    = "#80a8a0",
-  magenta = "#b080a8",
-  green   = "#88a878",
+  bg      = "#10141a",
+  bg1     = "#161b24",
+  bg2     = "#1c2230",
+  bg3     = "#28303c",
+  bg4     = "#2e3642",
+  fg      = "#c4ccd4",
+  fg1     = "#a8b0bc",
+  dim     = "#5a6470",
+  sage    = "#7a9a8a",
+  lavender = "#8a95b0",
+  accent  = "#8ab4d0",
+  red     = "#9a7590",
+  yellow  = "#a8a878",
+  cyan    = "#7898b5",
+  magenta = "#a090b8",
+  green   = "#88a898",
   none    = "NONE",
 }
 
@@ -39,7 +40,7 @@ hi("CursorLine",   { bg = c.bg1 })
 hi("CursorColumn", { bg = c.bg1 })
 hi("ColorColumn",  { bg = c.bg1 })
 hi("LineNr",       { fg = c.bg4 })
-hi("CursorLineNr", { fg = c.orange, bold = true })
+hi("CursorLineNr", { fg = c.accent, bold = true })
 hi("SignColumn",   { bg = c.bg })
 hi("VertSplit",    { fg = c.bg3 })
 hi("WinSeparator", { fg = c.bg3 })
@@ -54,9 +55,9 @@ hi("WinBarNC",     { fg = c.dim, bg = c.bg })
 -- Search & visual
 hi("Visual",       { bg = c.bg3 })
 hi("VisualNOS",    { bg = c.bg3 })
-hi("Search",       { fg = c.bg, bg = c.yellow })
-hi("IncSearch",    { fg = c.bg, bg = c.orange })
-hi("CurSearch",    { fg = c.bg, bg = c.orange, bold = true })
+hi("Search",       { fg = c.bg, bg = c.lavender })
+hi("IncSearch",    { fg = c.bg, bg = c.lavender })
+hi("CurSearch",    { fg = c.bg, bg = c.lavender, bold = true })
 hi("Substitute",   { fg = c.bg, bg = c.red })
 
 -- Pmenu (completion)
@@ -67,7 +68,7 @@ hi("PmenuThumb",   { bg = c.bg4 })
 
 -- Messages
 hi("ErrorMsg",     { fg = c.red, bold = true })
-hi("WarningMsg",   { fg = c.orange, bold = true })
+hi("WarningMsg",   { fg = c.accent, bold = true })
 hi("MoreMsg",      { fg = c.sage })
 hi("Question",     { fg = c.sage })
 hi("ModeMsg",      { fg = c.fg, bold = true })
@@ -78,15 +79,15 @@ hi("FoldColumn",   { fg = c.bg4, bg = c.bg })
 hi("NonText",      { fg = c.bg3 })
 hi("SpecialKey",   { fg = c.bg3 })
 hi("Conceal",      { fg = c.dim })
-hi("MatchParen",   { fg = c.orange, bold = true, underline = true })
+hi("MatchParen",   { fg = c.accent, bold = true, underline = true })
 hi("Directory",    { fg = c.sage })
-hi("Title",        { fg = c.orange, bold = true })
+hi("Title",        { fg = c.accent, bold = true })
 
 -- Diff
-hi("DiffAdd",      { bg = "#1e2a1a" })
-hi("DiffChange",   { bg = "#1e1e2a" })
-hi("DiffDelete",   { fg = c.red, bg = "#2a1a1a" })
-hi("DiffText",     { bg = "#2a2a1e", bold = true })
+hi("DiffAdd",      { bg = "#1a2a22" })
+hi("DiffChange",   { bg = "#1a2030" })
+hi("DiffDelete",   { fg = c.red, bg = "#2a1a24" })
+hi("DiffText",     { bg = "#1e2a30", bold = true })
 
 -- Spelling
 hi("SpellBad",     { undercurl = true, sp = c.red })
@@ -103,7 +104,7 @@ hi("Number",       { fg = c.lavender })
 hi("Boolean",      { fg = c.lavender })
 hi("Float",        { fg = c.lavender })
 hi("Identifier",   { fg = c.fg })
-hi("Function",     { fg = c.orange })
+hi("Function",     { fg = c.accent })
 hi("Statement",    { fg = c.red })
 hi("Conditional",  { fg = c.red })
 hi("Repeat",       { fg = c.red })
@@ -120,11 +121,11 @@ hi("Type",         { fg = c.yellow })
 hi("StorageClass", { fg = c.yellow })
 hi("Structure",    { fg = c.yellow })
 hi("Typedef",      { fg = c.yellow })
-hi("Special",      { fg = c.orange })
-hi("SpecialChar",  { fg = c.orange })
-hi("Tag",          { fg = c.orange })
+hi("Special",      { fg = c.accent })
+hi("SpecialChar",  { fg = c.accent })
+hi("Tag",          { fg = c.accent })
 hi("Delimiter",    { fg = c.fg1 })
-hi("Debug",        { fg = c.orange })
+hi("Debug",        { fg = c.accent })
 hi("Underlined",   { fg = c.lavender, underline = true })
 hi("Error",        { fg = c.red, bold = true })
 hi("Todo",         { fg = c.yellow, bg = c.bg2, bold = true })
@@ -143,12 +144,12 @@ hi("@character",          { fg = c.sage })
 hi("@number",             { fg = c.lavender })
 hi("@boolean",            { fg = c.lavender })
 hi("@float",              { fg = c.lavender })
-hi("@function",           { fg = c.orange })
-hi("@function.builtin",   { fg = c.orange })
-hi("@function.call",      { fg = c.orange })
+hi("@function",           { fg = c.accent })
+hi("@function.builtin",   { fg = c.accent })
+hi("@function.call",      { fg = c.accent })
 hi("@function.macro",     { fg = c.cyan })
-hi("@method",             { fg = c.orange })
-hi("@method.call",        { fg = c.orange })
+hi("@method",             { fg = c.accent })
+hi("@method.call",        { fg = c.accent })
 hi("@constructor",        { fg = c.yellow })
 hi("@keyword",            { fg = c.red })
 hi("@keyword.function",   { fg = c.red })
@@ -166,7 +167,7 @@ hi("@punctuation.bracket",    { fg = c.fg1 })
 hi("@punctuation.delimiter",  { fg = c.fg1 })
 hi("@punctuation.special",    { fg = c.cyan })
 hi("@comment",            { fg = c.dim, italic = true })
-hi("@tag",                { fg = c.orange })
+hi("@tag",                { fg = c.accent })
 hi("@tag.attribute",      { fg = c.yellow })
 hi("@tag.delimiter",      { fg = c.fg1 })
 hi("@attribute",          { fg = c.yellow })
@@ -175,11 +176,11 @@ hi("@field",              { fg = c.fg1 })
 
 -- LSP
 hi("DiagnosticError",          { fg = c.red })
-hi("DiagnosticWarn",           { fg = c.orange })
+hi("DiagnosticWarn",           { fg = c.accent })
 hi("DiagnosticInfo",           { fg = c.lavender })
 hi("DiagnosticHint",           { fg = c.sage })
 hi("DiagnosticUnderlineError", { undercurl = true, sp = c.red })
-hi("DiagnosticUnderlineWarn",  { undercurl = true, sp = c.orange })
+hi("DiagnosticUnderlineWarn",  { undercurl = true, sp = c.accent })
 hi("DiagnosticUnderlineInfo",  { undercurl = true, sp = c.lavender })
 hi("DiagnosticUnderlineHint",  { undercurl = true, sp = c.sage })
 hi("LspReferenceText",        { bg = c.bg2 })
@@ -191,11 +192,11 @@ hi("TelescopeNormal",       { fg = c.fg, bg = c.bg1 })
 hi("TelescopeBorder",       { fg = c.dim, bg = c.bg1 })
 hi("TelescopePromptNormal", { fg = c.fg, bg = c.bg2 })
 hi("TelescopePromptBorder", { fg = c.dim, bg = c.bg2 })
-hi("TelescopePromptTitle",  { fg = c.bg, bg = c.orange, bold = true })
+hi("TelescopePromptTitle",  { fg = c.bg, bg = c.accent, bold = true })
 hi("TelescopeResultsTitle", { fg = c.dim })
 hi("TelescopePreviewTitle", { fg = c.bg, bg = c.sage, bold = true })
 hi("TelescopeSelection",    { bg = c.bg3, bold = true })
-hi("TelescopeMatching",     { fg = c.orange, bold = true })
+hi("TelescopeMatching",     { fg = c.accent, bold = true })
 
 -- Git signs
 hi("GitSignsAdd",    { fg = c.sage })
@@ -207,13 +208,13 @@ hi("IblIndent", { fg = c.bg2 })
 hi("IblScope",  { fg = c.bg4 })
 
 -- Which-key
-hi("WhichKey",          { fg = c.orange })
+hi("WhichKey",          { fg = c.accent })
 hi("WhichKeyGroup",     { fg = c.lavender })
 hi("WhichKeyDesc",      { fg = c.fg1 })
 hi("WhichKeySeparator", { fg = c.dim })
 
 -- Alpha dashboard
-hi("NimbusHeader",  { fg = c.orange })
+hi("NimbusHeader",  { fg = c.lavender })
 hi("NimbusFooter",  { fg = c.dim })
 
 -- Lualine will pick up Normal/StatusLine automatically
