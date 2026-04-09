@@ -25,13 +25,13 @@ from gi.repository import Gtk4LayerShell as LayerShell
 
 # Waybar palette
 COLORS = {
-    'bg':      '#1a1510',
-    'fg':      '#d4c4b0',
-    'dim':     '#7a6e62',
-    'green':   '#a0b89a',
-    'lavender':'#9a9ab8',
-    'orange':  '#c08060',
-    'surface': 'rgba(26, 21, 16, 0.85)',
+    'bg':      '#10141a',
+    'fg':      '#c4ccd4',
+    'dim':     '#5a6470',
+    'green':   '#7a9a8a',
+    'lavender':'#8a95b0',
+    'orange':  '#8ab4d0',
+    'surface': 'rgba(16, 20, 26, 0.85)',
 }
 
 QUOTES = [
@@ -375,7 +375,7 @@ class LockScreen(Gtk.Application):
 
         .pw-fade-left {{
             min-width: 30px;
-            background-image: linear-gradient(to right, {COLORS['surface']}, rgba(26, 21, 16, 0));
+            background-image: linear-gradient(to right, {COLORS['surface']}, rgba(16, 20, 26, 0));
         }}
 
         entry.pw-entry {{
