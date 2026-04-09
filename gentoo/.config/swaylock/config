@@ -1,5 +1,5 @@
 # appearance — Nimbus palette, source of truth: ~/.config/nimbus/palette.sh
-color=1a1510
+color=10141a
 font=FantasqueSansM Nerd Font Mono
 font-size=22
 
@@ -9,23 +9,23 @@ indicator-thickness=8
 indicator-caps-lock
 
 # colors — matching waybar palette
-inside-color=1a151000
-inside-clear-color=1a151000
-inside-ver-color=1a151000
-inside-wrong-color=1a151000
+inside-color=10141a00
+inside-clear-color=10141a00
+inside-ver-color=10141a00
+inside-wrong-color=10141a00
 
-ring-color=7a6e62
-ring-clear-color=a0b89a
-ring-ver-color=9a9ab8
-ring-wrong-color=c08060
+ring-color=5a6470
+ring-clear-color=7a9a8a
+ring-ver-color=8a95b0
+ring-wrong-color=8ab4d0
 
-key-hl-color=a0b89a
-bs-hl-color=c08060
+key-hl-color=7a9a8a
+bs-hl-color=8ab4d0
 
-text-color=d4c4b0
-text-clear-color=d4c4b0
-text-ver-color=9a9ab8
-text-wrong-color=c08060
+text-color=c4ccd4
+text-clear-color=c4ccd4
+text-ver-color=8a95b0
+text-wrong-color=8ab4d0
 
 line-color=00000000
 separator-color=00000000
