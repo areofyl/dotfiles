@@ -138,6 +138,9 @@ return {
           -- Find the alpha buffer
           for _, buf in ipairs(vim.api.nvim_list_bufs()) do
             if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "alpha" then
+              -- No buttons in this dashboard — disable alpha's <CR> press handler
+              pcall(vim.keymap.del, "n", "<CR>", { buffer = buf })
+              vim.keymap.set("n", "<CR>", "<Nop>", { buffer = buf, silent = true })
               start_animation(buf)
               return
             end
