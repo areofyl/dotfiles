@@ -30,7 +30,7 @@ COLORS = {
     'dim':     '#5a6470',
     'green':   '#7a9a8a',
     'lavender':'#8a95b0',
-    'orange':  '#8ab4d0',
+    'accent':  '#8ab4d0',
     'surface': 'rgba(16, 20, 26, 0.85)',
 }
 
@@ -417,7 +417,7 @@ class LockScreen(Gtk.Application):
         .error {{
             font-family: "{FONT}";
             font-size: 13px;
-            color: {COLORS['orange']};
+            color: {COLORS['accent']};
         }}
 
         .quote {{
@@ -448,7 +448,7 @@ class LockScreen(Gtk.Application):
         }}
 
         .pw-frame-error {{
-            border: 2px solid {COLORS['orange']};
+            border: 2px solid {COLORS['accent']};
         }}
 
         @keyframes fadeout {{
