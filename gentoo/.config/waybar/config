@@ -41,10 +41,10 @@
             "mode-mon-col": 3,
             "on-scroll": 1,
             "format": {
-                "months":   "<span color='#d4c4b0'><b>{}</b></span>",
-                "days":     "<span color='#d4c4b0'>{}</span>",
-                "weekdays": "<span color='#7a6e62'>{}</span>",
-                "today":    "<span color='#c08060'><b><u>{}</u></b></span>"
+                "months":   "<span color='#c4ccd4'><b>{}</b></span>",
+                "days":     "<span color='#c4ccd4'>{}</span>",
+                "weekdays": "<span color='#5a6470'>{}</span>",
+                "today":    "<span color='#8ab4d0'><b><u>{}</u></b></span>"
             }
         }
     },
