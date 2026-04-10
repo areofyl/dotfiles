@@ -1,0 +1,18 @@
+#!/bin/sh
+printf "%s\n" \
+"ungoogled-chromium" \
+    "btop" \
+    "nvim" \
+    "thunar" \
+    "zathura" \
+    "mpv" \
+    "airpods" \
+    "bluetoothctl" \
+    "nmtui" \
+| wmenu | xargs -I{} sh -c '
+    case "{}" in
+        airpods) bluetoothctl connect F0:04:E1:D6:E5:01 ;;
+        btop|nvim|bluetoothctl|nmtui) kitty {} ;;
+        *) {} ;;
+    esac
+' &
