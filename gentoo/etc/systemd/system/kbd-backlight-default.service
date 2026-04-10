@@ -1,0 +1,10 @@
+[Unit]
+Description=Set keyboard backlight default brightness
+After=systemd-udev-settle.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo 25 > /sys/class/leds/kbd_backlight/brightness'
+
+[Install]
+WantedBy=default.target
