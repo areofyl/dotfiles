@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure zram swap
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'swapoff /dev/zram0 2>/dev/null; echo 1 > /sys/block/zram0/reset && echo zstd > /sys/block/zram0/comp_algorithm && echo 4G > /sys/block/zram0/disksize && mkswap /dev/zram0 && swapon -p 100 /dev/zram0'
+ExecStop=/bin/sh -c 'swapoff /dev/zram0 && echo 1 > /sys/block/zram0/reset'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
