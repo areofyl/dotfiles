@@ -1,0 +1,36 @@
+#!/bin/sh
+# Simple adblock using /etc/hosts
+# Uses Steven Black's unified hosts list (free, open source)
+
+HOSTS="/etc/hosts"
+MARKER_START="# --- ADBLOCK START ---"
+MARKER_END="# --- ADBLOCK END ---"
+URL="https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+
+case "$1" in
+    on)
+        # Remove old block if exists
+        sudo sed -i "/$MARKER_START/,/$MARKER_END/d" "$HOSTS"
+        echo ":: downloading blocklist..."
+        block=$(curl -s "$URL" | grep "^0.0.0.0" | grep -v "0.0.0.0 0.0.0.0")
+        count=$(echo "$block" | wc -l)
+        echo ":: adding $count blocked domains..."
+        printf "%s\n%s\n%s\n" "$MARKER_START" "$block" "$MARKER_END" | sudo tee -a "$HOSTS" > /dev/null
+        echo ":: adblock enabled"
+        ;;
+    off)
+        sudo sed -i "/$MARKER_START/,/$MARKER_END/d" "$HOSTS"
+        echo ":: adblock disabled"
+        ;;
+    status)
+        if grep -q "$MARKER_START" "$HOSTS"; then
+            count=$(sed -n "/$MARKER_START/,/$MARKER_END/p" "$HOSTS" | grep -c "^0.0.0.0")
+            echo ":: adblock enabled ($count domains blocked)"
+        else
+            echo ":: adblock disabled"
+        fi
+        ;;
+    *)
+        echo "usage: adblock [on|off|status]"
+        ;;
+esac
