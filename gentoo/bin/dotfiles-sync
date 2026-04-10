@@ -1,0 +1,78 @@
+#!/bin/sh
+# Auto-sync dotfiles — copies configs to dotfiles repo and commits changes individually.
+# Runs hourly via systemd timer.
+
+DOTFILES="$HOME/dotfiles/gentoo"
+
+# Sync a file or directory
+sync_path() {
+    src="$1"
+    dst="$DOTFILES/$2"
+    if [ -e "$src" ]; then
+        if [ -d "$src" ]; then
+            mkdir -p "$dst"
+            cp -a "$src"/. "$dst"/
+        else
+            mkdir -p "$(dirname "$dst")"
+            cp -a "$src" "$dst"
+        fi
+    fi
+}
+
+# Sync all tracked configs
+sync_path "$HOME/.config/dwl"          ".config/dwl"
+sync_path "$HOME/.config/custom-lock"  ".config/custom-lock"
+sync_path "$HOME/.config/kitty"        ".config/kitty"
+sync_path "$HOME/.config/waybar"       ".config/waybar"
+sync_path "$HOME/.config/nvim"         ".config/nvim"
+sync_path "$HOME/.config/fastfetch"    ".config/fastfetch"
+sync_path "$HOME/.config/swaylock"     ".config/swaylock"
+sync_path "$HOME/.config/gtk-3.0"      ".config/gtk-3.0"
+sync_path "$HOME/.config/gtk-4.0"      ".config/gtk-4.0"
+sync_path "$HOME/.config/systemd/user" ".config/systemd/user"
+sync_path "$HOME/.zshrc"               ".zshrc"
+sync_path "$HOME/.gitconfig"           ".gitconfig"
+sync_path "$HOME/bin"                  "bin"
+sync_path "$HOME/dwl"                  "dwl"
+
+# System config (world-readable, no sudo)
+sync_path "/etc/fstab"                 "etc/fstab"
+sync_path "/etc/portage"               "etc/portage"
+sync_path "/etc/systemd/system"        "etc/systemd/system"
+sync_path "/var/lib/portage/world"     "var/lib/portage/world"
+sync_path "/usr/src/linux/.config"     "kernel-config"
+
+# Clean up junk and secrets
+rm -rf "$DOTFILES/.config/custom-lock/__pycache__" 2>/dev/null
+rm -rf "$DOTFILES/dwl/.git" 2>/dev/null
+rm -rf "$DOTFILES/etc/portage/gnupg" 2>/dev/null
+find "$DOTFILES" -type f \( -iname "*secret*" -o -iname "*token*" -o -iname "*password*" -o -iname "id_rsa*" -o -iname "id_ed25519*" \) -delete 2>/dev/null
+
+cd "$HOME/dotfiles" || exit 1
+
+# Nothing to do?
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+    exit 0
+fi
+
+# Stage everything, then commit each file individually
+git add -A
+
+for file in $(git diff --cached --name-only); do
+    git reset HEAD -- . > /dev/null 2>&1
+    git add "$file"
+    git commit -m "sync $(echo "$file" | sed 's|gentoo/||')"
+done
+
+# Any remaining staged files
+git add -A
+if ! git diff --cached --quiet; then
+    for file in $(git diff --cached --name-only); do
+        git reset HEAD -- . > /dev/null 2>&1
+        git add "$file"
+        git commit -m "sync $(echo "$file" | sed 's|gentoo/||')"
+    done
+fi
+
+# Push to remote
+git push origin master 2>/dev/null
