@@ -30,7 +30,7 @@ alias la='ls -a'
 alias lla='ls -la'
 
 alias sudo='sudo -S'
-alias kasa-debug='cd ~/flick && python3 debug_kasa.py'
+alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
 
 # full system update
 update() {
