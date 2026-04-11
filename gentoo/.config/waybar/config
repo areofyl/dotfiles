@@ -44,7 +44,7 @@
                 "months":   "<span color='#c4ccd4'><b>{}</b></span>",
                 "days":     "<span color='#c4ccd4'>{}</span>",
                 "weekdays": "<span color='#5a6470'>{}</span>",
-                "today":    "<span color='#8ab4d0'><b><u>{}</u></b></span>"
+                "today":    "<span color='#9298a0'><b><u>{}</u></b></span>"
             }
         }
     },
