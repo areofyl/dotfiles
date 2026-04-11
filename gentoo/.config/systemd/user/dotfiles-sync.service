@@ -1,6 +1,0 @@
-[Unit]
-Description=Sync dotfiles to git
-
-[Service]
-Type=oneshot
-ExecStart=/home/aarav/bin/dotfiles-sync
