@@ -1,5 +1,7 @@
 app-admin/stow
 app-admin/sudo
+app-arch/unzip
+app-arch/xarchiver
 app-containers/podman
 app-editors/neovim
 app-eselect/eselect-repository
@@ -54,3 +56,4 @@ sys-process/btop
 x11-terms/kitty
 x11-themes/papirus-icon-theme
 xfce-base/thunar
+xfce-extra/thunar-archive-plugin
