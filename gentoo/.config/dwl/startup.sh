@@ -2,7 +2,7 @@
 # launched by dwl -s (dwl pipes status to our stdin)
 
 # external display: force 2560x1440 (preferred 4K@30 broken on apple-dcp)
-wlr-randr --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0 &
+wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0 &
 
 sleep 1
 
@@ -11,7 +11,8 @@ swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
 # idle + lock + lock before suspend (lid close)
 swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' \
-    before-sleep '/home/aarav/.config/custom-lock/lock.sh' &
+    before-sleep '/home/aarav/.config/custom-lock/lock.sh' \
+    after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0' &
 
 # listen for power button / loginctl lock-session (delay for session registration)
 (sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
