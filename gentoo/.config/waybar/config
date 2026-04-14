@@ -34,10 +34,10 @@
 
     "clock": {
         "format": "{:%I:%M %p}",
-        "format-alt": "{:%Y-%m-%d}",
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+        "format-alt": "{:%I:%M %p - %B %d, %Y}",
+        "tooltip-format": "<big>Calendar</big>\n<tt>{calendar}</tt>",
         "calendar": {
-            "mode": "month",
+            "mode": "year",
             "mode-mon-col": 3,
             "on-scroll": 1,
             "format": {
