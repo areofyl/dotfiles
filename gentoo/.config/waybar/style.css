@@ -1,5 +1,5 @@
 /*
- * Nimbus — storm cloud bar
+ * Nimbus — retro storm terminal
  * Palette from ~/.config/nimbus/palette.sh
  */
 
@@ -10,14 +10,21 @@
 }
 
 window#waybar {
-    background: #10141a;
-    color: #5a6470;
+    background: repeating-linear-gradient(
+        to bottom,
+        #10141a 0px,
+        #10141a 1px,
+        rgba(255,255,255,0.015) 1px,
+        rgba(255,255,255,0.015) 2px
+    );
+    color: #c4ccd4;
+    border-bottom: 1px solid #2e3642;
 }
 
 tooltip {
     background: #10141a;
     border: 1px solid #2e3642;
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 tooltip label {
@@ -27,18 +34,17 @@ tooltip label {
     padding: 6px 8px;
 }
 
-/* ===== Left: dwl tags ===== */
+/* ===== Left: dwl tags — terminal style ===== */
 
 #custom-tag1, #custom-tag2, #custom-tag3,
 #custom-tag4, #custom-tag5, #custom-tag6,
 #custom-tag7, #custom-tag8, #custom-tag9, #custom-tag10 {
-    padding: 0 8px;
-    margin: 4px 1px;
-    border-radius: 3px;
+    padding: 0 2px;
+    margin: 0;
+    border-radius: 0;
     background: transparent;
     color: #5a6470;
-    min-width: 10px;
-    transition: all 150ms ease;
+    min-width: 0;
 }
 
 #custom-tag1 { margin-left: 6px; }
@@ -53,7 +59,7 @@ tooltip label {
     opacity: 0;
 }
 
-/* Occupied: slightly brighter than default dim */
+/* Occupied: visible but quiet */
 #custom-tag1.occupied, #custom-tag2.occupied, #custom-tag3.occupied,
 #custom-tag4.occupied, #custom-tag5.occupied, #custom-tag6.occupied,
 #custom-tag7.occupied, #custom-tag8.occupied,
@@ -61,62 +67,57 @@ tooltip label {
     color: #8a95b0;
 }
 
-/* Selected: lifted out of the dark */
+/* Selected: bright with brackets from the script */
 #custom-tag1.selected, #custom-tag2.selected, #custom-tag3.selected,
 #custom-tag4.selected, #custom-tag5.selected, #custom-tag6.selected,
 #custom-tag7.selected, #custom-tag8.selected,
 #custom-tag9.selected, #custom-tag10.selected {
     color: #c4ccd4;
-    background: #1c2230;
+    background: transparent;
 }
 
-/* Urgent: the only warmth in the storm */
+/* Urgent */
 #custom-tag1.urgent, #custom-tag2.urgent, #custom-tag3.urgent,
 #custom-tag4.urgent, #custom-tag5.urgent, #custom-tag6.urgent,
 #custom-tag7.urgent, #custom-tag8.urgent,
 #custom-tag9.urgent, #custom-tag10.urgent {
     color: #9a7590;
-    background: #241e24;
+    background: transparent;
 }
 
 /* ===== Center: clock ===== */
 
 #clock {
-    color: #8a95b0;
-    font-size: 18px;
+    color: #c4ccd4;
+    padding: 0 14px;
 }
 
-/* ===== Right: icons in the fog ===== */
+/* ===== Right: terminal modules ===== */
 
 #custom-glance,
 #wireplumber,
 #network,
 #custom-bluetooth,
 #custom-battery {
-    padding: 0 10px;
+    padding: 0 8px;
     background: transparent;
-    color: #5a6470;
-    transition: color 200ms ease;
 }
 
-#custom-battery { padding-right: 10px; }
-
 /* ── Wireplumber ── */
-#wireplumber              { color: #8a95b0; }
-#wireplumber.muted        { color: #28303c; }
+#wireplumber              { color: #c4ccd4; }
+#wireplumber.muted        { color: #5a6470; }
 
 /* ── Network ── */
-#network                  { color: #5a6470; }
-#network.wifi             { color: #8a95b0; }
-#network.disconnected     { color: #28303c; }
+#network                  { color: #90a098; }
+#network.disconnected     { color: #5a6470; }
 
 /* ── Bluetooth ── */
-#custom-bluetooth         { color: #5a6470; }
+#custom-bluetooth         { color: #8a95b0; }
 #custom-bluetooth.connected { color: #8a95b0; }
-#custom-bluetooth.off     { color: #28303c; }
+#custom-bluetooth.off     { color: #5a6470; }
 
-/* ── Battery: green → dim → rose → red as it drains ── */
-#custom-battery                  { color: #5a6470; }
+/* ── Battery: green → lavender → rose as it drains ── */
+#custom-battery                  { color: #c4ccd4; }
 #custom-battery.good             { color: #90a098; }
 #custom-battery.medium           { color: #8a95b0; }
 #custom-battery.warning          { color: #9a7590; }
@@ -129,7 +130,7 @@ tooltip label {
 #custom-updates.pending    { color: #9a7590; }
 
 /* ── Glance ── */
-#custom-glance            { color: #5a6470; }
+#custom-glance            { color: #c4ccd4; }
 #custom-glance.active     { color: #8a95b0; }
 #custom-glance.empty {
     padding: 0;
