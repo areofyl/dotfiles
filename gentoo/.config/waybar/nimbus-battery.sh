@@ -2,11 +2,18 @@
 # Nimbus battery module — calculates time remaining from sysfs.
 bat=/sys/class/power_supply/macsmc-battery
 
-capacity=$(cat "$bat/capacity")
 status=$(cat "$bat/status")
 power=$(cat "$bat/power_now")
 energy_now=$(cat "$bat/energy_now")
 energy_full=$(cat "$bat/energy_full")
+
+# Calculate real capacity from energy values (kernel's "capacity" file rounds)
+if [ "$energy_full" -gt 0 ] 2>/dev/null; then
+    capacity=$(( (energy_now * 100) / energy_full ))
+    [ "$capacity" -gt 100 ] && capacity=100
+else
+    capacity=$(cat "$bat/capacity")
+fi
 
 # Normalize power to positive
 [ "$power" -lt 0 ] 2>/dev/null && power=$((-power))
