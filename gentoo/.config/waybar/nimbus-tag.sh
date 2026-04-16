@@ -22,7 +22,11 @@ emit() {
         printf '{"text":"","class":"hidden"}\n'
         return
     fi
-    printf '{"text":"%s","class":"%s"}\n' "$label" "$cls"
+    if [ "$cls" = "selected" ]; then
+        printf '{"text":"[%s]","class":"%s"}\n' "$label" "$cls"
+    else
+        printf '{"text":" %s ","class":"%s"}\n' "$label" "$cls"
+    fi
 }
 
 [ -f "$state_file" ] || { emit empty; exit 0; }
