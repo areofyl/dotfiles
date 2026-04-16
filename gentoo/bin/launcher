@@ -9,9 +9,10 @@ printf "%s\n" \
     "airpods" \
     "bluetoothctl" \
     "nmtui" \
-| wmenu | xargs -I{} sh -c '
+| tofi 2>/dev/null | xargs -I{} sh -c '
     case "{}" in
         airpods) bluetoothctl connect F0:04:E1:D6:E5:01 ;;
+        ungoogled-chromium) /home/aarav/.local/bin/ungoogled-chromium ;;
         btop|nvim|bluetoothctl|nmtui) kitty {} ;;
         *) {} ;;
     esac
