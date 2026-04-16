@@ -34,8 +34,8 @@
     "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
 
     "clock": {
-        "format": "{:%H:%M}",
-        "format-alt": "{:%a %b %d}",
+        "format": "[{:%I:%M %p}]",
+        "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
         "calendar": {
             "mode": "year",
@@ -51,8 +51,8 @@
     },
 
     "wireplumber": {
-        "format": "󰕾 {volume}%",
-        "format-muted": "󰖁 muted",
+        "format": "[{volume}%]",
+        "format-muted": "[muted]",
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
         "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
@@ -60,23 +60,23 @@
     },
 
     "network": {
-        "format-wifi": "󰖩 {essid}",
-        "format-ethernet": "󰈁 ethernet",
-        "format-disconnected": "󰖪 offline",
+        "format-wifi": "[{essid}]",
+        "format-ethernet": "[wired]",
+        "format-disconnected": "[offline]",
         "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
         "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
         "tooltip-format-disconnected": "offline"
     },
 
     "custom/bluetooth": {
-        "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"󰂯 '\"$dev\"'\", \"class\": \"connected\"}'; else echo '{\"text\": \"󰂯\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"󰂲\", \"class\": \"off\"}'; fi",
+        "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"['\"$dev\"']\", \"class\": \"connected\"}'; else echo '{\"text\": \"[bt]\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"[--]\", \"class\": \"off\"}'; fi",
         "return-type": "json",
         "interval": 5,
         "tooltip": false
     },
 
     "custom/updates": {
-        "exec": "if [ -n \"$(eix -u --world 2>/dev/null | head -1)\" ]; then echo '{\"text\": \"●\", \"class\": \"pending\"}'; else echo '{\"text\": \"○\", \"class\": \"clean\"}'; fi",
+        "exec": "if [ -n \"$(eix -u --world 2>/dev/null | head -1)\" ]; then echo '{\"text\": \"[+]\", \"class\": \"pending\"}'; else echo '{\"text\": \"[-]\", \"class\": \"clean\"}'; fi",
         "return-type": "json",
         "interval": 1800,
         "tooltip": false
