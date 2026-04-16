@@ -34,11 +34,11 @@ fi
 
 # Build display text
 if [ "$charging" -eq 1 ]; then
-    text="${capacity}%+"
+    text="[${capacity}%+]"
 elif [ "$discharging" -eq 1 ]; then
-    text="${capacity}%-"
+    text="[${capacity}%-]"
 else
-    text="${capacity}%"
+    text="[${capacity}%]"
 fi
 
 # Calculate time remaining
