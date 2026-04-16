@@ -1,13 +1,14 @@
 {
     "layer": "top",
     "position": "top",
+    "height": 28,
     "margin-top": 0,
     "margin-left": 0,
     "margin-right": 0,
     "margin-bottom": 0,
     "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/glance", "cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
+    "modules-right": ["custom/glance", "wireplumber", "network", "custom/bluetooth", "custom/battery", "custom/updates"],
 
     "custom/glance": {
         "exec": "/home/aarav/.local/bin/glance status",
@@ -33,42 +34,20 @@
     "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
 
     "clock": {
-        "format": "{:%I:%M %p}",
-        "format-alt": "{:%I:%M %p - %B %d, %Y}",
-        "tooltip-format": "<big>Calendar</big>\n<tt>{calendar}</tt>",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %b %d}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
         "calendar": {
             "mode": "year",
             "mode-mon-col": 3,
             "on-scroll": 1,
             "format": {
-                "months":   "<span color='#c4ccd4'><b>{}</b></span>",
-                "days":     "<span color='#c4ccd4'>{}</span>",
-                "weekdays": "<span color='#5a6470'>{}</span>",
-                "today":    "<span color='#9298a0'><b><u>{}</u></b></span>"
+                "months":   "<span color='#8a95b0'><b>{}</b></span>",
+                "days":     "<span color='#5a6470'>{}</span>",
+                "weekdays": "<span color='#28303c'>{}</span>",
+                "today":    "<span color='#c4ccd4'><b>{}</b></span>"
             }
         }
-    },
-
-    "cpu": {
-        "format": "󰻠 {usage}%",
-        "interval": 2,
-        "tooltip": true,
-        "on-click": "kitty btop"
-    },
-
-    "memory": {
-        "format": "󰍛 {used:0.1f}G",
-        "interval": 2,
-        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
-        "on-click": "kitty btop"
-    },
-
-    "custom/power": {
-        "exec": "awk '{w=$1/1000000; if(w<0)w=-w; if(w>=10) printf \"{\\\"text\\\":\\\"󱐋 %dW\\\"}\\n\",w; else printf \"{\\\"text\\\":\\\"󱐋 %.1fW\\\"}\\n\",w}' /sys/class/power_supply/macsmc-battery/power_now",
-        "return-type": "json",
-        "interval": 2,
-        "tooltip": false,
-        "on-click": "kitty btop"
     },
 
     "wireplumber": {
@@ -86,7 +65,7 @@
         "format-disconnected": "󰖪 offline",
         "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
         "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-        "tooltip-format-disconnected": "no connection"
+        "tooltip-format-disconnected": "offline"
     },
 
     "custom/bluetooth": {
@@ -96,10 +75,17 @@
         "tooltip": false
     },
 
-    "battery": {
-        "format": "{capacity}%-",
-        "format-charging": "{capacity}%+",
-        "interval": 30,
-        "tooltip-format": "{capacity}%  {time}"
+    "custom/updates": {
+        "exec": "if [ -n \"$(eix -u --world 2>/dev/null | head -1)\" ]; then echo '{\"text\": \"●\", \"class\": \"pending\"}'; else echo '{\"text\": \"○\", \"class\": \"clean\"}'; fi",
+        "return-type": "json",
+        "interval": 1800,
+        "tooltip": false
+    },
+
+    "custom/battery": {
+        "exec": "~/.config/waybar/nimbus-battery.sh",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip": true
     }
 }
