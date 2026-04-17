@@ -6,6 +6,13 @@ wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --po
 
 sleep 1
 
+# portal (file chooser, screenshare, etc.)
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY
+/usr/libexec/xdg-desktop-portal-termfilechooser &
+/usr/libexec/xdg-desktop-portal-gtk &
+/usr/libexec/xdg-desktop-portal-wlr &
+sleep 1 && /usr/libexec/xdg-desktop-portal -r &
+
 # wallpaper
 swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
