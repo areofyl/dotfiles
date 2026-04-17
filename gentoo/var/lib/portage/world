@@ -31,6 +31,7 @@ gui-apps/wl-clipboard
 gui-apps/wmenu
 gui-libs/greetd
 gui-libs/gtk4-layer-shell
+gui-libs/xdg-desktop-portal-wlr
 gui-wm/dwl
 gui-wm/sway
 media-fonts/noto
@@ -46,6 +47,8 @@ sys-apps/bat
 sys-apps/fd
 sys-apps/ripgrep
 sys-apps/speakersafetyd
+sys-apps/xdg-desktop-portal
+sys-apps/xdg-desktop-portal-gtk
 sys-auth/seatd
 sys-boot/efibootmgr
 sys-boot/grub
