@@ -1,16 +1,20 @@
 app-admin/stow
 app-admin/sudo
+app-arch/p7zip
 app-arch/unzip
 app-arch/xarchiver
+app-arch/zip
 app-containers/podman
 app-editors/neovim
 app-emulation/qemu
 app-eselect/eselect-repository
 app-misc/fastfetch
+app-misc/jq
 app-portage/gentoolkit
 app-shells/fzf
 app-shells/zsh
 app-text/texlive
+app-text/tree
 app-text/zathura
 app-text/zathura-pdf-poppler
 dev-python/pip
@@ -43,6 +47,7 @@ media-sound/playerctl
 media-video/mpv
 net-misc/asahi-btsync
 net-misc/networkmanager
+net-wireless/iw
 sys-apps/bat
 sys-apps/fd
 sys-apps/ripgrep
@@ -53,6 +58,7 @@ sys-auth/seatd
 sys-boot/efibootmgr
 sys-boot/grub
 sys-fs/fuse:3
+sys-fs/ncdu
 sys-fs/squashfs-tools
 sys-kernel/asahi-sources
 sys-kernel/dracut
