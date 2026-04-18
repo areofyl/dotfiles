@@ -45,9 +45,12 @@ media-gfx/imv
 media-libs/asahi-audio
 media-sound/playerctl
 media-video/mpv
+net-dns/avahi
 net-irc/irssi
 net-misc/asahi-btsync
 net-misc/networkmanager
+net-print/cups
+net-print/cups-filters
 net-wireless/iw
 sys-apps/bat
 sys-apps/fd
