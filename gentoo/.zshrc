@@ -27,6 +27,7 @@ alias airpods='bluetoothctl connect F0:04:E1:D6:E5:01'
 alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
+alias fetch='./fetch/fetch'
 
 alias sudo='sudo -S'
 alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
