@@ -45,6 +45,7 @@ media-gfx/imv
 media-libs/asahi-audio
 media-sound/playerctl
 media-video/mpv
+net-irc/irssi
 net-misc/asahi-btsync
 net-misc/networkmanager
 net-wireless/iw
