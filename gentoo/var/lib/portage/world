@@ -13,6 +13,7 @@ app-misc/jq
 app-portage/gentoolkit
 app-shells/fzf
 app-shells/zsh
+app-text/enscript
 app-text/lowdown
 app-text/texlive
 app-text/tree
