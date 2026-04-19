@@ -27,9 +27,7 @@ dev-vcs/git
 gui-apps/grim
 gui-apps/mako
 gui-apps/slurp
-gui-apps/swaybg
 gui-apps/swayidle
-gui-apps/swaylock
 gui-apps/tuigreet
 gui-apps/waybar
 gui-apps/wl-clipboard
@@ -38,7 +36,6 @@ gui-libs/greetd
 gui-libs/gtk4-layer-shell
 gui-libs/xdg-desktop-portal-wlr
 gui-wm/dwl
-gui-wm/sway
 media-fonts/noto
 media-fonts/noto-cjk
 media-fonts/noto-emoji
