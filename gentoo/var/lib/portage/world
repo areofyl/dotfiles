@@ -18,6 +18,7 @@ app-text/texlive
 app-text/tree
 app-text/zathura
 app-text/zathura-pdf-poppler
+dev-python/numpy
 dev-python/pip
 dev-python/python-lsp-server
 dev-python/websockets
