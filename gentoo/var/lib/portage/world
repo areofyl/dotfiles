@@ -6,6 +6,7 @@ app-arch/xarchiver
 app-arch/zip
 app-containers/podman
 app-editors/neovim
+app-editors/vim
 app-emulation/qemu
 app-eselect/eselect-repository
 app-misc/fastfetch
