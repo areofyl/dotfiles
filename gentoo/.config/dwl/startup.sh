@@ -17,7 +17,10 @@ sleep 1 && /usr/libexec/xdg-desktop-portal -r &
 swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
 # idle + lock + lock before suspend (lid close)
-swayidle timeout 300 '/home/aarav/.config/custom-lock/lock.sh' \
+swayidle \
+    timeout 300 'brightnessctl -s && brightnessctl set 50%' \
+        resume 'brightnessctl -r' \
+    timeout 360 '/home/aarav/.config/custom-lock/lock.sh' \
     before-sleep '/home/aarav/.config/custom-lock/lock.sh' \
     after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0' &
 
