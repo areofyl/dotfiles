@@ -47,6 +47,7 @@ tail -n 0 -F /tmp/dwl-status 2>/dev/null | while read -r line; do
     case "$line" in
         *" tags "*)
             set -- $line
+            mon=$1
             occ=$3
             sel=$4
             urg=$6
@@ -55,6 +56,8 @@ tail -n 0 -F /tmp/dwl-status 2>/dev/null | while read -r line; do
             if [ "$sel" = "1023" ] || [ "$sel" = "511" ] || [ "$sel" = "63" ]; then
                 sel=1
             fi
+            printf '%s %s %s\n' "$occ" "$sel" "$urg" > "${state_file}-${mon}"
+            # backward compat: also write the focused monitor's state to the base file
             printf '%s %s %s\n' "$occ" "$sel" "$urg" > "$state_file"
             notify_waybar
             ;;
