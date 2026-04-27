@@ -14,7 +14,7 @@ rm -f /tmp/dwl-status
 
 # external display: force 2560x1440 if connected (preferred 4K@30 broken on apple-dcp)
 if wlr-randr 2>/dev/null | grep -q 'DP-1'; then
-    wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0 &
+    wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0 &
 else
     wlr-randr --output eDP-1 --pos 0,0 &
 fi
@@ -33,11 +33,13 @@ swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
 # idle + lock + lock before suspend (lid close)
 swayidle \
-    timeout 300 'brightnessctl -s && brightnessctl set 50%' \
+    timeout 240 'brightnessctl -s && brightnessctl set 50%' \
+        resume 'brightnessctl -r' \
+    timeout 300 'brightnessctl set 10%' \
         resume 'brightnessctl -r' \
     timeout 360 '/home/aarav/.config/custom-lock/lock.sh' \
     before-sleep '/home/aarav/.config/custom-lock/lock.sh' \
-    after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0' &
+    after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0' &
 
 # listen for power button / loginctl lock-session (delay for session registration)
 (sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
