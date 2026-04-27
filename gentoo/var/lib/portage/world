@@ -30,6 +30,7 @@ dev-vcs/git
 gui-apps/grim
 gui-apps/mako
 gui-apps/slurp
+gui-apps/swaybg
 gui-apps/swayidle
 gui-apps/tuigreet
 gui-apps/waybar
