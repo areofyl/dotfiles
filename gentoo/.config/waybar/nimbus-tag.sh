@@ -1,13 +1,18 @@
 #!/bin/sh
 # Per-tag state reader for waybar.
-# Usage: nimbus-tag.sh <tag-number 1-9>
-# Reads the latest dwl tags line from /tmp/nimbus-tags-state (maintained by
-# nimbus-tags-producer.sh) and outputs JSON for a single tag's waybar module.
+# Usage: nimbus-tag.sh [monitor] <tag-number 1-10>
+# If monitor is given, reads per-monitor state from /tmp/nimbus-tags-state-<mon>.
+# Otherwise reads the global file.
 #
 # Output classes: "selected", "occupied", "urgent", "empty"
 
-tag=$1
-state_file=/tmp/nimbus-tags-state
+if [ $# -ge 2 ]; then
+    mon=$1; tag=$2
+    state_file="/tmp/nimbus-tags-state-${mon}"
+else
+    tag=$1
+    state_file=/tmp/nimbus-tags-state
+fi
 
 # Display label: 10 shown as "0" to match the keybind (Super+0)
 label=$tag
