@@ -14,4 +14,18 @@ pkill -f 'cat /tmp/dwl-status' 2>/dev/null
 rm -f /tmp/dwl-status
 
 # start dwl under a D-Bus session (needed for xdg-desktop-portal)
-exec dbus-run-session dwl -s ~/.config/dwl/startup.sh 2>/tmp/dwl-error.log
+# restart dwl on crash/signal unless the user explicitly quit (keybind touches quit flag)
+exec dbus-run-session sh -c '
+    quit_flag=/tmp/dwl-quit
+    rm -f "$quit_flag"
+    while true; do
+        dwl -s ~/.config/dwl/startup.sh 2>>/tmp/dwl-error.log
+        rc=$?
+        if [ -f "$quit_flag" ]; then
+            rm -f "$quit_flag"
+            break
+        fi
+        echo "[$(date)] dwl exited (code $rc), restarting..." >> /tmp/dwl-error.log
+        sleep 1
+    done
+'
