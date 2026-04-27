@@ -591,6 +591,10 @@ class LockScreen(Gtk.Application):
 
     def _on_auth_result(self, success):
         if success:
+            try:
+                os.remove('/tmp/dwl-locked')
+            except FileNotFoundError:
+                pass
             self._dpms_on()
             for box in self.content_boxes:
                 box.add_css_class('fadeout')
