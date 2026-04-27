@@ -143,13 +143,23 @@ class LockScreen(Gtk.Application):
         self._dpms_on()
         self.quit()
 
+    def _get_output_names(self):
+        try:
+            result = subprocess.run(['wlr-randr'], capture_output=True, text=True)
+            return [line.split()[0] for line in result.stdout.splitlines()
+                    if line and not line[0].isspace()]
+        except Exception:
+            return ['eDP-1']
+
     def _dpms_on(self):
         if self._dpms_off:
-            subprocess.run(['wlr-randr', '--output', 'eDP-1', '--on'], capture_output=True)
+            for output in self._get_output_names():
+                subprocess.run(['wlr-randr', '--output', output, '--on'], capture_output=True)
             self._dpms_off = False
 
     def _dpms_off_cmd(self):
-        subprocess.run(['wlr-randr', '--output', 'eDP-1', '--off'], capture_output=True)
+        for output in self._get_output_names():
+            subprocess.run(['wlr-randr', '--output', output, '--off'], capture_output=True)
         self._dpms_off = True
         self._dpms_timeout_id = None
         return False
@@ -187,10 +197,21 @@ class LockScreen(Gtk.Application):
             self.windows.append(win)
             win.present()
 
+        # lock new monitors that appear after launch (e.g. DP-1 reconnecting after resume)
+        monitors.connect('items-changed', self._on_monitors_changed)
+
         self._apply_css()
         self._update_time()
         GLib.timeout_add_seconds(1, self._update_time)
         self._reset_dpms_timer()
+
+    def _on_monitors_changed(self, monitors, position, removed, added):
+        for i in range(added):
+            monitor = monitors.get_item(position + i)
+            if monitor:
+                win = self._create_window(monitor)
+                self.windows.append(win)
+                win.present()
 
     def _create_window(self, monitor):
         win = Gtk.ApplicationWindow(application=self)
@@ -570,6 +591,7 @@ class LockScreen(Gtk.Application):
 
     def _on_auth_result(self, success):
         if success:
+            self._dpms_on()
             for box in self.content_boxes:
                 box.add_css_class('fadeout')
             for win in self.windows:
