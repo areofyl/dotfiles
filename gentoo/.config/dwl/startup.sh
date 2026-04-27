@@ -1,8 +1,23 @@
 #!/bin/sh
 # launched by dwl -s (dwl pipes status to our stdin)
 
-# external display: force 2560x1440 (preferred 4K@30 broken on apple-dcp)
-wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0 &
+# kill stale processes from a previous crashed session
+pkill -x swaybg 2>/dev/null
+pkill -x waybar 2>/dev/null
+pkill -x swayidle 2>/dev/null
+pkill -f 'xdg-desktop-portal' 2>/dev/null
+pkill -f 'nimbus-tags-producer' 2>/dev/null
+pkill -f 'glance watch' 2>/dev/null
+pkill -f 'lock-listener' 2>/dev/null
+pkill -f 'cat > /tmp/dwl-status' 2>/dev/null
+rm -f /tmp/dwl-status
+
+# external display: force 2560x1440 if connected (preferred 4K@30 broken on apple-dcp)
+if wlr-randr 2>/dev/null | grep -q 'DP-1'; then
+    wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 2560x1440@59.951000 --pos 2560,0 &
+else
+    wlr-randr --output eDP-1 --pos 0,0 &
+fi
 
 sleep 1
 
