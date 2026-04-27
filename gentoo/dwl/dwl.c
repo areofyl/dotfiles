@@ -1,6 +1,7 @@
 /*
  * See LICENSE file for copyright and license details.
  */
+#include <fcntl.h>
 #include <getopt.h>
 #include <libinput.h>
 #include <linux/input-event-codes.h>
@@ -2253,6 +2254,9 @@ powermgrsetmode(struct wl_listener *listener, void *data)
 void
 quit(const Arg *arg)
 {
+	int fd = open("/tmp/dwl-quit", O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		close(fd);
 	wl_display_terminate(dpy);
 }
 
