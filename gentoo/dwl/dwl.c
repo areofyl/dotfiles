@@ -3013,8 +3013,12 @@ updatemons(struct wl_listener *listener, void *data)
 	/* Insert outputs that need to */
 	wl_list_for_each(m, &mons, link) {
 		if (m->wlr_output->enabled
-				&& !wlr_output_layout_get(output_layout, m->wlr_output))
-			wlr_output_layout_add_auto(output_layout, m->wlr_output);
+				&& !wlr_output_layout_get(output_layout, m->wlr_output)) {
+			if (m->m.x >= 0 && m->m.y >= 0)
+				wlr_output_layout_add(output_layout, m->wlr_output, m->m.x, m->m.y);
+			else
+				wlr_output_layout_add_auto(output_layout, m->wlr_output);
+		}
 	}
 
 	/* Now that we update the output layout we can get its box */
