@@ -9,8 +9,9 @@ pkill -f 'xdg-desktop-portal' 2>/dev/null
 pkill -f 'nimbus-tags-producer' 2>/dev/null
 pkill -f 'glance watch' 2>/dev/null
 pkill -f 'lock-listener' 2>/dev/null
-pkill -f 'cat > /tmp/dwl-status' 2>/dev/null
-rm -f /tmp/dwl-status
+pkill -f 'lockscreen.py' 2>/dev/null
+pkill -f 'lock.sh' 2>/dev/null
+rm -f /tmp/dwl-status /tmp/dwl-locked
 
 # external display: force 2560x1440 if connected (preferred 4K@30 broken on apple-dcp)
 if wlr-randr 2>/dev/null | grep -q 'DP-1'; then
