@@ -211,6 +211,7 @@ struct Monitor {
 	int nmaster;
 	char ltsymbol[16];
 	int asleep;
+	int cfg_x, cfg_y; /* configured position from monrules (-1 = auto) */
 };
 
 typedef struct {
@@ -1077,14 +1078,15 @@ createmon(struct wl_listener *listener, void *data)
 	m->gappiv = gappiv;
 	m->gappoh = gappoh;
 	m->gappov = gappov;
+	m->cfg_x = m->cfg_y = -1;
 
 	wlr_output_state_init(&state);
 	/* Initialize monitor state using configured rules */
 	m->tagset[0] = m->tagset[1] = 1;
 	for (r = monrules; r < END(monrules); r++) {
 		if (!r->name || strstr(wlr_output->name, r->name)) {
-			m->m.x = r->x;
-			m->m.y = r->y;
+			m->m.x = m->cfg_x = r->x;
+			m->m.y = m->cfg_y = r->y;
 			m->mfact = r->mfact;
 			m->nmaster = r->nmaster;
 			m->lt[0] = r->lt;
@@ -3014,8 +3016,8 @@ updatemons(struct wl_listener *listener, void *data)
 	wl_list_for_each(m, &mons, link) {
 		if (m->wlr_output->enabled
 				&& !wlr_output_layout_get(output_layout, m->wlr_output)) {
-			if (m->m.x >= 0 && m->m.y >= 0)
-				wlr_output_layout_add(output_layout, m->wlr_output, m->m.x, m->m.y);
+			if (m->cfg_x >= 0 && m->cfg_y >= 0)
+				wlr_output_layout_add(output_layout, m->wlr_output, m->cfg_x, m->cfg_y);
 			else
 				wlr_output_layout_add_auto(output_layout, m->wlr_output);
 		}
