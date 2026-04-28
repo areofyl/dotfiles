@@ -126,6 +126,7 @@ class LockScreen(Gtk.Application):
         self._locked_until = 0
         self._dpms_off = False
         self._dpms_timeout_id = None
+        self._saved_brightness = None
         self.quote, self.quote_author = random.choice(QUOTES)
         self.windows = []
         self.content_boxes = []
@@ -141,25 +142,22 @@ class LockScreen(Gtk.Application):
 
     def _on_signal(self, signum, frame):
         self._dpms_on()
-        self.quit()
-
-    def _get_output_names(self):
         try:
-            result = subprocess.run(['wlr-randr'], capture_output=True, text=True)
-            return [line.split()[0] for line in result.stdout.splitlines()
-                    if line and not line[0].isspace()]
+            self.quit()
         except Exception:
-            return ['eDP-1']
+            os._exit(1)
 
     def _dpms_on(self):
         if self._dpms_off:
-            for output in self._get_output_names():
-                subprocess.run(['wlr-randr', '--output', output, '--on'], capture_output=True)
+            if self._saved_brightness is not None:
+                subprocess.run(['brightnessctl', 's', self._saved_brightness],
+                               capture_output=True)
             self._dpms_off = False
 
     def _dpms_off_cmd(self):
-        for output in self._get_output_names():
-            subprocess.run(['wlr-randr', '--output', output, '--off'], capture_output=True)
+        result = subprocess.run(['brightnessctl', 'g'], capture_output=True, text=True)
+        self._saved_brightness = result.stdout.strip() if result.returncode == 0 else None
+        subprocess.run(['brightnessctl', 's', '0'], capture_output=True)
         self._dpms_off = True
         self._dpms_timeout_id = None
         return False
@@ -206,6 +204,28 @@ class LockScreen(Gtk.Application):
         self._reset_dpms_timer()
 
     def _on_monitors_changed(self, monitors, position, removed, added):
+        # Clean up dead windows from removed monitors
+        alive = set()
+        for win in self.windows:
+            if win.get_mapped():
+                alive.add(win)
+        if len(alive) != len(self.windows):
+            self.windows = [w for w in self.windows if w in alive]
+            self.content_boxes = [b for b in self.content_boxes
+                                  if b.get_root() in alive]
+            self.password_entries = [e for e in self.password_entries
+                                     if e.get_root() in alive]
+            self.revealers = [r for r in self.revealers
+                              if r.get_root() in alive]
+            self.hour_labels = [l for l in self.hour_labels
+                                if l.get_root() in alive]
+            self.minute_labels = [l for l in self.minute_labels
+                                  if l.get_root() in alive]
+            self.error_labels = [l for l in self.error_labels
+                                 if l.get_root() in alive]
+            self.password_frames = [f for f in self.password_frames
+                                    if f.get_root() in alive]
+
         for i in range(added):
             monitor = monitors.get_item(position + i)
             if monitor:
