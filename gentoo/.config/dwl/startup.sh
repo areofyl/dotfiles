@@ -39,6 +39,7 @@ swayidle \
     timeout 300 'brightnessctl set 10%' \
         resume 'brightnessctl -r' \
     timeout 360 '/home/aarav/.config/custom-lock/lock.sh' \
+    timeout 600 'systemctl suspend' \
     before-sleep '/home/aarav/.config/custom-lock/lock.sh' \
     after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0' &
 
