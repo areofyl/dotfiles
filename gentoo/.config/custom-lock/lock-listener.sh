@@ -24,7 +24,7 @@ if [ -z "$SESSION_PATH" ]; then
     exit 1
 fi
 
-# Monitor session Lock signal (power button)
+# Monitor session Lock signal (power button) in background
 gdbus monitor --system \
     --dest org.freedesktop.login1 \
     --object-path "$SESSION_PATH" 2>/dev/null | \
@@ -32,4 +32,17 @@ while read -r line; do
     if echo "$line" | grep -q "\.Lock ()"; then
         lock_screen
     fi
-done
+done &
+
+# Monitor PrepareForSleep on the Manager (lid close / manual suspend)
+# Lock screen before the system actually sleeps
+gdbus monitor --system \
+    --dest org.freedesktop.login1 \
+    --object-path /org/freedesktop/login1 2>/dev/null | \
+while read -r line; do
+    if echo "$line" | grep -q "PrepareForSleep (true)"; then
+        lock_screen
+    fi
+done &
+
+wait
