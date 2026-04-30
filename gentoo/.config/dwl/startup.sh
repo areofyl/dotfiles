@@ -9,6 +9,8 @@ pkill -f 'xdg-desktop-portal' 2>/dev/null
 pkill -f 'nimbus-tags-producer' 2>/dev/null
 pkill -f 'glance watch' 2>/dev/null
 pkill -f 'lock-listener' 2>/dev/null
+pkill -f 'gdbus.*login1.*session' 2>/dev/null
+pkill -f 'gdbus.*login1$' 2>/dev/null
 pkill -f 'lockscreen.py' 2>/dev/null
 pkill -f 'lock.sh' 2>/dev/null
 rm -f /tmp/dwl-status /tmp/dwl-locked
@@ -39,9 +41,9 @@ swayidle \
     timeout 300 'brightnessctl set 10%' \
         resume 'brightnessctl -r' \
     timeout 360 '/home/aarav/.config/custom-lock/lock.sh' \
-    timeout 600 'systemctl suspend' \
+    timeout 600 '/home/aarav/.config/custom-lock/suspend.sh' \
     before-sleep '/home/aarav/.config/custom-lock/lock.sh' \
-    after-resume 'wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0' &
+    after-resume 'sleep 1 && wlr-randr --output eDP-1 --on --pos 0,0; wlr-randr 2>/dev/null | grep -q DP-1 && wlr-randr --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0' &
 
 # listen for power button / loginctl lock-session (delay for session registration)
 (sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
