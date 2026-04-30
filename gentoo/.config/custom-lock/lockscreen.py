@@ -331,8 +331,6 @@ class LockScreen(Gtk.Application):
         pw_entry.set_width_chars(1)
         pw_entry.set_max_width_chars(0)
         pw_entry.add_css_class('pw-entry')
-        pw_entry.connect('activate', self._on_activate)
-        pw_entry.connect('changed', self._on_changed)
         self.password_entries.append(pw_entry)
 
         pw_overlay.set_child(pw_entry)
@@ -548,41 +546,42 @@ class LockScreen(Gtk.Application):
                 r.set_reveal_child(False)
             return True
 
+        # Handle all input explicitly — after resume, GTK entry focus may be
+        # broken (stale Wayland text-input state), so we never rely on
+        # return False to propagate keys to the entry widget.
+        is_printable = 32 <= keyval <= 126 or keyname == 'space'
+
         if not self.is_typing:
-            is_printable = 32 <= keyval <= 126 or keyname == 'space'
             if is_printable:
                 self.is_typing = True
                 for r in self.revealers:
                     r.set_reveal_child(True)
+                char = chr(keyval) if 32 <= keyval <= 126 else ' '
+                self._set_password(char)
+            return True
 
-                entry = self.password_entries[0] if self.password_entries else None
-                for e in self.password_entries:
-                    win = e.get_root()
-                    if win and win.is_active():
-                        entry = e
-                        break
-                if entry:
-                    entry.grab_focus()
-                    char = chr(keyval) if 32 <= keyval <= 126 else ' '
-                    entry.set_text(char)
-                    entry.set_position(-1)
-                return True
+        if keyname == 'Return':
+            self._try_unlock()
+        elif keyname == 'BackSpace':
+            text = self._get_password()
+            self._set_password(text[:-1] if text else "")
+        elif is_printable:
+            text = self._get_password()
+            char = chr(keyval) if 32 <= keyval <= 126 else ' '
+            self._set_password(text + char)
 
-        return False
+        return True
 
-    def _on_activate(self, entry):
-        self._try_unlock()
+    def _get_password(self):
+        return self.password_entries[0].get_text() if self.password_entries else ""
 
-    def _on_changed(self, entry):
-        if self._syncing:
-            return
-        text = entry.get_text()
+    def _set_password(self, text):
         chars = max(len(text) + 1, 1)
         self._syncing = True
         for e in self.password_entries:
             e.set_width_chars(chars)
-            if e is not entry:
-                e.set_text(text)
+            e.set_text(text)
+            e.set_position(-1)
         self._syncing = False
         if not text and self.is_typing:
             self.is_typing = False
