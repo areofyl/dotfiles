@@ -36,9 +36,7 @@ swaybg -i /home/aarav/Pictures/wallpapers/clouds.jpg -m fill &
 
 # idle + lock + lock before suspend (lid close)
 swayidle \
-    timeout 240 'brightnessctl -s && brightnessctl set 50%' \
-        resume 'brightnessctl -r' \
-    timeout 300 'brightnessctl set 10%' \
+    timeout 300 'brightnessctl -s && brightnessctl set 10%' \
         resume 'brightnessctl -r' \
     timeout 360 '/home/aarav/.config/custom-lock/lock.sh' \
     timeout 600 '/home/aarav/.config/custom-lock/suspend.sh' \
