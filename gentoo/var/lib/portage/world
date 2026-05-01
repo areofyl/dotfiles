@@ -10,6 +10,7 @@ app-editors/vim
 app-emulation/qemu
 app-eselect/eselect-repository
 app-misc/fastfetch
+app-misc/figlet
 app-misc/jq
 app-portage/gentoolkit
 app-shells/fzf
