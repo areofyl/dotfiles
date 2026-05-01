@@ -38,7 +38,7 @@
         "clock": {
             "format": "[{:%I:%M %p}]",
             "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
-            "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+            "tooltip-format": "<big>{:%B %Y}</big>\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
             "calendar": {
                 "mode": "year",
                 "mode-mon-col": 3,
@@ -169,7 +169,7 @@
         "clock": {
             "format": "[{:%I:%M %p}]",
             "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
-            "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+            "tooltip-format": "<big>{:%B %Y}</big>\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
             "calendar": {
                 "mode": "year",
                 "mode-mon-col": 3,
