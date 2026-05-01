@@ -31,6 +31,7 @@ alias fetch='./fetch/fetch'
 
 alias sudo='sudo -S'
 alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
+alias restart-dwl='cd ~/dwl && make clean && make && sudo make install'
 
 # suppress accessibility bus (no screen reader needed)
 export NO_AT_BRIDGE=1
