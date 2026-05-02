@@ -12,6 +12,7 @@ app-eselect/eselect-repository
 app-misc/fastfetch
 app-misc/figlet
 app-misc/jq
+app-misc/sl
 app-portage/gentoolkit
 app-shells/fzf
 app-shells/zsh
