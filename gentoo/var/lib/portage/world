@@ -9,6 +9,7 @@ app-editors/neovim
 app-editors/vim
 app-emulation/qemu
 app-eselect/eselect-repository
+app-misc/cmatrix
 app-misc/fastfetch
 app-misc/figlet
 app-misc/jq
