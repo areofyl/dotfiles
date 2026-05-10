@@ -7,17 +7,12 @@ app-arch/zip
 app-containers/podman
 app-editors/neovim
 app-editors/vim
-app-emulation/qemu
 app-eselect/eselect-repository
-app-misc/cmatrix
 app-misc/fastfetch
-app-misc/figlet
 app-misc/jq
-app-misc/sl
 app-portage/gentoolkit
 app-shells/fzf
 app-shells/zsh
-app-text/enscript
 app-text/lowdown
 app-text/texlive
 app-text/tree
@@ -74,5 +69,3 @@ sys-kernel/dracut
 sys-process/btop
 x11-terms/kitty
 x11-themes/papirus-icon-theme
-xfce-base/thunar
-xfce-extra/thunar-archive-plugin
