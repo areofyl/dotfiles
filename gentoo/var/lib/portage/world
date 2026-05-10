@@ -2,7 +2,6 @@ app-admin/stow
 app-admin/sudo
 app-arch/p7zip
 app-arch/unzip
-app-arch/xarchiver
 app-arch/zip
 app-containers/podman
 app-editors/neovim
