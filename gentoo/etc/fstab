@@ -21,4 +21,4 @@
 #/dev/cdrom		/mnt/cdrom	auto		noauto,ro	0 0
 UUID=b896de97-1e41-4c1a-af22-376f77fd5a8e    /          ext4    defaults,noatime  0  1
 UUID=7F9C-7114                                /boot/efi  vfat    defaults          0  2
-/swapfile none swap sw 0 0
+UUID=d6db2ad3-c9cb-48c3-90c7-f40d5dd4c74e    /home    ext4    defaults,noatime    0    2
