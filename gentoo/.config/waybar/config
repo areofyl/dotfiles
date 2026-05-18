@@ -1,186 +1,105 @@
-[
-    {
-        "output": "eDP-1",
-        "layer": "top",
-        "position": "top",
-        "height": 28,
-        "margin-top": 0,
-        "margin-left": 0,
-        "margin-right": 0,
-        "margin-bottom": 0,
-        "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
-        "modules-center": ["clock"],
-        "modules-right": ["custom/glance", "wireplumber", "network", "custom/bluetooth", "custom/battery", "custom/updates"],
+{
+    "layer": "top",
+    "position": "top",
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
+    "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
+    "modules-center": ["clock"],
+    "modules-right": ["custom/glance", "cpu", "memory", "custom/power", "wireplumber", "network", "custom/bluetooth", "battery"],
 
-        "custom/glance": {
-            "exec": "/home/aarav/.local/bin/glance status",
-            "return-type": "json",
-            "interval": 5,
-            "signal": 9,
-            "on-click": "/home/aarav/.local/bin/glance menu",
-            "on-click-right": "/home/aarav/.local/bin/glance copy",
-            "on-scroll-up": "/home/aarav/.local/bin/glance scroll up",
-            "on-scroll-down": "/home/aarav/.local/bin/glance scroll down",
-            "tooltip": false
-        },
+    "custom/glance": {
+        "exec": "/home/aarav/.local/bin/glance status",
+        "return-type": "json",
+        "interval": 5,
+        "signal": 9,
+        "on-click": "/home/aarav/.local/bin/glance menu",
+        "on-click-right": "/home/aarav/.local/bin/glance copy",
+        "on-scroll-up": "/home/aarav/.local/bin/glance scroll up",
+        "on-scroll-down": "/home/aarav/.local/bin/glance scroll down",
+        "tooltip": false
+    },
 
-        "custom/tag1":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag2":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag3":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 3",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag4":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 4",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag5":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 5",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag6":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 6",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag7":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 7",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag8":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 8",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag9":  { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 9",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh eDP-1 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag1":  { "exec": "~/.config/waybar/nimbus-tag.sh 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag2":  { "exec": "~/.config/waybar/nimbus-tag.sh 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag3":  { "exec": "~/.config/waybar/nimbus-tag.sh 3",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag4":  { "exec": "~/.config/waybar/nimbus-tag.sh 4",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag5":  { "exec": "~/.config/waybar/nimbus-tag.sh 5",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag6":  { "exec": "~/.config/waybar/nimbus-tag.sh 6",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag7":  { "exec": "~/.config/waybar/nimbus-tag.sh 7",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag8":  { "exec": "~/.config/waybar/nimbus-tag.sh 8",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag9":  { "exec": "~/.config/waybar/nimbus-tag.sh 9",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
+    "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
 
-        "clock": {
-            "format": "[{:%I:%M %p}]",
-            "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
-            "tooltip-format": "<big>{:%B %Y}</big>\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
-            "calendar": {
-                "mode": "year",
-                "mode-mon-col": 3,
-                "on-scroll": 1,
-                "format": {
-                    "months":   "<span color='#8a95b0'><b>{}</b></span>",
-                    "days":     "<span color='#5a6470'>{}</span>",
-                    "weekdays": "<span color='#28303c'>{}</span>",
-                    "today":    "<span color='#c4ccd4'><b>{}</b></span>"
-                }
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "format-alt": "{:%Y-%m-%d}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#c4ccd4'><b>{}</b></span>",
+                "days":     "<span color='#c4ccd4'>{}</span>",
+                "weekdays": "<span color='#5a6470'>{}</span>",
+                "today":    "<span color='#9298a0'><b><u>{}</u></b></span>"
             }
-        },
-
-        "wireplumber": {
-            "format": "[{volume}%]",
-            "format-muted": "[muted]",
-            "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-            "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
-            "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
-            "tooltip": false
-        },
-
-        "network": {
-            "format-wifi": "[{essid}]",
-            "format-ethernet": "[wired]",
-            "format-disconnected": "[offline]",
-            "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
-            "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-            "tooltip-format-disconnected": "offline"
-        },
-
-        "custom/bluetooth": {
-            "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"['\"$dev\"']\", \"class\": \"connected\"}'; else echo '{\"text\": \"[bt]\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"[--]\", \"class\": \"off\"}'; fi",
-            "return-type": "json",
-            "interval": 5,
-            "tooltip": false
-        },
-
-        "custom/updates": {
-            "exec": "if [ -n \"$(eix -u --world 2>/dev/null | head -1)\" ]; then echo '{\"text\": \"[+]\", \"class\": \"pending\"}'; else echo '{\"text\": \"[-]\", \"class\": \"clean\"}'; fi",
-            "return-type": "json",
-            "interval": 1800,
-            "tooltip": false
-        },
-
-        "custom/battery": {
-            "exec": "~/.config/waybar/nimbus-battery.sh",
-            "return-type": "json",
-            "interval": 5,
-            "tooltip": true
         }
     },
-    {
-        "output": "DP-1",
-        "layer": "top",
-        "position": "top",
-        "height": 28,
-        "margin-top": 0,
-        "margin-left": 0,
-        "margin-right": 0,
-        "margin-bottom": 0,
-        "modules-left": ["custom/tag1","custom/tag2","custom/tag3","custom/tag4","custom/tag5","custom/tag6","custom/tag7","custom/tag8","custom/tag9","custom/tag10"],
-        "modules-center": ["clock"],
-        "modules-right": ["custom/glance", "wireplumber", "network", "custom/bluetooth", "custom/battery", "custom/updates"],
 
-        "custom/glance": {
-            "exec": "/home/aarav/.local/bin/glance status",
-            "return-type": "json",
-            "interval": 5,
-            "signal": 9,
-            "on-click": "/home/aarav/.local/bin/glance menu",
-            "on-click-right": "/home/aarav/.local/bin/glance copy",
-            "on-scroll-up": "/home/aarav/.local/bin/glance scroll up",
-            "on-scroll-down": "/home/aarav/.local/bin/glance scroll down",
-            "tooltip": false
-        },
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "interval": 2,
+        "tooltip": true,
+        "on-click": "kitty btop"
+    },
 
-        "wireplumber": {
-            "format": "[{volume}%]",
-            "format-muted": "[muted]",
-            "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-            "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
-            "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
-            "tooltip": false
-        },
+    "memory": {
+        "format": "󰍛 {used:0.1f}G",
+        "interval": 2,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+        "on-click": "kitty btop"
+    },
 
-        "network": {
-            "format-wifi": "[{essid}]",
-            "format-ethernet": "[wired]",
-            "format-disconnected": "[offline]",
-            "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
-            "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-            "tooltip-format-disconnected": "offline"
-        },
+    "custom/power": {
+        "exec": "awk '{w=$1/1000000; if(w<0)w=-w; if(w>=10) printf \"{\\\"text\\\":\\\"󱐋 %dW\\\"}\\n\",w; else printf \"{\\\"text\\\":\\\"󱐋 %.1fW\\\"}\\n\",w}' /sys/class/power_supply/macsmc-battery/power_now",
+        "return-type": "json",
+        "interval": 2,
+        "tooltip": false,
+        "on-click": "kitty btop"
+    },
 
-        "custom/bluetooth": {
-            "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"['\"$dev\"']\", \"class\": \"connected\"}'; else echo '{\"text\": \"[bt]\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"[--]\", \"class\": \"off\"}'; fi",
-            "return-type": "json",
-            "interval": 5,
-            "tooltip": false
-        },
+    "wireplumber": {
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁 muted",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+        "tooltip": false
+    },
 
-        "custom/updates": {
-            "exec": "if [ -n \"$(eix -u --world 2>/dev/null | head -1)\" ]; then echo '{\"text\": \"[+]\", \"class\": \"pending\"}'; else echo '{\"text\": \"[-]\", \"class\": \"clean\"}'; fi",
-            "return-type": "json",
-            "interval": 1800,
-            "tooltip": false
-        },
+    "network": {
+        "format-wifi": "󰖩 {essid}",
+        "format-ethernet": "󰈁 ethernet",
+        "format-disconnected": "󰖪 offline",
+        "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+        "tooltip-format-disconnected": "no connection"
+    },
 
-        "custom/battery": {
-            "exec": "~/.config/waybar/nimbus-battery.sh",
-            "return-type": "json",
-            "interval": 5,
-            "tooltip": true
-        },
+    "custom/bluetooth": {
+        "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"󰂯 '\"$dev\"'\", \"class\": \"connected\"}'; else echo '{\"text\": \"󰂯\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"󰂲\", \"class\": \"off\"}'; fi",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip": false
+    },
 
-        "custom/tag1":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag2":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag3":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 3",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag4":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 4",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag5":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 5",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag6":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 6",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag7":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 7",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag8":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 8",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag9":  { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 9",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        "custom/tag10": { "exec": "~/.config/waybar/nimbus-tag.sh DP-1 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-
-        "clock": {
-            "format": "[{:%I:%M %p}]",
-            "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
-            "tooltip-format": "<big>{:%B %Y}</big>\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
-            "calendar": {
-                "mode": "year",
-                "mode-mon-col": 3,
-                "on-scroll": 1,
-                "format": {
-                    "months":   "<span color='#8a95b0'><b>{}</b></span>",
-                    "days":     "<span color='#5a6470'>{}</span>",
-                    "weekdays": "<span color='#28303c'>{}</span>",
-                    "today":    "<span color='#c4ccd4'><b>{}</b></span>"
-                }
-            }
-        }
+    "battery": {
+        "format": "{capacity}%-",
+        "format-charging": "{capacity}%+",
+        "interval": 30,
+        "tooltip-format": "{capacity}%  {time}"
     }
-]
+}
