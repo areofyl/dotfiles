@@ -402,6 +402,10 @@ class LockScreen(Gtk.Application):
             color: {COLORS['dim']};
         }}
 
+        .time-minute.charging {{
+            color: #4d5952;
+        }}
+
         .pw-frame {{
             background-color: {COLORS['surface']};
             border: 2px solid {COLORS['dim']};
@@ -512,12 +516,24 @@ class LockScreen(Gtk.Application):
         now = datetime.datetime.now()
         return now.strftime("%I"), now.strftime("%M")
 
+    def _is_charging(self):
+        try:
+            with open('/sys/class/power_supply/macsmc-battery/status') as f:
+                return f.read().strip() in ('Charging', 'Full')
+        except (FileNotFoundError, PermissionError):
+            return False
+
     def _update_time(self):
         hour, minute = self._get_time()
+        charging = self._is_charging()
         for l in self.hour_labels:
             l.set_text(hour)
         for l in self.minute_labels:
             l.set_text(minute)
+            if charging:
+                l.add_css_class('charging')
+            else:
+                l.remove_css_class('charging')
         return True
 
     def _on_key_press(self, controller, keyval, keycode, state):
