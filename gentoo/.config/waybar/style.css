@@ -124,10 +124,10 @@ tooltip label {
 #custom-battery.critical         { color: #9a7590; font-weight: bold; }
 #custom-battery.charging         { color: #90a098; }
 
-/* ── Updates ── */
-#custom-updates            { padding: 0 10px; }
-#custom-updates.clean      { color: #5a6470; }
-#custom-updates.pending    { color: #9a7590; }
+/* ── Idle Inhibitor ── */
+#idle_inhibitor            { padding: 0 10px; }
+#idle_inhibitor.deactivated { color: #5a6470; }
+#idle_inhibitor.activated   { color: #8a95b0; }
 
 /* ── Glance ── */
 #custom-glance            { color: #c4ccd4; }
