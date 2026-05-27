@@ -7,3 +7,5 @@
 [user]
 	name = areofyl
 	email = areofyl@users.noreply.github.com
+[safe]
+	directory = /usr/src/linux-fairydust
