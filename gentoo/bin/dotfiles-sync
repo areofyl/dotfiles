@@ -4,10 +4,15 @@
 
 DOTFILES="$HOME/dotfiles/gentoo"
 
-# Sync a file or directory
+# Sync a file or directory (skip symlinks pointing into dotfiles)
 sync_path() {
     src="$1"
     dst="$DOTFILES/$2"
+    # Skip if src is a symlink into the dotfiles repo (avoids copying dir into itself)
+    if [ -L "$src" ]; then
+        target=$(readlink -f "$src")
+        case "$target" in "$HOME/dotfiles/"*) return ;; esac
+    fi
     if [ -e "$src" ]; then
         if [ -d "$src" ]; then
             mkdir -p "$dst"
@@ -33,7 +38,9 @@ sync_path "$HOME/.config/systemd/user" ".config/systemd/user"
 sync_path "$HOME/.zshrc"               ".zshrc"
 sync_path "$HOME/.gitconfig"           ".gitconfig"
 sync_path "$HOME/bin"                  "bin"
-sync_path "$HOME/dwl"                  "dwl"
+sync_path "$HOME/dwl/config.h"          "dwl/config.h"
+sync_path "$HOME/dwl/config.def.h"      "dwl/config.def.h"
+sync_path "$HOME/dwl/vanitygaps.patch"  "dwl/vanitygaps.patch"
 
 # System config (world-readable, no sudo)
 sync_path "/etc/fstab"                 "etc/fstab"

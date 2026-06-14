@@ -1,5 +1,11 @@
 *.bak
 **/backup/
+**/__pycache__/
 gentoo/etc/systemd/
 gentoo/etc/portage/make.profile
 gentoo/.config/systemd/
+gentoo/dwl/*.o
+gentoo/dwl/dwl
+gentoo/dwl/*.h
+!gentoo/dwl/config.h
+!gentoo/dwl/config.def.h
