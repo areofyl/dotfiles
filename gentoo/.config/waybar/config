@@ -37,10 +37,10 @@
 
         "clock": {
             "format": "[{:%I:%M %p}]",
-            "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
-            "tooltip-format": "{:%B %Y}\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
+            "format-alt": "[{:%I:%M %p - %A, %B %d, %Y}]",
+            "tooltip-format": "<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
             "calendar": {
-                "mode": "year",
+                "mode": "month",
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
@@ -172,10 +172,10 @@
         
         "clock": {
             "format": "[{:%I:%M %p}]",
-            "format-alt": "[{:%I:%M %p - %B %d, %Y}]",
+            "format-alt": "[{:%I:%M %p - %A, %B %d, %Y}]",
             "tooltip-format": "{:%B %Y}\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
             "calendar": {
-                "mode": "year",
+                "mode": "month",
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
@@ -186,7 +186,6 @@
                 }
             }
         },
-
         
     }
 ]
