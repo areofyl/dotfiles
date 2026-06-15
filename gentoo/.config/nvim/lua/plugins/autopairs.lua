@@ -1,7 +1,7 @@
 return {
   {
     "echasnovski/mini.pairs",
-    event = "VeryLazy",
+    event = "InsertEnter",
     opts = {
       modes = { insert = true, command = false, terminal = false },
     },
