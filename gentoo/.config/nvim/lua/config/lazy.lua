@@ -1,10 +1,3 @@
--- Set leader key before lazy.nvim loads
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
--- Load options before lazy (so plugins see them)
-require("config.options")
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -29,29 +22,4 @@ require("lazy").setup({
   defaults = {
     lazy = false,
   },
-  install = { colorscheme = { "gruvbox", "default" } },
-  checker = {
-    enabled = true,
-    notify = false,
-  },
-  performance = {
-    rtp = {
-      disabled_plugins = {
-        "gzip",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-      },
-    },
-  },
-})
-
--- Load keymaps and autocmds after plugins (VeryLazy)
-vim.api.nvim_create_autocmd("User", {
-  pattern = "VeryLazy",
-  callback = function()
-    require("config.keymaps")
-    require("config.autocmds")
-  end,
 })
