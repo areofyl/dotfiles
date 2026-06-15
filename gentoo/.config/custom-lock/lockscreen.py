@@ -22,16 +22,33 @@ gi.require_version('Gtk4LayerShell', '1.0')
 from gi.repository import Gtk, Gdk, GLib
 from gi.repository import Gtk4LayerShell as LayerShell
 
-# Nimbus palette
+# Read palette from theme file
+def _load_palette():
+    import re
+    colors = {}
+    path = os.path.expanduser('~/.config/theme/palette.sh')
+    for line in open(path):
+        m = re.match(r"^(\w+)='(#[0-9a-fA-F]+)'", line)
+        if m:
+            colors[m.group(1)] = m.group(2)
+    # derive surface rgba from bg
+    bg = colors.get('bg', '#1b1e28')
+    r, g, b = int(bg[1:3], 16), int(bg[3:5], 16), int(bg[5:7], 16)
+    colors['surface'] = f'rgba({r}, {g}, {b}, 0.85)'
+    colors['bg_clear'] = f'rgba({r}, {g}, {b}, 0)'
+    return colors
+
+_p = _load_palette()
 COLORS = {
-    'bg':      '#10141a',
-    'fg':      '#c4ccd4',
-    'dim':     '#5a6470',
-    'green':   '#90a098',
-    'lavender':'#8a95b0',
-    'accent':  '#9298a0',
-    'red':     '#9a7590',
-    'surface': 'rgba(16, 20, 26, 0.85)',
+    'bg':      _p.get('bg', '#1b1e28'),
+    'fg':      _p.get('fg', '#a6accd'),
+    'dim':     _p.get('dim', '#767c9d'),
+    'green':   _p.get('green', '#5de4c7'),
+    'lavender':_p.get('lavender', '#add7ff'),
+    'accent':  _p.get('accent', '#add7ff'),
+    'red':     _p.get('red_error', '#d0679d'),
+    'surface': _p['surface'],
+    'bg_clear':_p['bg_clear'],
 }
 
 QUOTES = [
@@ -418,7 +435,7 @@ class LockScreen(Gtk.Application):
 
         .pw-fade-left {{
             min-width: 30px;
-            background-image: linear-gradient(to right, {COLORS['surface']}, rgba(16, 20, 26, 0));
+            background-image: linear-gradient(to right, {COLORS['surface']}, {COLORS['bg_clear']});
         }}
 
         entry.pw-entry {{
