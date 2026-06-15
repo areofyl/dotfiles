@@ -5,7 +5,7 @@ return {
     config = function()
       local alpha = require("alpha")
 
-      local macaroni_dir = vim.fn.expand("~/macaroni")
+      local macaroni_dir = vim.fn.expand("~/Projects/macaroni")
       local num_frames = 13
       local frame_idx = 0
       local timer = nil
@@ -69,7 +69,7 @@ return {
               table.insert(lines, "aarav | neovim")
               return lines
             end,
-            opts = { position = "center", hl = "NimbusHeader" },
+            opts = { position = "center" },
           },
         },
         opts = { margin = 0, noautocmd = false },
@@ -77,8 +77,13 @@ return {
 
       alpha.setup(dashboard)
 
-      -- Highlight namespace for the macaroni coloring
-      local ns = vim.api.nvim_create_namespace("macaroni")
+      local function stop_animation()
+        if timer then
+          timer:stop()
+          timer:close()
+          timer = nil
+        end
+      end
 
       local function write_frame_to_buf()
         if not alpha_buf or not vim.api.nvim_buf_is_valid(alpha_buf) then
@@ -95,22 +100,6 @@ return {
         vim.api.nvim_set_option_value("modifiable", true, { buf = alpha_buf })
         vim.api.nvim_buf_set_lines(alpha_buf, 0, -1, false, lines)
         vim.api.nvim_set_option_value("modifiable", false, { buf = alpha_buf })
-
-        -- Apply highlight to all non-empty content
-        vim.api.nvim_buf_clear_namespace(alpha_buf, ns, 0, -1)
-        for i, line in ipairs(lines) do
-          if #line > 0 then
-            vim.api.nvim_buf_add_highlight(alpha_buf, ns, "NimbusHeader", i - 1, 0, -1)
-          end
-        end
-      end
-
-      local function stop_animation()
-        if timer then
-          timer:stop()
-          timer:close()
-          timer = nil
-        end
       end
 
       local function start_animation(buf)
@@ -135,10 +124,8 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "AlphaReady",
         callback = function()
-          -- Find the alpha buffer
           for _, buf in ipairs(vim.api.nvim_list_bufs()) do
             if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "alpha" then
-              -- No buttons in this dashboard — disable alpha's <CR> press handler
               pcall(vim.keymap.del, "n", "<CR>", { buffer = buf })
               vim.keymap.set("n", "<CR>", "<Nop>", { buffer = buf, silent = true })
               start_animation(buf)
