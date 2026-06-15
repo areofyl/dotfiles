@@ -44,10 +44,10 @@
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
-                    "months":   "<span color='#8a95b0'><b>{}</b></span>",
-                    "days":     "<span color='#5a6470'>{}</span>",
-                    "weekdays": "<span color='#28303c'>{}</span>",
-                    "today":    "<span color='#c4ccd4'><b>{}</b></span>"
+                    "months":   "<span color='#add7ff'><b>{}</b></span>",
+                    "days":     "<span color='#767c9d'>{}</span>",
+                    "weekdays": "<span color='#303446'>{}</span>",
+                    "today":    "<span color='#a6accd'><b>{}</b></span>"
                 }
             }
         },
@@ -179,10 +179,10 @@
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
-                    "months":   "<span color='#8a95b0'><b>{}</b></span>",
-                    "days":     "<span color='#5a6470'>{}</span>",
-                    "weekdays": "<span color='#28303c'>{}</span>",
-                    "today":    "<span color='#c4ccd4'><b>{}</b></span>"
+                    "months":   "<span color='#add7ff'><b>{}</b></span>",
+                    "days":     "<span color='#767c9d'>{}</span>",
+                    "weekdays": "<span color='#303446'>{}</span>",
+                    "today":    "<span color='#a6accd'><b>{}</b></span>"
                 }
             }
         },
