@@ -13,7 +13,7 @@ return {
         menu = { auto_show = true },
       },
       sources = {
-        default = { "lsp", "snippets", "path", "buffer" },
+        default = { "lsp", "snippets", "path" },
       },
     },
   },
