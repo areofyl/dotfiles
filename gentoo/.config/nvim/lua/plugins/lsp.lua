@@ -31,7 +31,18 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+    },
     config = function()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- System clangd (not managed by mason)
+      vim.lsp.config("clangd", {
+        capabilities = capabilities,
+      })
+      vim.lsp.enable("clangd")
+
       vim.diagnostic.config({
         virtual_text = { spacing = 4 },
         severity_sort = true,
@@ -53,6 +64,13 @@ return {
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
           map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
           map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+        end,
+      })
+
+      -- Format on save using LSP
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        callback = function()
+          vim.lsp.buf.format({ timeout_ms = 3000 })
         end,
       })
     end,
