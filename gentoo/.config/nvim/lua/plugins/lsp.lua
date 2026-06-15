@@ -1,12 +1,10 @@
 return {
-  -- Mason: portable package manager for LSP servers, formatters, etc.
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
     opts = {},
   },
 
-  -- Auto-configure LSP servers installed by Mason
   {
     "mason-org/mason-lspconfig.nvim",
     dependencies = {
@@ -18,7 +16,6 @@ return {
     },
   },
 
-  -- Declaratively install tools via Mason
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "mason-org/mason.nvim" },
@@ -27,18 +24,14 @@ return {
         "pylsp",
         "clang-format",
         "ruff",
-        "codelldb",
-        "debugpy",
       },
     },
   },
 
-  -- LSP config
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-      -- Diagnostics
       vim.diagnostic.config({
         virtual_text = { spacing = 4 },
         severity_sort = true,
@@ -46,7 +39,6 @@ return {
         underline = true,
       })
 
-      -- Keymaps on LspAttach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local buf = args.buf
