@@ -44,10 +44,10 @@
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
-                    "months":   "<span color=''><b>{}</b></span>",
-                    "days":     "<span color=''>{}</span>",
-                    "weekdays": "<span color=''>{}</span>",
-                    "today":    "<span color=''><b>{}</b></span>"
+                    "months":   "<b>{}</b>",
+                    "days":     "{}",
+                    "weekdays": "{}",
+                    "today":    "<b>{}</b>"
                 }
             }
         },
@@ -65,7 +65,7 @@
             "format-wifi": "[{essid}]",
             "format-ethernet": "[wired]",
             "format-disconnected": "[offline]",
-            "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}",
+            "tooltip-format-wifi": "{essid} : {signalStrength}%\n{ipaddr}",
             "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
             "tooltip-format-disconnected": "offline"
         },
@@ -179,13 +179,13 @@
                 "mode-mon-col": 12,
                 "on-scroll": 1,
                 "format": {
-                    "months":   "<span color=''><b>{}</b></span>",
-                    "days":     "<span color=''>{}</span>",
-                    "weekdays": "<span color=''>{}</span>",
-                    "today":    "<span color=''><b>{}</b></span>"
+                    "months":   "<b>{}</b>",
+                    "days":     "{}",
+                    "weekdays": "{}",
+                    "today":    "<b>{}</b>"
                 }
             }
-        },
-        
+        }
+
     }
 ]
