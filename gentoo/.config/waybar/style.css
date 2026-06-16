@@ -9,23 +9,23 @@
 window#waybar {
     background: repeating-linear-gradient(
         to bottom,
-        #1b1e28 0px,
-        #1b1e28 1px,
+        #10141a 0px,
+        #10141a 1px,
         rgba(255,255,255,0.015) 1px,
         rgba(255,255,255,0.015) 2px
     );
-    color: #a6accd;
-    border-bottom: 1px solid #303446;
+    color: #c4ccd4;
+    border-bottom: 1px solid #2e3642;
 }
 
 tooltip {
-    background: #1b1e28;
-    border: 1px solid #303446;
+    background: #10141a;
+    border: 1px solid #2e3642;
     border-radius: 0;
 }
 
 tooltip label {
-    color: #a6accd;
+    color: #c4ccd4;
     font-family: "FantasqueSansM Nerd Font Mono";
     font-size: 17px;
     padding: 6px 8px;
@@ -40,7 +40,7 @@ tooltip label {
     margin: 0;
     border-radius: 0;
     background: transparent;
-    color: #add7ff;
+    color: #8a95b0;
     min-width: 0;
 }
 
@@ -61,7 +61,7 @@ tooltip label {
 #custom-tag4.occupied, #custom-tag5.occupied, #custom-tag6.occupied,
 #custom-tag7.occupied, #custom-tag8.occupied,
 #custom-tag9.occupied, #custom-tag10.occupied {
-    color: #add7ff;
+    color: #8a95b0;
 }
 
 /* Selected */
@@ -69,7 +69,7 @@ tooltip label {
 #custom-tag4.selected, #custom-tag5.selected, #custom-tag6.selected,
 #custom-tag7.selected, #custom-tag8.selected,
 #custom-tag9.selected, #custom-tag10.selected {
-    color: #add7ff;
+    color: #8a95b0;
     background: transparent;
 }
 
@@ -78,14 +78,14 @@ tooltip label {
 #custom-tag4.urgent, #custom-tag5.urgent, #custom-tag6.urgent,
 #custom-tag7.urgent, #custom-tag8.urgent,
 #custom-tag9.urgent, #custom-tag10.urgent {
-    color: #d0679d;
+    color: #9a7590;
     background: transparent;
 }
 
 /* ===== Center: clock ===== */
 
 #clock {
-    color: #a6accd;
+    color: #c4ccd4;
     padding: 0 14px;
 }
 
@@ -101,34 +101,34 @@ tooltip label {
 }
 
 /* ── Wireplumber ── */
-#wireplumber              { color: #a6accd; }
-#wireplumber.muted        { color: #767c9d; }
+#wireplumber              { color: #c4ccd4; }
+#wireplumber.muted        { color: #5a6470; }
 
 /* ── Network ── */
-#network                  { color: #5de4c7; }
-#network.disconnected     { color: #767c9d; }
+#network                  { color: #90a098; }
+#network.disconnected     { color: #5a6470; }
 
 /* ── Bluetooth ── */
-#custom-bluetooth         { color: #add7ff; }
-#custom-bluetooth.connected { color: #add7ff; }
-#custom-bluetooth.off     { color: #767c9d; }
+#custom-bluetooth         { color: #8a95b0; }
+#custom-bluetooth.connected { color: #8a95b0; }
+#custom-bluetooth.off     { color: #5a6470; }
 
 /* ── Battery ── */
-#custom-battery                  { color: #a6accd; }
-#custom-battery.good             { color: #5de4c7; }
-#custom-battery.medium           { color: #add7ff; }
-#custom-battery.warning          { color: #d0679d; }
-#custom-battery.critical         { color: #d0679d; font-weight: bold; }
-#custom-battery.charging         { color: #5de4c7; }
+#custom-battery                  { color: #c4ccd4; }
+#custom-battery.good             { color: #90a098; }
+#custom-battery.medium           { color: #8a95b0; }
+#custom-battery.warning          { color: #9a7590; }
+#custom-battery.critical         { color: #9a7590; font-weight: bold; }
+#custom-battery.charging         { color: #90a098; }
 
 /* ── Idle Inhibitor ── */
 #idle_inhibitor            { padding: 0 10px; }
-#idle_inhibitor.deactivated { color: #767c9d; }
-#idle_inhibitor.activated   { color: #add7ff; }
+#idle_inhibitor.deactivated { color: #5a6470; }
+#idle_inhibitor.activated   { color: #8a95b0; }
 
 /* ── Glance ── */
-#custom-glance            { color: #a6accd; }
-#custom-glance.active     { color: #add7ff; }
+#custom-glance            { color: #c4ccd4; }
+#custom-glance.active     { color: #8a95b0; }
 #custom-glance.empty {
     padding: 0;
     min-width: 0;
