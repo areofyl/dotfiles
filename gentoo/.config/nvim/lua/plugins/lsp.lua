@@ -69,8 +69,11 @@ return {
 
       -- Format on save using LSP
       vim.api.nvim_create_autocmd("BufWritePre", {
-        callback = function()
-          vim.lsp.buf.format({ timeout_ms = 3000 })
+        callback = function(args)
+          local clients = vim.lsp.get_clients({ bufnr = args.buf, method = "textDocument/formatting" })
+          if #clients > 0 then
+            vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 3000 })
+          end
         end,
       })
     end,
