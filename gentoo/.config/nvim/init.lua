@@ -7,6 +7,9 @@ require("config.lazy")
 -- Change colorscheme here (e.g. "vim", "nimbus", "default")
 vim.cmd.colorscheme("vim")
 
+-- Quick todo: <leader>td opens ~/todo.md
+vim.keymap.set("n", "<leader>td", "<cmd>edit ~/todo.md<cr>", { desc = "Open todo" })
+
 -- Terminal: <C-t> toggles a bottom split terminal
 vim.keymap.set("n", "<C-t>", function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
