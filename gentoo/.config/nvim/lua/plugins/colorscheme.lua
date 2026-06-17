@@ -1,10 +1,11 @@
 return {
-  {
-    "olivercederborg/poimandres.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme("poimandres")
-    end,
-  },
+  -- poimandres available but not active
+  -- {
+  --   "olivercederborg/poimandres.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme("poimandres")
+  --   end,
+  -- },
 }
