@@ -5,7 +5,7 @@ vim.opt.relativenumber = true
 require("config.lazy")
 
 -- Change colorscheme here (e.g. "vim", "nimbus", "default")
-vim.cmd.colorscheme("default")
+vim.cmd.colorscheme("vim")
 
 -- Quick todo: <leader>td opens ~/todo.md
 vim.keymap.set("n", "<leader>td", "<cmd>edit ~/todo.md<cr>", { desc = "Open todo" })
