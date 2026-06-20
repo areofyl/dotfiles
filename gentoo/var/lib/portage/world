@@ -49,6 +49,7 @@ net-dns/avahi
 net-irc/irssi
 net-misc/asahi-btsync
 net-misc/networkmanager
+net-news/newsboat
 net-print/cups
 net-print/cups-filters
 net-wireless/iw
