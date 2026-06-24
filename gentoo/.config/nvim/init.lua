@@ -49,3 +49,5 @@ end, {})
 vim.cmd("cabbrev cc Cc")
 vim.cmd("cabbrev cr Cr")
 vim.cmd("cabbrev ccr Ccr")
+
+vim.cmd("cabbrev mp MarkdownPreview")
