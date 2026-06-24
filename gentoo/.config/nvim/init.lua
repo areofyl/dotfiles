@@ -51,3 +51,13 @@ vim.cmd("cabbrev cr Cr")
 vim.cmd("cabbrev ccr Ccr")
 
 vim.cmd("cabbrev mp MarkdownPreview")
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us"
+    vim.opt_local.spellcapcheck = ""
+    vim.opt_local.conceallevel = 2
+  end,
+})
