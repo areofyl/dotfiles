@@ -7,6 +7,8 @@ return {
       "hrsh7th/cmp-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-buffer",
+      "f3fora/cmp-spell",
     },
     config = function()
       local cmp = require("cmp")
@@ -44,6 +46,8 @@ return {
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "path" },
+          { name = "buffer" },
+          { name = "spell", keyword_length = 3 },
         }),
       })
     end,
