@@ -41,7 +41,9 @@ media-fonts/iosevka
 media-fonts/noto
 media-fonts/noto-cjk
 media-fonts/noto-emoji
+media-gfx/feh
 media-gfx/imv
+media-gfx/scrot
 media-libs/asahi-audio
 media-sound/playerctl
 media-video/mpv
@@ -68,5 +70,12 @@ sys-fs/squashfs-tools
 sys-kernel/asahi-sources
 sys-kernel/dracut
 sys-process/btop
+x11-apps/xrandr
+x11-base/xorg-server
+x11-misc/dmenu
+x11-misc/i3lock
+x11-misc/picom
+x11-misc/xdotool
 x11-terms/kitty
 x11-themes/papirus-icon-theme
+x11-wm/dwm
