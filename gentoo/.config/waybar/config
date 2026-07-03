@@ -47,7 +47,7 @@
                     "months":   "<b>{}</b>",
                     "days":     "{}",
                     "weekdays": "{}",
-                    "today":    "<b>{}</b>"
+                    "today":    "<b><i>{}</i></b>"
                 }
             }
         },
