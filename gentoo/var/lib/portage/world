@@ -48,6 +48,7 @@ media-libs/asahi-audio
 media-sound/playerctl
 media-video/mpv
 net-dns/avahi
+net-dns/bind-tools
 net-irc/irssi
 net-misc/asahi-btsync
 net-misc/networkmanager
