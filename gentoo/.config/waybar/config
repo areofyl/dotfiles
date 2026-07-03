@@ -47,7 +47,7 @@
                     "months":   "<b>{}</b>",
                     "days":     "{}",
                     "weekdays": "{}",
-                    "today":    "<b><i>{}</i></b>"
+                    "today":    "<u>{}</u>"
                 }
             }
         },
@@ -173,7 +173,7 @@
         "clock": {
             "format": "[{:%I:%M %p}]",
             "format-alt": "[{:%I:%M %p - %A, %B %d, %Y}]",
-            "tooltip-format": "{:%B %Y}\n<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
+            "tooltip-format": "<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
             "calendar": {
                 "mode": "month",
                 "mode-mon-col": 12,
@@ -182,7 +182,7 @@
                     "months":   "<b>{}</b>",
                     "days":     "{}",
                     "weekdays": "{}",
-                    "today":    "<b>{}</b>"
+                    "today":    "<u>{}</u>"
                 }
             }
         }
