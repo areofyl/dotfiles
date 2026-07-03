@@ -3,3 +3,13 @@ app-text/zathura synctex
 # required by app-containers/podman-5.7.1::gentoo
 # required by app-containers/podman (argument)
 >=net-firewall/iptables-1.8.13 nftables
+# required by media-gfx/feh-3.12.2::gentoo
+# required by media-gfx/feh (argument)
+>=media-libs/imlib2-1.12.6 X
+# required by x11-base/xorg-server-21.1.23::gentoo[-minimal]
+# required by x11-drivers/xf86-input-libinput-1.5.0::gentoo
+# required by x11-base/xorg-drivers-21.1-r2::gentoo[input_devices_libinput]
+>=media-libs/mesa-26.1.2 X
+# required by x11-misc/i3lock-2.16::gentoo
+# required by x11-misc/i3lock (argument)
+>=x11-libs/libxkbcommon-1.13.2 X
