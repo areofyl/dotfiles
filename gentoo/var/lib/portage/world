@@ -8,6 +8,7 @@ app-editors/nano
 app-editors/neovim
 app-editors/vim
 app-eselect/eselect-repository
+app-misc/evtest
 app-misc/fastfetch
 app-misc/jq
 app-portage/gentoolkit
