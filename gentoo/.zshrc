@@ -43,4 +43,6 @@ wifi() {
 
 export XCURSOR_THEME=macOS-Tahoe
 export XCURSOR_SIZE=24
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin:$PATH"
+export GOPATH="$HOME/.local/share/go"
+export CARGO_HOME="$HOME/.local/share/cargo"
+export PATH="$HOME/.local/bin:$CARGO_HOME/bin:$HOME/bin:$PATH"
