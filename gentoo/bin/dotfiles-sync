@@ -38,9 +38,9 @@ sync_path "$HOME/.config/systemd/user" ".config/systemd/user"
 sync_path "$HOME/.zshrc"               ".zshrc"
 sync_path "$HOME/.gitconfig"           ".gitconfig"
 sync_path "$HOME/bin"                  "bin"
-sync_path "$HOME/dwl/config.h"          "dwl/config.h"
-sync_path "$HOME/dwl/config.def.h"      "dwl/config.def.h"
-sync_path "$HOME/dwl/vanitygaps.patch"  "dwl/vanitygaps.patch"
+sync_path "$HOME/Projects/dwl/config.h"          "dwl/config.h"
+sync_path "$HOME/Projects/dwl/config.def.h"      "dwl/config.def.h"
+sync_path "$HOME/Projects/dwl/vanitygaps.patch"  "dwl/vanitygaps.patch"
 
 # System config (world-readable, no sudo)
 sync_path "/etc/fstab"                 "etc/fstab"
