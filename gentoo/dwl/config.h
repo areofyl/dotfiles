@@ -96,7 +96,7 @@ static const Key keys[] = {
 	/* $mod+f: launch lf file manager */
 	{ MODKEY,                    XKB_KEY_f,           spawn,            SHCMD("kitty lf") },
 	/* $mod+b: launch ungoogled-chromium */
-	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium") },
+	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium --password-store=basic") },
 	/* matches sway: $mod+x exec swaylock */
 	{ MODKEY,                    XKB_KEY_x,           spawn,            SHCMD("/home/aarav/.config/custom-lock/lock.sh") },
 
