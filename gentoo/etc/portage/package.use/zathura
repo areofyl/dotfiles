@@ -13,3 +13,6 @@ app-text/zathura synctex
 # required by x11-misc/i3lock-2.16::gentoo
 # required by x11-misc/i3lock (argument)
 >=x11-libs/libxkbcommon-1.13.2 X
+# required by games-emulation/dosbox-staging-0.82.2-r1::gentoo
+# required by games-emulation/dosbox-staging (argument)
+>=media-libs/libsdl2-2.32.10 X
