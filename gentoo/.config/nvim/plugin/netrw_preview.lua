@@ -49,28 +49,31 @@ local function get_netrw_file()
 end
 
 local function show_preview(path)
-  if not path then
-    -- Show empty buffer when no file to preview
-    if preview_win and vim.api.nvim_win_is_valid(preview_win) then
-      clean_preview_buf()
-      preview_buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_win_set_buf(preview_win, preview_buf)
-    end
-    return
-  end
-
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
     close_preview()
     return
   end
 
-  clean_preview_buf()
+  if not path then
+    local old = preview_buf
+    preview_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_win_set_buf(preview_win, preview_buf)
+    if old and vim.api.nvim_buf_is_valid(old) then
+      vim.api.nvim_buf_delete(old, { force = true })
+    end
+    return
+  end
+
+  local old = preview_buf
 
   if is_image(path) then
     if vim.fn.executable("chafa") == 0 then
       preview_buf = vim.api.nvim_create_buf(false, true)
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "install chafa to preview images" })
       vim.api.nvim_win_set_buf(preview_win, preview_buf)
+      if old and old ~= preview_buf and vim.api.nvim_buf_is_valid(old) then
+        vim.api.nvim_buf_delete(old, { force = true })
+      end
       return
     end
 
@@ -112,6 +115,10 @@ local function show_preview(path)
       vim.bo[preview_buf].filetype = ft
     end
   end
+
+  if old and old ~= preview_buf and vim.api.nvim_buf_is_valid(old) then
+    vim.api.nvim_buf_delete(old, { force = true })
+  end
 end
 
 local function start_preview()
@@ -119,10 +126,11 @@ local function start_preview()
   previewing = true
   netrw_win = vim.api.nvim_get_current_win()
 
-  -- Open vertical split to the right
+  -- Open vertical split to the right, 1/3 screen width
   vim.cmd("botright vnew")
   preview_win = vim.api.nvim_get_current_win()
   preview_buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_win_set_width(preview_win, math.floor(vim.o.columns / 3))
   vim.wo[preview_win].number = false
   vim.wo[preview_win].relativenumber = false
   vim.wo[preview_win].signcolumn = "no"
@@ -152,6 +160,17 @@ local function start_preview()
     end,
   })
 
+  -- Rescale on window resize
+  vim.api.nvim_create_autocmd("VimResized", {
+    group = au_group,
+    callback = function()
+      if not previewing then return end
+      if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+        vim.api.nvim_win_set_width(preview_win, math.floor(vim.o.columns / 3))
+      end
+    end,
+  })
+
   -- Clean up when leaving netrw (but not when opening the preview split)
   vim.api.nvim_create_autocmd("WinEnter", {
     group = au_group,
@@ -165,19 +184,11 @@ local function start_preview()
   })
 end
 
-local function toggle_preview()
-  if previewing then
-    close_preview()
-  else
-    start_preview()
-  end
-end
-
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
   callback = function()
     vim.schedule(function()
-      vim.keymap.set("n", "P", toggle_preview, { buffer = true, desc = "Toggle preview" })
+      start_preview()
     end)
   end,
 })
