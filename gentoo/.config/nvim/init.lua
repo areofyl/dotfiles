@@ -2,6 +2,25 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.scrolloff = 5
+vim.opt.undofile = true
+vim.opt.statusline = " %f %m%r%= %y %l:%c "
+vim.opt.wrap = false
+
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 0
+vim.g.netrw_keepdir = 0
+
+vim.keymap.set("n", "<leader>e", function()
+  local dir = vim.fn.expand("%:p:h")
+  if dir == "" or vim.fn.isdirectory(dir) == 0 then
+    dir = vim.fn.getcwd()
+  end
+  vim.cmd("Explore " .. vim.fn.fnameescape(dir))
+end, { desc = "Open netrw in file's directory" })
+
 require("config.lazy")
 
 -- Change colorscheme here (e.g. "vim", "nimbus", "default")
@@ -24,31 +43,20 @@ end, { desc = "Toggle terminal" })
 vim.keymap.set("t", "<C-t>", "<cmd>close<cr>", { desc = "Close terminal" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- C compile/run commands
--- :Cc  — compile current file (cc file.c -o file)
--- :Cr  — run the compiled binary (./file)
--- :Ccr — compile and run
-local function c_out()
-  return vim.fn.expand("%:r")
-end
+-- :make — compile current C file
+-- :Mr   — run binary (uses Makefile 'run' target if available, else ./binary)
+vim.opt.makeprg = "cc %:S -o %:r:S"
 
-vim.api.nvim_create_user_command("Cc", function()
-  vim.cmd("write")
-  vim.cmd("botright 15split | term cc " .. vim.fn.expand("%") .. " -o " .. c_out())
+vim.api.nvim_create_user_command("Mr", function()
+  local has_makefile = vim.fn.filereadable("Makefile") == 1
+  local cmd
+  if has_makefile and vim.fn.system("grep -q '^run:' Makefile && echo y"):match("y") then
+    cmd = "make run"
+  else
+    cmd = "./" .. vim.fn.expand("%:r")
+  end
+  vim.cmd("vertical botright split | term " .. cmd)
 end, {})
-
-vim.api.nvim_create_user_command("Cr", function()
-  vim.cmd("botright 15split | term ./" .. c_out())
-end, {})
-
-vim.api.nvim_create_user_command("Ccr", function()
-  vim.cmd("write")
-  vim.cmd("botright 15split | term cc " .. vim.fn.expand("%") .. " -o " .. c_out() .. " && ./" .. c_out())
-end, {})
-
-vim.cmd("cabbrev cc Cc")
-vim.cmd("cabbrev cr Cr")
-vim.cmd("cabbrev ccr Ccr")
 
 vim.cmd("cabbrev mp MarkdownPreview")
 
