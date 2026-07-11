@@ -1,3 +1,4 @@
+vim.opt.shortmess:append("I")
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.opt.number = true
