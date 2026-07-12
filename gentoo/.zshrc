@@ -5,11 +5,6 @@ ZSH_PLUGINS="$HOME/.zsh/plugins"
 source "$ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
-[ -f ~/.config/theme/fzf.sh ] && source ~/.config/theme/fzf.sh
-source <(fzf --zsh)
-
 # history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -21,8 +16,7 @@ autoload -Uz compinit && compinit -d "$HOME/.cache/zcompdump"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# aliases
-alias fnvim='nvim $(fd --type f --hidden --exclude .git | fzf -m --preview="bat --color=always {}")'
+# aliases 
 alias airpods='bluetoothctl connect F0:04:E1:D6:E5:01'
 alias l='ls -l'
 alias la='ls -a'
