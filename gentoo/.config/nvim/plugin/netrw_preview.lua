@@ -314,6 +314,14 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.schedule(function()
       start_preview()
+      -- Dragon drag-and-drop
+      vim.keymap.set("n", "D", function()
+        local path, kind = get_netrw_entry()
+        if path and kind == "file" then
+          vim.fn.jobstart({ "dragon", "--and-exit", path }, { detach = true })
+        end
+      end, { buffer = true, desc = "Drag and drop file" })
+
       local netrw_cr = vim.fn.maparg("<CR>", "n", false, true)
       vim.keymap.set("n", "<CR>", function()
         if not netrw_open_external() then
