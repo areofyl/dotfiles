@@ -3,6 +3,7 @@ local preview_buf = nil
 local netrw_win = nil
 local au_group = vim.api.nvim_create_augroup("NetrwPreview", { clear = true })
 local previewing = false
+local dir_history = {}
 
 local image_exts = {
   png = true, jpg = true, jpeg = true, gif = true,
@@ -91,6 +92,22 @@ local function list_dir(path)
   return entries
 end
 
+local function file_info(path)
+  local stat = vim.loop.fs_stat(path)
+  if not stat then return nil end
+  local size = stat.size
+  local units = { "B", "K", "M", "G" }
+  local i = 1
+  while size >= 1024 and i < #units do
+    size = size / 1024
+    i = i + 1
+  end
+  local size_str = i == 1 and string.format("%d%s", size, units[i]) or string.format("%.1f%s", size, units[i])
+  local perms = string.format("%o", stat.mode % 512)
+  local mtime = os.date("%Y-%m-%d %H:%M", stat.mtime.sec)
+  return perms .. "  " .. size_str .. "  " .. mtime
+end
+
 local function show_preview(path, kind)
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
     close_preview()
@@ -109,10 +126,15 @@ local function show_preview(path, kind)
 
   local old = preview_buf
 
+  -- Update preview statusline with filename
+  local name = vim.fn.fnamemodify(path, ":t")
+  vim.wo[preview_win].statusline = " " .. name .. " "
+
   if kind == "dir" then
     preview_buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_win_set_buf(preview_win, preview_buf)
     local entries = list_dir(path)
+    vim.wo[preview_win].statusline = " " .. name .. "/ (" .. #entries .. ") "
     if #entries == 0 then
       entries = { "[empty directory]" }
     end
@@ -201,7 +223,12 @@ local function show_preview(path, kind)
       end
     end
 
-    vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
+    local info = file_info(path)
+    local header = info and { info, "" } or {}
+    for i, l in ipairs(lines) do
+      table.insert(header, l)
+    end
+    vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, header)
 
     local ft = vim.filetype.match({ filename = path, buf = preview_buf })
     if ft then
@@ -227,6 +254,7 @@ local function start_preview()
   vim.wo[preview_win].number = false
   vim.wo[preview_win].relativenumber = false
   vim.wo[preview_win].signcolumn = "no"
+  vim.wo[preview_win].statusline = " preview "
   vim.wo[preview_win].foldcolumn = "0"
   vim.wo[preview_win].winfixwidth = true
 
@@ -284,43 +312,143 @@ local function start_preview()
   })
 end
 
--- Open files with external programs when appropriate
-local open_externally = {
-  png = "imv", jpg = "imv", jpeg = "imv", gif = "imv",
-  bmp = "imv", webp = "imv", svg = "imv", tiff = "imv", tif = "imv",
-  pdf = "zathura",
-  mp4 = "mpv", mkv = "mpv", webm = "mpv", avi = "mpv",
-  mp3 = "mpv", flac = "mpv", ogg = "mpv", wav = "mpv",
+-- Files to open externally with xdg-open
+local external_exts = {
+  png = true, jpg = true, jpeg = true, gif = true, bmp = true,
+  webp = true, svg = true, ico = true, tiff = true, tif = true,
+  pdf = true,
+  mp4 = true, mkv = true, webm = true, avi = true, mov = true,
+  flv = true, wmv = true, m4v = true,
+  mp3 = true, flac = true, ogg = true, wav = true, m4a = true,
+  doc = true, docx = true, xls = true, xlsx = true, ppt = true, pptx = true,
+  odt = true, ods = true, odp = true,
 }
 
 local function netrw_open_external()
-  local dir = vim.b.netrw_curdir
-  if not dir then return false end
-  local line = vim.trim(vim.api.nvim_get_current_line())
-  if line == "" or line == "../" or line == "./" or line:match("/$") then return false end
-  line = line:gsub("^[│├└─┬ ]+", "")
-  local ext = line:match("%.(%w+)$")
-  if not ext then return false end
-  local prog = open_externally[ext:lower()]
-  if not prog then return false end
-  if vim.fn.executable(prog) == 0 then return false end
-  local path = (dir:gsub("/$", "")) .. "/" .. line
-  vim.fn.jobstart({ prog, path }, { detach = true })
+  local path, kind = get_netrw_entry()
+  if not path or kind ~= "file" then return false end
+  local ext = path:match("%.(%w+)$")
+  if not ext or not external_exts[ext:lower()] then return false end
+  vim.fn.jobstart({ "xdg-open", path }, { detach = true })
   return true
 end
+
+-- Show current path in statusline for netrw
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    vim.wo.statusline = " %{b:netrw_curdir} "
+  end,
+})
+
+-- Track directory history
+local last_netrw_dir = nil
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    if vim.bo.filetype ~= "netrw" then return end
+    local cur = vim.b.netrw_curdir
+    if cur and cur ~= last_netrw_dir then
+      if last_netrw_dir then
+        table.insert(dir_history, last_netrw_dir)
+        if #dir_history > 50 then table.remove(dir_history, 1) end
+      end
+      last_netrw_dir = cur
+    end
+  end,
+})
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
   callback = function()
     vim.schedule(function()
       start_preview()
-      -- Dragon drag-and-drop
+      -- Trash file
+      local netrw_D = vim.fn.maparg("D", "n", false, true)
       vim.keymap.set("n", "D", function()
         local path, kind = get_netrw_entry()
+        if not path then return end
+        local trash = vim.fn.expand("~/.local/share/Trash/files")
+        vim.fn.mkdir(trash, "p")
+        local name = vim.fn.fnamemodify(path, ":t")
+        local dest = trash .. "/" .. name
+        -- Avoid overwriting existing trash
+        local n = 1
+        while vim.loop.fs_stat(dest) do
+          dest = trash .. "/" .. name .. "." .. n
+          n = n + 1
+        end
+        if vim.fn.confirm("Trash " .. name .. "?", "&Yes\n&No") == 1 then
+          vim.loop.fs_rename(path, dest)
+          vim.cmd("edit .")
+        end
+      end, { buffer = true, desc = "Trash file" })
+
+      -- Bookmarks
+      vim.keymap.set("n", "P", function()
+        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/Projects")))
+      end, { buffer = true, desc = "Go to ~/Projects" })
+
+      vim.keymap.set("n", "c", function()
+        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/.config")))
+      end, { buffer = true, nowait = true, desc = "Go to ~/.config" })
+
+      vim.keymap.set("n", "~", function()
+        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~")))
+      end, { buffer = true, desc = "Go to ~" })
+
+      vim.keymap.set("n", "d", function()
+        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/Downloads")))
+      end, { buffer = true, nowait = true, desc = "Go to ~/Downloads" })
+
+      -- Yank file to clipboard
+      vim.keymap.set("n", "y", function()
+        local path, kind = get_netrw_entry()
         if path and kind == "file" then
-          vim.fn.jobstart({ "dragon", "--and-exit", path }, { detach = true })
+          local mime = vim.fn.system({ "file", "-b", "--mime-type", path }):gsub("%s+$", "")
+          vim.fn.system("wl-copy --type " .. vim.fn.shellescape(mime) .. " < " .. vim.fn.shellescape(path))
         end
       end, { buffer = true, desc = "Drag and drop file" })
+
+      -- Quick rename
+      vim.keymap.set("n", "r", function()
+        local path, kind = get_netrw_entry()
+        if not path then return end
+        local old_name = vim.fn.fnamemodify(path, ":t")
+        vim.ui.input({ prompt = "Rename: ", default = old_name }, function(new_name)
+          if not new_name or new_name == "" or new_name == old_name then return end
+          local dir = vim.fn.fnamemodify(path, ":h")
+          vim.loop.fs_rename(path, dir .. "/" .. new_name)
+          vim.cmd("edit .")
+        end)
+      end, { buffer = true, desc = "Rename file" })
+
+      -- New file or directory (trailing / = dir)
+      vim.keymap.set("n", "a", function()
+        local dir = vim.b.netrw_curdir
+        if not dir then return end
+        dir = dir:gsub("/$", "")
+        vim.ui.input({ prompt = "New (end with / for dir): " }, function(name)
+          if not name or name == "" then return end
+          local full = dir .. "/" .. name
+          if name:match("/$") then
+            vim.fn.mkdir(full:gsub("/$", ""), "p")
+          else
+            local parent = vim.fn.fnamemodify(full, ":h")
+            if vim.fn.isdirectory(parent) == 0 then
+              vim.fn.mkdir(parent, "p")
+            end
+            vim.fn.writefile({}, full)
+          end
+          vim.cmd("edit .")
+        end)
+      end, { buffer = true, desc = "New file/dir" })
+
+      -- Back history
+      vim.keymap.set("n", "b", function()
+        if #dir_history == 0 then return end
+        local prev = table.remove(dir_history)
+        vim.cmd("edit " .. vim.fn.fnameescape(prev))
+      end, { buffer = true, nowait = true, desc = "Go back" })
 
       local netrw_cr = vim.fn.maparg("<CR>", "n", false, true)
       vim.keymap.set("n", "<CR>", function()
