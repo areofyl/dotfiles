@@ -10,7 +10,7 @@ return {
     opts = {},
   },
   {
-      "ajmwagar/vim-deus",
+      "theniceboy/nvim-deus",
       priority = 1000,
       opts = {},
   }
