@@ -52,6 +52,20 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<S-Tab>", "<<", { buffer = true })
     vim.keymap.set("i", "<S-Tab>", "<C-d>", { buffer = true })
 
+    -- *<space> at start of line = indented sub-bullet
+    -- -<space> at start of line = top-level bullet
+    vim.keymap.set("i", "<Space>", function()
+      local line = vim.api.nvim_get_current_line()
+      local col = vim.fn.col(".")
+      if line:match("^%s*%*$") and col == #line + 1 then
+        return "<C-u>* "
+      elseif line:match("^%s*%-$") and col == #line + 1 then
+        return "<C-u>- "
+      end
+      return " "
+    end, { buffer = true, expr = true, replace_keycodes = true })
+
+
     -- title case headers on save
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = 0,
@@ -66,49 +80,5 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
       end,
     })
-  end,
-})
-
--- bio words for spellcheck
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    local words = {
-      "allele", "alleles", "amino", "anaphase", "anticodon",
-      "autosomal", "autosome", "autosomes",
-      "bioflowers", "bioinformatics",
-      "centromere", "centromeres", "chromatid", "chromatids",
-      "chromatin", "chromosomal", "codon", "codons", "codominance",
-      "codominant", "cytoplasm", "cytokinesis", "cytosine",
-      "deoxyribonucleic", "diploid", "dihybrid",
-      "endoplasmic", "eukaryote", "eukaryotes", "eukaryotic",
-      "gamete", "gametes", "genotype", "genotypes", "genotypic",
-      "glycolysis", "guanine",
-      "haploid", "helicase", "hemizygous", "heterozygous",
-      "homologous", "homozygous",
-      "interphase",
-      "karyotype", "karyotypes", "kinetochore",
-      "locus", "loci", "lysosome", "lysosomes",
-      "meiosis", "meiotic", "Mendel", "Mendelian",
-      "metaphase", "mitochondria", "mitochondrion", "mitosis", "mitotic",
-      "monohybrid", "mRNA", "tRNA", "rRNA",
-      "nucleotide", "nucleotides", "nucleoplasm",
-      "organelle", "organelles",
-      "peptide", "peptides", "phenotype", "phenotypes", "phenotypic",
-      "phospholipid", "phospholipids", "plasmid", "plasmids",
-      "polymerase", "polypeptide", "polypeptides",
-      "prokaryote", "prokaryotes", "prokaryotic",
-      "prophase", "protease", "proteases", "Punnett",
-      "recessive", "recombinant", "reticulum", "ribonucleic",
-      "ribosome", "ribosomes",
-      "spindle", "spliceosome",
-      "telomere", "telomeres", "telophase", "thymine",
-      "transcription", "translocation", "triploid",
-      "uracil",
-      "zygote", "zygotes", "zygosity",
-    }
-    for _, w in ipairs(words) do
-      vim.cmd("silent! spellgood! " .. w)
-    end
   end,
 })
