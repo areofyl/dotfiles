@@ -51,7 +51,7 @@ return {
         settings = {
           ["harper-ls"] = {
             linters = {
-              spell_check = false,
+              spell_check = true,
               spelled_numbers = false,
               an_a = true,
               sentence_capitalization = false,
