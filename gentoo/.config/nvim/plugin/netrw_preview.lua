@@ -341,6 +341,16 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Restore 'a' in non-netrw buffers (netrw buffer reuse can leak the mapping)
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = au_group,
+  callback = function()
+    if vim.bo.filetype ~= "netrw" then
+      pcall(vim.keymap.del, "n", "a", { buffer = 0 })
+    end
+  end,
+})
+
 -- Track directory history
 local last_netrw_dir = nil
 vim.api.nvim_create_autocmd("BufEnter", {
