@@ -6,6 +6,8 @@ return {
     opts = {
       markdown = {
         indented_code_blocks = { enable = false },
+        code_blocks = { enable = false },
+        inline_codes = { enable = false },
         list_items = {
           shift_width = 4,
           marker_minus = {
@@ -40,17 +42,18 @@ return {
           map("i", "<CR>", "<CR><cmd>AutolistNewBullet<CR>", { buffer = true })
           map("n", "o", "o<cmd>AutolistNewBullet<CR>", { buffer = true })
           map("n", "O", "O<cmd>AutolistNewBulletBefore<CR>", { buffer = true })
-          map("i", "<Space>", function()
-            local col = vim.fn.col(".") - 1
-            local line = vim.api.nvim_get_current_line()
-            local before = line:sub(1, col)
-            if before == "*" or before == "-" then
-              local keys = vim.api.nvim_replace_termcodes("<C-t>", true, false, true)
-              vim.api.nvim_feedkeys(keys .. " ", "n", false)
-            else
-              vim.api.nvim_feedkeys(" ", "n", false)
-            end
-          end, { buffer = true })
+          vim.api.nvim_create_autocmd("TextChangedI", {
+            buffer = 0,
+            callback = function()
+              local line = vim.api.nvim_get_current_line()
+              if line == "* " or line == "- " then
+                local row = vim.api.nvim_win_get_cursor(0)[1]
+                local new = "    " .. line
+                vim.api.nvim_set_current_line(new)
+                vim.api.nvim_win_set_cursor(0, { row, #new })
+              end
+            end,
+          })
         end,
       })
     end,
