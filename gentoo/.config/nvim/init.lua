@@ -8,6 +8,7 @@ vim.opt.scrolloff = 5
 vim.opt.undofile = true
 vim.opt.statusline = " %f %m%r%= %y %l:%c "
 vim.opt.wrap = false
+vim.opt.tabstop = 4
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 0
