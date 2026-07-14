@@ -15,4 +15,4 @@ vim.opt.statusline = " %f %m%r%= %y %l:%c "
 vim.opt.termguicolors = true
 
 require("config.lazy")
-vim.cmd.colorscheme("vague")
+vim.cmd.colorscheme("kanagawa")
