@@ -15,4 +15,8 @@ vim.opt.statusline = " %f %m%r%= %y %l:%c "
 vim.opt.termguicolors = true
 
 require("config.lazy")
-vim.cmd.colorscheme("deus")
+vim.cmd.colorscheme("nordic")
+
+vim.api.nvim_set_hl(0, "@markup.heading.1.markdown", { fg = "#ebcb8b", bold = true })
+vim.api.nvim_set_hl(0, "@markup.heading.2.markdown", { fg = "#a3be8c", bold = true })
+vim.api.nvim_set_hl(0, "@markup.list.markdown", { fg = "#81a1c1" })
