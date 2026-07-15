@@ -10,8 +10,14 @@ return {
     opts = {},
   },
   {
-      "theniceboy/nvim-deus",
+      "savq/melange-nvim",
+      lazy = false,
+      priority = 1000,
+  },
+  {
+      "AlexvZyl/nordic.nvim",
       lazy = false,
       priority = 1000,
   }
+
 }
