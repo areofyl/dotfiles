@@ -39,7 +39,10 @@ local function title_case(str)
   return table.concat(words, " ")
 end
 
+local md_group = vim.api.nvim_create_augroup("MarkdownSettings", { clear = true })
+
 vim.api.nvim_create_autocmd("FileType", {
+  group = md_group,
   pattern = "markdown",
   callback = function()
     vim.opt_local.spell = true
@@ -64,21 +67,21 @@ vim.api.nvim_create_autocmd("FileType", {
       end
       return " "
     end, { buffer = true, expr = true, replace_keycodes = true })
+  end,
+})
 
-
-    -- title case headers on save
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = 0,
-      callback = function()
-        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-        for i, line in ipairs(lines) do
-          local hashes, text = line:match("^(#+)%s+(.+)")
-          if hashes and text then
-            lines[i] = hashes .. " " .. title_case(text)
-          end
-        end
-        vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
-      end,
-    })
+-- title case headers on save (once per buffer, not per FileType event)
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = md_group,
+  pattern = "*.md",
+  callback = function()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    for i, line in ipairs(lines) do
+      local hashes, text = line:match("^(#+)%s+(.+)")
+      if hashes and text then
+        lines[i] = hashes .. " " .. title_case(text)
+      end
+    end
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
   end,
 })
