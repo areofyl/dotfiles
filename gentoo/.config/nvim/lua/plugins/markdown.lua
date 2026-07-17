@@ -35,15 +35,19 @@ return {
     opts = {},
     config = function(_, opts)
       require("autolist").setup(opts)
+      local autolist_group = vim.api.nvim_create_augroup("AutolistMarkdown", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
+        group = autolist_group,
         pattern = "markdown",
-        callback = function()
+        callback = function(args)
+          local buf = args.buf
           local map = vim.keymap.set
-          map("i", "<CR>", "<CR><cmd>AutolistNewBullet<CR>", { buffer = true })
-          map("n", "o", "o<cmd>AutolistNewBullet<CR>", { buffer = true })
-          map("n", "O", "O<cmd>AutolistNewBulletBefore<CR>", { buffer = true })
+          map("i", "<CR>", "<CR><cmd>AutolistNewBullet<CR>", { buffer = buf })
+          map("n", "o", "o<cmd>AutolistNewBullet<CR>", { buffer = buf })
+          map("n", "O", "O<cmd>AutolistNewBulletBefore<CR>", { buffer = buf })
           vim.api.nvim_create_autocmd("TextChangedI", {
-            buffer = 0,
+            group = autolist_group,
+            buffer = buf,
             callback = function()
               local line = vim.api.nvim_get_current_line()
               if line == "* " or line == "- " then
