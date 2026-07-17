@@ -82,4 +82,5 @@ x11-misc/xdotool
 x11-terms/kitty
 x11-themes/papirus-icon-theme
 x11-wm/dwm
+x11-wm/icewm
 x11-wm/windowmaker
