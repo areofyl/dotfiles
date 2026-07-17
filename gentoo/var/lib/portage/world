@@ -12,7 +12,6 @@ app-misc/evtest
 app-misc/fastfetch
 app-misc/jq
 app-portage/gentoolkit
-app-shells/fzf
 app-shells/zsh
 app-text/lowdown
 app-text/texlive
@@ -60,7 +59,6 @@ net-print/cups
 net-print/cups-filters
 net-wireless/iw
 sys-apps/bat
-sys-apps/fd
 sys-apps/ripgrep
 sys-apps/speakersafetyd
 sys-apps/xdg-desktop-portal
