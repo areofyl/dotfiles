@@ -39,7 +39,7 @@ local function do_rename(buf, dir, original)
     if vim.fn.isdirectory(parent) == 0 then
       vim.fn.mkdir(parent, "p")
     end
-    local ret = vim.loop.fs_rename(op.old, op.new)
+    local ret = vim.uv.fs_rename(op.old, op.new)
     if not ret then
       vim.notify("Failed: " .. op.old .. " -> " .. op.new, vim.log.levels.ERROR)
     end
@@ -52,10 +52,10 @@ end
 
 local function scan_dir(dir)
   local entries = {}
-  local handle = vim.loop.fs_scandir(dir)
+  local handle = vim.uv.fs_scandir(dir)
   if not handle then return entries end
   while true do
-    local name, typ = vim.loop.fs_scandir_next(handle)
+    local name, typ = vim.uv.fs_scandir_next(handle)
     if not name then break end
     if typ == "directory" then
       table.insert(entries, name .. "/")
@@ -81,13 +81,6 @@ local function bulk_rename(dir, from_netrw)
   vim.api.nvim_buf_set_name(buf, "bulkrename://" .. dir)
   vim.bo[buf].buftype = "acwrite"
   vim.bo[buf].modified = false
-
-  local function save_and_back()
-    if do_rename(buf, dir, original) and from_netrw then
-      vim.api.nvim_buf_delete(buf, { force = true })
-      vim.cmd("Explore " .. vim.fn.fnameescape(dir))
-    end
-  end
 
   vim.api.nvim_create_autocmd("BufWriteCmd", {
     buffer = buf,
@@ -125,10 +118,10 @@ local function bulk_rename(dir, from_netrw)
       for _, entry in ipairs(contents) do
         local old = subdir_path .. "/" .. entry
         local new = dir .. "/" .. entry
-        if vim.loop.fs_stat(new) then
+        if vim.uv.fs_stat(new) then
           vim.notify("Skipped (already exists): " .. entry, vim.log.levels.WARN)
         else
-          if vim.loop.fs_rename(old, new) then
+          if vim.uv.fs_rename(old, new) then
             moved = moved + 1
           else
             vim.notify("Failed to move: " .. entry, vim.log.levels.ERROR)
