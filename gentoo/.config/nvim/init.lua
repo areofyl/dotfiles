@@ -26,8 +26,4 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 require("config.lazy")
-vim.cmd.colorscheme("vague")
-
-vim.api.nvim_set_hl(0, "@markup.heading.1.markdown", { fg = "#ebcb8b", bold = true })
-vim.api.nvim_set_hl(0, "@markup.heading.2.markdown", { fg = "#a3be8c", bold = true })
-vim.api.nvim_set_hl(0, "@markup.list.markdown", { fg = "#81a1c1" })
+vim.cmd.colorscheme("substrata")
