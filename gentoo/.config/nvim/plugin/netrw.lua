@@ -17,6 +17,8 @@ local preview_win, preview_buf, netrw_win
 local au_group = vim.api.nvim_create_augroup("NetrwPreview", { clear = true })
 local previewing = false
 local dir_history = {}
+local preview_job = nil
+local debounce_timer = nil
 
 -- file type checks
 
@@ -53,7 +55,9 @@ local function get_netrw_entry()
   local dir = vim.b.netrw_curdir
   if not dir then return nil, nil end
 
-  local line = vim.trim(vim.api.nvim_get_current_line())
+  local ok, line = pcall(vim.api.nvim_get_current_line)
+  if not ok or not line then return nil, nil end
+  line = vim.trim(line)
   if line == "" or line == "./" then return nil, nil end
 
   line = line:gsub("^[│├└─┬ ]+", "") -- strip tree markers
@@ -110,43 +114,70 @@ local function file_info(path)
   return perms .. "  " .. size_str .. "  " .. mtime
 end
 
--- swap preview buffer without closing the window
+-- kill any running preview job
 
-local function swap_preview_buf(old)
-  preview_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_win_set_buf(preview_win, preview_buf)
-  if old and old ~= preview_buf and vim.api.nvim_buf_is_valid(old) then
-    vim.api.nvim_buf_delete(old, { force = true })
+local function kill_preview_job()
+  if preview_job then
+    pcall(vim.fn.jobstop, preview_job)
+    preview_job = nil
   end
 end
 
--- run a command in the preview pane (for chafa, ffmpeg, etc)
+-- swap preview buffer without closing the window
+
+local function swap_preview_buf(old)
+  if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return false end
+  kill_preview_job()
+  local ok, buf = pcall(vim.api.nvim_create_buf, false, true)
+  if not ok then return false end
+  preview_buf = buf
+  pcall(vim.api.nvim_win_set_buf, preview_win, preview_buf)
+  if old and old ~= preview_buf and vim.api.nvim_buf_is_valid(old) then
+    pcall(vim.api.nvim_buf_delete, old, { force = true })
+  end
+  return true
+end
+
+-- run a command in the preview pane
 
 local function preview_term(cmd)
-  local cur = vim.api.nvim_get_current_win()
-  vim.api.nvim_set_current_win(preview_win)
-  vim.fn.termopen(cmd)
-  vim.api.nvim_set_current_win(cur)
+  if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return end
+  if not preview_buf or not vim.api.nvim_buf_is_valid(preview_buf) then return end
+  vim.api.nvim_win_call(preview_win, function()
+    local ok, job = pcall(vim.fn.termopen, cmd, {
+      on_exit = function(id)
+        if preview_job == id then preview_job = nil end
+      end,
+    })
+    if ok then preview_job = job end
+  end)
 end
 
 local function preview_size()
+  if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return 40, 20 end
   return vim.api.nvim_win_get_width(preview_win), vim.api.nvim_win_get_height(preview_win)
 end
 
 -- cleanup
 
 local function clean_preview_buf()
+  kill_preview_job()
   if preview_buf and vim.api.nvim_buf_is_valid(preview_buf) then
-    vim.api.nvim_buf_delete(preview_buf, { force = true })
+    pcall(vim.api.nvim_buf_delete, preview_buf, { force = true })
   end
   preview_buf = nil
 end
 
 local function close_preview()
   previewing = false
+  if debounce_timer then
+    pcall(function() debounce_timer:stop(); debounce_timer:close() end)
+    debounce_timer = nil
+  end
   vim.api.nvim_clear_autocmds({ group = au_group })
+  kill_preview_job()
   if preview_win and vim.api.nvim_win_is_valid(preview_win) then
-    vim.api.nvim_win_close(preview_win, true)
+    pcall(vim.api.nvim_win_close, preview_win, true)
   end
   clean_preview_buf()
   preview_win, netrw_win = nil, nil
@@ -160,7 +191,6 @@ local function show_preview(path, kind)
     return
   end
 
-  -- nothing to preview
   if not path then
     swap_preview_buf(preview_buf)
     return
@@ -171,47 +201,52 @@ local function show_preview(path, kind)
   local ext = ext_of(path)
   local w, h = preview_size()
 
-  vim.wo[preview_win].statusline = " " .. name .. " "
+  pcall(function() vim.wo[preview_win].statusline = " " .. name .. " " end)
 
   if kind == "dir" then
-    swap_preview_buf(old)
-    local entries = list_dir(path)
-    vim.wo[preview_win].statusline = (" %s/ (%d) "):format(name, #entries)
+    if not swap_preview_buf(old) then return end
+    local ok, entries = pcall(list_dir, path)
+    if not ok then entries = {} end
+    pcall(function()
+      vim.wo[preview_win].statusline = (" %s/ (%d) "):format(name, #entries)
+    end)
     vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false,
       #entries > 0 and entries or { "[empty]" })
 
   elseif image_exts[ext or ""] then
     if vim.fn.executable("chafa") == 0 then
-      swap_preview_buf(old)
+      if not swap_preview_buf(old) then return end
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "need chafa for image preview" })
       return
     end
-    swap_preview_buf(old)
-    preview_term(("chafa --size=%dx%d %s"):format(w, h, vim.fn.shellescape(path)))
+    if not swap_preview_buf(old) then return end
+    preview_term({ "chafa", "--animate=off", "--polite=on", "--size=" .. w .. "x" .. h, path })
 
   elseif ext == "pdf" then
     if vim.fn.executable("pdftoppm") == 0 or vim.fn.executable("chafa") == 0 then
-      swap_preview_buf(old)
+      if not swap_preview_buf(old) then return end
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "need poppler + chafa for pdf preview" })
       return
     end
-    swap_preview_buf(old)
-    preview_term(("pdftoppm -f 1 -l 1 -png %s | chafa --size=%dx%d"):format(
-      vim.fn.shellescape(path), w, h))
+    if not swap_preview_buf(old) then return end
+    local tmp = os.tmpname() .. ".png"
+    preview_term({ "sh", "-c", ("pdftoppm -f 1 -l 1 -png %s > %s && chafa --animate=off --polite=on --size=%dx%d %s || echo '[preview failed]'; rm -f %s"):format(
+      vim.fn.shellescape(path), vim.fn.shellescape(tmp), w, h, vim.fn.shellescape(tmp), vim.fn.shellescape(tmp)) })
 
   elseif video_exts[ext or ""] then
     if vim.fn.executable("ffmpeg") == 0 or vim.fn.executable("chafa") == 0 then
-      swap_preview_buf(old)
+      if not swap_preview_buf(old) then return end
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "need ffmpeg + chafa for video preview" })
       return
     end
-    swap_preview_buf(old)
-    preview_term(("ffmpeg -v quiet -i %s -frames:v 1 -f image2pipe -vcodec png - | chafa --size=%dx%d"):format(
-      vim.fn.shellescape(path), w, h))
+    if not swap_preview_buf(old) then return end
+    local tmp = os.tmpname() .. ".png"
+    preview_term({ "sh", "-c", ("ffmpeg -v quiet -y -i %s -frames:v 1 %s && chafa --animate=off --polite=on --size=%dx%d %s || echo '[preview failed]'; rm -f %s"):format(
+      vim.fn.shellescape(path), vim.fn.shellescape(tmp), w, h, vim.fn.shellescape(tmp), vim.fn.shellescape(tmp)) })
 
   else
     -- text file
-    swap_preview_buf(old)
+    if not swap_preview_buf(old) then return end
     local ok, lines = pcall(vim.fn.readfile, path, "", 200)
     if not ok or not lines then
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "[cannot read]" })
@@ -229,9 +264,25 @@ local function show_preview(path, kind)
     if info then table.insert(lines, 1, info); table.insert(lines, 2, "") end
     vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
 
-    local ft = vim.filetype.match({ filename = path, buf = preview_buf })
-    if ft then vim.bo[preview_buf].filetype = ft end
+    local ft_ok, ft = pcall(vim.filetype.match, { filename = path, buf = preview_buf })
+    if ft_ok and ft then vim.bo[preview_buf].filetype = ft end
   end
+end
+
+-- debounced preview update
+
+local function schedule_preview()
+  if not debounce_timer then
+    debounce_timer = vim.uv.new_timer()
+  end
+  debounce_timer:stop()
+  debounce_timer:start(30, 0, vim.schedule_wrap(function()
+    if not previewing then return end
+    if not netrw_win or not vim.api.nvim_win_is_valid(netrw_win) then return end
+    if vim.api.nvim_get_current_win() ~= netrw_win then return end
+    if vim.bo.filetype ~= "netrw" then return end
+    pcall(show_preview, get_netrw_entry())
+  end))
 end
 
 -- open the preview pane and wire up autocmds
@@ -258,14 +309,12 @@ local function start_preview()
     pcall(show_preview, get_netrw_entry())
   end)
 
-  -- update preview on cursor move
+  -- update preview on cursor move (debounced)
   vim.api.nvim_create_autocmd("CursorMoved", {
     group = au_group,
     callback = function()
       if not previewing then return end
-      if vim.api.nvim_get_current_win() ~= netrw_win then return end
-      if vim.bo.filetype ~= "netrw" then return end
-      pcall(show_preview, get_netrw_entry())
+      schedule_preview()
     end,
   })
 
@@ -350,6 +399,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
   callback = function()
+    if vim.b.netrw_custom_mapped then return end
+    vim.b.netrw_custom_mapped = true
+
     vim.schedule(function()
       start_preview()
 
@@ -357,42 +409,42 @@ vim.api.nvim_create_autocmd("FileType", {
       netrw_map("D", function()
         local path = get_netrw_entry()
         if not path then return end
-        local trash = vim.fn.expand("~/.local/share/Trash/files")
-        vim.fn.mkdir(trash, "p")
         local name = vim.fn.fnamemodify(path, ":t")
-        local dest = trash .. "/" .. name
-        local n = 1
-        while vim.uv.fs_stat(dest) do
-          dest = trash .. "/" .. name .. "." .. n
-          n = n + 1
+        if vim.fn.confirm("Trash " .. name .. "?", "&Yes\n&No") ~= 1 then return end
+
+        if vim.fn.executable("trash-put") == 1 then
+          vim.fn.system({ "trash-put", path })
+        else
+          local trash_files = vim.fn.expand("~/.local/share/Trash/files")
+          local trash_info = vim.fn.expand("~/.local/share/Trash/info")
+          vim.fn.mkdir(trash_files, "p")
+          vim.fn.mkdir(trash_info, "p")
+          local dest_name = name
+          local n = 1
+          while vim.uv.fs_stat(trash_files .. "/" .. dest_name) do
+            dest_name = name .. "." .. n
+            n = n + 1
+          end
+          vim.uv.fs_rename(path, trash_files .. "/" .. dest_name)
+          vim.fn.writefile(vim.split(
+            ("[Trash Info]\nPath=%s\nDeletionDate=%s\n"):format(path, os.date("%Y-%m-%dT%H:%M:%S")),
+            "\n"), trash_info .. "/" .. dest_name .. ".trashinfo")
         end
-        if vim.fn.confirm("Trash " .. name .. "?", "&Yes\n&No") == 1 then
-          vim.uv.fs_rename(path, dest)
-          vim.cmd("edit .")
-        end
+        vim.cmd("edit .")
       end)
 
       -- bookmarks
-      netrw_map("P", function()
-        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/Projects")))
-      end)
-      netrw_map("c", function()
-        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/.config")))
-      end, { nowait = true })
       netrw_map("~", function()
         vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~")))
       end)
-      netrw_map("d", function()
-        vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand("~/Downloads")))
-      end, { nowait = true })
 
       -- yank file contents to clipboard
       netrw_map("y", function()
         local path, kind = get_netrw_entry()
-        if path and kind == "file" then
-          local mime = vim.fn.system({ "file", "-b", "--mime-type", path }):gsub("%s+$", "")
-          vim.fn.system("wl-copy --type " .. vim.fn.shellescape(mime) .. " < " .. vim.fn.shellescape(path))
-        end
+        if not path or kind ~= "file" then return end
+        local mime = vim.fn.system({ "file", "-b", "--mime-type", path }):gsub("%s+$", "")
+        if vim.v.shell_error ~= 0 or mime == "" then return end
+        vim.fn.system({ "sh", "-c", "wl-copy --type " .. vim.fn.shellescape(mime) .. " < " .. vim.fn.shellescape(path) })
       end)
 
       -- quick rename
