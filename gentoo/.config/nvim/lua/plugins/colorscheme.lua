@@ -1,33 +1,12 @@
 return {
   {
-    "vague2k/vague.nvim",
-    priority = 1000,
-    opts = {},
-  },
-  {
-    "rebelot/kanagawa.nvim",
-    priority = 1000,
-    opts = {},
-  },
-  {
-      "savq/melange-nvim",
+      "lunacookies/vim-substrata",
       lazy = false,
       priority = 1000,
   },
   {
-      "AlexvZyl/nordic.nvim",
+      "jaredgorski/fogbell.vim",
       lazy = false,
       priority = 1000,
   },
-  {
-      "neanias/everforest-nvim",
-      lazy = false,
-      priority = 1000,
-      config = function()
-        require("everforest").setup({
-          background = "hard",
-        })
-      end,
-  },
-
 }
