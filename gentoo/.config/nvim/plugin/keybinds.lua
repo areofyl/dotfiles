@@ -1,7 +1,21 @@
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
 -- compile & run
-vim.opt.makeprg = "cc %:S -o %:r:S"
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp" },
+  callback = function()
+    vim.opt_local.makeprg = "cc %:S -o %:r:S"
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    vim.opt_local.makeprg = "python3 %:S"
+  end,
+})
+
+vim.keymap.set("n", "<leader>m", "<cmd>make<CR>", { desc = "Make" })
 
 vim.api.nvim_create_user_command("Mr", function()
   local has_makefile = vim.fn.filereadable("Makefile") == 1
@@ -9,7 +23,12 @@ vim.api.nvim_create_user_command("Mr", function()
   if has_makefile and vim.fn.system("grep -q '^run:' Makefile && echo y"):match("y") then
     cmd = "make run"
   else
-    cmd = "./" .. vim.fn.expand("%:r")
+    local ft = vim.bo.filetype
+    if ft == "python" then
+      cmd = "python3 " .. vim.fn.expand("%:S")
+    else
+      cmd = "./" .. vim.fn.expand("%:r")
+    end
   end
   vim.cmd("vertical botright split | term " .. cmd)
 end, {})
@@ -54,6 +73,49 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<Tab>", ">>", { buffer = true })
     vim.keymap.set("n", "<S-Tab>", "<<", { buffer = true })
     vim.keymap.set("i", "<S-Tab>", "<C-d>", { buffer = true })
+
+    -- heading navigation
+    vim.keymap.set("n", "]]", function()
+      vim.fn.search("^#", "W")
+    end, { buffer = true, desc = "Next heading" })
+    vim.keymap.set("n", "[[", function()
+      vim.fn.search("^#", "bW")
+    end, { buffer = true, desc = "Previous heading" })
+
+    -- follow markdown link under cursor (handles [text](path) and [[wiki-style]])
+    vim.keymap.set("n", "gf", function()
+      local line = vim.api.nvim_get_current_line()
+      local col = vim.fn.col(".")
+
+      -- [text](path.md)
+      for link in line:gmatch("%[.-%]%((.-)%)") do
+        local s, e = line:find("%[.-%]%(" .. vim.pesc(link) .. "%)")
+        if s and col >= s and col <= e then
+          if not link:match("^https?://") then
+            vim.cmd("edit " .. vim.fn.fnameescape(link))
+          else
+            vim.fn.jobstart({ "xdg-open", link }, { detach = true })
+          end
+          return
+        end
+      end
+
+      -- [[wiki-link]]
+      for link in line:gmatch("%[%[(.-)%]%]") do
+        local s, e = line:find("%[%[" .. vim.pesc(link) .. "%]%]")
+        if s and col >= s and col <= e then
+          local path = link:gsub(" ", "-") .. ".md"
+          vim.cmd("edit " .. vim.fn.fnameescape(path))
+          return
+        end
+      end
+
+      -- fallback to normal gf
+      vim.cmd("normal! gF")
+    end, { buffer = true, desc = "Follow link" })
+
+    -- word count in statusline for markdown
+    vim.opt_local.statusline = " %f %m%r%= %{wordcount().words}w %y %l:%c "
 
     -- *<space> at start of line = indented sub-bullet
     -- -<space> at start of line = top-level bullet
