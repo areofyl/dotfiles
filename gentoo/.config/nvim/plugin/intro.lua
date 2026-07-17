@@ -11,10 +11,8 @@ end
 vim.opt.shortmess:append('I')
 
 local function set_intro_highlights()
-  vim.cmd([[
-    highlight link IntroTitle SpecialKey
-    highlight link IntroText Normal
-  ]])
+  vim.api.nvim_set_hl(0, "IntroTitle", { fg = "#8caaba" })
+  vim.api.nvim_set_hl(0, "IntroText", { fg = "#5a6578" })
 end
 
 local intro = {
