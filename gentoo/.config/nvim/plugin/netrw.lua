@@ -59,6 +59,7 @@ local function get_netrw_entry()
   line = line:gsub("^[│├└─┬ ]+", "") -- strip tree markers
   local is_dir = line:match("/$") ~= nil
   line = line:gsub("/$", "")
+  line = line:gsub("%*$", "") -- strip executable marker
   if line == "" then return nil, nil end
 
   local path
