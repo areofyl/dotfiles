@@ -7,12 +7,15 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.scrolloff = 5
 vim.opt.undofile = true
+vim.opt.swapfile = false
 vim.opt.wrap = false
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.statusline = " %f %m%r%= %y %l:%c "
 vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.completeopt = "menu,menuone,noselect,popup"
 
 require("config.lazy")
 vim.cmd.colorscheme("nordic")
