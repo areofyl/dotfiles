@@ -78,10 +78,10 @@ end
 
 local function list_dir(path)
   local entries = {}
-  local handle = vim.loop.fs_scandir(path)
+  local handle = vim.uv.fs_scandir(path)
   if not handle then return entries end
   while true do
-    local name, typ = vim.loop.fs_scandir_next(handle)
+    local name, typ = vim.uv.fs_scandir_next(handle)
     if not name then break end
     table.insert(entries, typ == "directory" and name .. "/" or name)
   end
@@ -92,7 +92,7 @@ end
 -- file metadata line
 
 local function file_info(path)
-  local stat = vim.loop.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   if not stat then return nil end
 
   local size = stat.size
@@ -361,12 +361,12 @@ vim.api.nvim_create_autocmd("FileType", {
         local name = vim.fn.fnamemodify(path, ":t")
         local dest = trash .. "/" .. name
         local n = 1
-        while vim.loop.fs_stat(dest) do
+        while vim.uv.fs_stat(dest) do
           dest = trash .. "/" .. name .. "." .. n
           n = n + 1
         end
         if vim.fn.confirm("Trash " .. name .. "?", "&Yes\n&No") == 1 then
-          vim.loop.fs_rename(path, dest)
+          vim.uv.fs_rename(path, dest)
           vim.cmd("edit .")
         end
       end)
@@ -401,7 +401,7 @@ vim.api.nvim_create_autocmd("FileType", {
         local old_name = vim.fn.fnamemodify(path, ":t")
         vim.ui.input({ prompt = "Rename: ", default = old_name }, function(new_name)
           if not new_name or new_name == "" or new_name == old_name then return end
-          vim.loop.fs_rename(path, vim.fn.fnamemodify(path, ":h") .. "/" .. new_name)
+          vim.uv.fs_rename(path, vim.fn.fnamemodify(path, ":h") .. "/" .. new_name)
           vim.cmd("edit .")
         end)
       end)
