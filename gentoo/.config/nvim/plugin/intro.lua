@@ -27,82 +27,20 @@ intro.ns = vim.api.nvim_create_namespace('IntroOverlayNS')
 intro.group = vim.api.nvim_create_augroup('IntroOverlay', { clear = true })
 
 intro.text = {
-  { { (' NVIM v%d.%d.%d'):format(vim_version.major, vim_version.minor, vim_version.patch), 'IntroTitle' } },
-  { { '' } },
-  { { ' Nvim is open source and freely distributable', 'IntroText' } },
-  { { ' https://neovim.io/#chat', 'IntroTitle' } },
-  { { '' } },
-  {
-    { 'type :help nvim', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { ' if you are new!', 'IntroText' },
-  },
-  {
-    { 'type :checkhealth', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { ' to optimize Nvim', 'IntroText' },
-  },
-  {
-    { 'type :q', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { ' to exit', 'IntroText' },
-  },
-  {
-    { 'type :help', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { ' for help', 'IntroText' },
-  },
-  { { '' } },
-  {
-    { 'type :help news', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { (' to see changes in v%d.%d'):format(vim_version.major, vim_version.minor), 'IntroText' },
-  },
-  { { '' } },
-  { { ' Help poor children in Uganda!', 'IntroText' } },
-  {
-    { 'type :help Kuwasha', 'IntroText' },
-    { '<Enter>', 'IntroTitle' },
-    { ' for information', 'IntroText' },
-  },
+  { { '   _     __  ________   ________  ________ ', 'IntroTitle' } },
+  { { '  / \\   /  \\/    /   \\ /        \\/        \\', 'IntroTitle' } },
+  { { ' /   \\     /         /_/       //         /', 'IntroTitle' } },
+  { { '/     \\   /\\        //         /         / ', 'IntroTitle' } },
+  { { '\\_/    \\_/  \\______/ \\________/\\__/__/__/  ', 'IntroTitle' } },
 }
 
 local function create_intro_buf()
   local buf = vim.api.nvim_create_buf(false, true)
-  local width = 49
 
   for i, text in ipairs(intro.text) do
     vim.api.nvim_buf_set_lines(buf, i - 1, i - 1, false, { '' })
-
-    local centered = {}
-    local is_type_line = #text == 3 and text[1][1]:match('^type ')
-
-    if is_type_line then
-      -- Left-justify command, right-justify description
-      local left_len = #text[1][1] + #text[2][1]
-      local right = text[3][1]:match('^%s*(.*)')
-      local inner = width - 2
-      local gap = math.max(1, inner - left_len - #right)
-      table.insert(centered, { ' ' })
-      table.insert(centered, text[1])
-      table.insert(centered, text[2])
-      table.insert(centered, { string.rep(' ', gap) .. right, text[3][2] })
-    else
-      local len = 0
-      for _, chunk in ipairs(text) do
-        len = len + #chunk[1]
-      end
-      if len > 0 then
-        local pad = math.max(0, math.floor((width - len) / 2))
-        table.insert(centered, { string.rep(' ', pad) })
-      end
-      for _, chunk in ipairs(text) do
-        table.insert(centered, chunk)
-      end
-    end
-
     vim.api.nvim_buf_set_extmark(buf, intro.ns, i - 1, 0, {
-      virt_text = centered,
+      virt_text = text,
       virt_text_pos = 'overlay',
     })
   end
@@ -140,7 +78,7 @@ local function render_intro()
     intro.buf = create_intro_buf()
   end
 
-  local width = 49
+  local width = 45
   local height = #intro.text
 
   local usable_width = vim.o.columns - 1
