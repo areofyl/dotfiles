@@ -423,7 +423,7 @@ local function apply_netrw_settings()
     vim.g.netrw_list_hide = ""
     vim.g.netrw_hide = 0
   else
-    vim.g.netrw_list_hide = "\\(^\\|\\s\\s\\)\\zs\\.\\S\\+"
+    vim.g.netrw_list_hide = "\\(^\\|\\s\\s\\)\\zs\\.[^.]\\S*"
     vim.g.netrw_hide = 1
   end
 end
