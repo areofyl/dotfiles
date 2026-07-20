@@ -33,7 +33,7 @@ vim.api.nvim_create_user_command("Mr", function()
   vim.cmd("vertical botright split | term " .. cmd)
 end, {})
 
--- markdown markup highlights (vague doesn't define these)
+-- markdown markup highlights (substrata doesn't define these)
 vim.api.nvim_set_hl(0, "@markup.italic", { italic = true })
 vim.api.nvim_set_hl(0, "@markup.strong", { bold = true })
 vim.api.nvim_set_hl(0, "@markup.strikethrough", { strikethrough = true })
