@@ -11,8 +11,12 @@ end
 vim.opt.shortmess:append('I')
 
 local function set_intro_highlights()
-  vim.api.nvim_set_hl(0, "IntroTitle", { fg = "#8caaba" })
-  vim.api.nvim_set_hl(0, "IntroText", { fg = "#5a6578" })
+  vim.api.nvim_set_hl(0, "IntroN", { fg = "#8caaba" })
+  vim.api.nvim_set_hl(0, "IntroE", { fg = "#a3a0c2" })
+  vim.api.nvim_set_hl(0, "IntroO", { fg = "#7ab0a8" })
+  vim.api.nvim_set_hl(0, "IntroV", { fg = "#cf8164" })
+  vim.api.nvim_set_hl(0, "IntroI", { fg = "#c4a24d" })
+  vim.api.nvim_set_hl(0, "IntroM", { fg = "#c27a93" })
 end
 
 local intro = {
@@ -26,13 +30,27 @@ local intro = {
 intro.ns = vim.api.nvim_create_namespace('IntroOverlayNS')
 intro.group = vim.api.nvim_create_augroup('IntroOverlay', { clear = true })
 
-intro.text = {
-  { { '   _      _  ________  ________  ________   ________  ________ ', 'IntroTitle' } },
-  { { '  / \\    / \\/        \\/        \\/    /   \\ /        \\/        \\', 'IntroTitle' } },
-  { { ' /   \\     /        -/    /    /         /_/       //         /', 'IntroTitle' } },
-  { { '/     \\   /        _/         /\\        //         /         / ', 'IntroTitle' } },
-  { { '\\_/    \\_/\\________/\\________/  \\______/ \\________/\\__/__/__/  ', 'IntroTitle' } },
+-- each row split into 6 segments: N E O V I M
+local cols = { 11, 21, 31, 42, 52 }
+local hls = { "IntroN", "IntroE", "IntroO", "IntroV", "IntroI", "IntroM" }
+local raw = {
+  '   _      _  ________  ________  ________   ________  ________ ',
+  '  / \\    / \\/        \\/        \\/    /   \\ /        \\/        \\',
+  ' /   \\     /        -/    /    /         /_/       //         /',
+  '/     \\   /        _/         /\\        //         /         / ',
+  '\\_/    \\_/\\________/\\________/  \\______/ \\________/\\__/__/__/  ',
 }
+intro.text = {}
+for _, line in ipairs(raw) do
+  local parts = {}
+  local prev = 1
+  for i, c in ipairs(cols) do
+    table.insert(parts, { line:sub(prev, c), hls[i] })
+    prev = c + 1
+  end
+  table.insert(parts, { line:sub(prev), hls[#hls] })
+  table.insert(intro.text, parts)
+end
 
 local function create_intro_buf()
   local buf = vim.api.nvim_create_buf(false, true)
