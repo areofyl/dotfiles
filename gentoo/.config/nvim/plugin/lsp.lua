@@ -1,10 +1,11 @@
 vim.lsp.enable({ "clangd", "pylsp", "ruff", "harper_ls" })
 
 vim.diagnostic.config({
-  virtual_text = { spacing = 4 },
+  virtual_text = { spacing = 4, prefix = "●" },
   severity_sort = true,
   signs = true,
   underline = true,
+  float = { border = "rounded", source = true },
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -29,6 +30,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
     map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
 
+    -- auto signature help when typing ( or ,
+    if client:supports_method("textDocument/signatureHelp") then
+      vim.api.nvim_create_autocmd("InsertCharPre", {
+        buffer = buf,
+        callback = function()
+          local char = vim.v.char
+          if char == "(" or char == "," then
+            vim.schedule(function()
+              vim.lsp.buf.signature_help()
+            end)
+          end
+        end,
+      })
+    end
+
     -- actions
     map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
@@ -39,8 +55,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>cd", vim.diagnostic.open_float, "Line diagnostics")
     map("n", "<leader>cq", vim.diagnostic.setloclist, "Diagnostics to loclist")
 
-    -- inlay hints (toggle with <leader>ch)
+    -- inlay hints (on by default, toggle with <leader>ch)
     if client:supports_method("textDocument/inlayHint") then
+      vim.lsp.inlay_hint.enable(true, { bufnr = buf })
       map("n", "<leader>ch", function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buf }), { bufnr = buf })
       end, "Toggle inlay hints")
