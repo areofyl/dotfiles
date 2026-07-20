@@ -22,8 +22,6 @@ local debounce_timer = nil
 local show_hidden = false
 local sort_mode = "name" -- name, time, size
 
--- file type checks
-
 local image_exts = {
   png = true, jpg = true, jpeg = true, gif = true,
   bmp = true, webp = true, svg = true, ico = true,
@@ -50,8 +48,6 @@ local function ext_of(path)
   local e = path:match("%.(%w+)$")
   return e and e:lower()
 end
-
--- get the file/dir under cursor in netrw
 
 local function get_netrw_entry()
   local dir = vim.b.netrw_curdir
@@ -82,8 +78,6 @@ local function get_netrw_entry()
   return vim.fn.filereadable(path) == 1 and path or nil, "file"
 end
 
--- get entries from visual selection
-
 local function get_visual_entries()
   local start = vim.fn.line("'<")
   local finish = vim.fn.line("'>")
@@ -109,8 +103,6 @@ local function get_visual_entries()
   return entries
 end
 
--- directory listing for preview
-
 local function list_dir(path)
   local entries = {}
   local handle = vim.uv.fs_scandir(path)
@@ -123,8 +115,6 @@ local function list_dir(path)
   table.sort(entries)
   return entries
 end
-
--- file metadata line
 
 local function file_info(path)
   local stat = vim.uv.fs_stat(path)
@@ -147,16 +137,12 @@ local function file_info(path)
   return perms .. "  " .. size_str .. "  " .. mtime .. link
 end
 
--- kill any running preview job
-
 local function kill_preview_job()
   if preview_job then
     pcall(vim.fn.jobstop, preview_job)
     preview_job = nil
   end
 end
-
--- swap preview buffer without closing the window
 
 local function swap_preview_buf(old)
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return false end
@@ -170,8 +156,6 @@ local function swap_preview_buf(old)
   end
   return true
 end
-
--- run a command in the preview pane
 
 local function preview_term(cmd)
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return end
@@ -190,8 +174,6 @@ local function preview_size()
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then return 40, 20 end
   return vim.api.nvim_win_get_width(preview_win), vim.api.nvim_win_get_height(preview_win)
 end
-
--- cleanup
 
 local function clean_preview_buf()
   kill_preview_job()
@@ -215,8 +197,6 @@ local function close_preview()
   clean_preview_buf()
   preview_win, netrw_win = nil, nil
 end
-
--- the actual preview logic
 
 local function show_preview(path, kind)
   if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
@@ -302,8 +282,6 @@ local function show_preview(path, kind)
   end
 end
 
--- debounced preview update
-
 local function schedule_preview()
   if not debounce_timer then
     debounce_timer = vim.uv.new_timer()
@@ -317,8 +295,6 @@ local function schedule_preview()
     pcall(show_preview, get_netrw_entry())
   end))
 end
-
--- open the preview pane and wire up autocmds
 
 local function start_preview()
   if previewing then return end
@@ -380,8 +356,6 @@ local function start_preview()
   })
 end
 
--- xdg-open for media/docs
-
 local function try_xdg_open()
   local path, kind = get_netrw_entry()
   if not path or kind ~= "file" then return false end
@@ -390,8 +364,6 @@ local function try_xdg_open()
   vim.fn.jobstart({ "xdg-open", path }, { detach = true })
   return true
 end
-
--- trash helper (used by both normal and visual mode)
 
 local function trash_path(path)
   if vim.fn.executable("trash-put") == 1 then
@@ -415,8 +387,6 @@ local function trash_path(path)
   end
 end
 
--- apply sort and hidden file settings
-
 local function apply_netrw_settings()
   vim.g.netrw_sort_by = sort_mode
   if show_hidden then
@@ -427,8 +397,6 @@ local function apply_netrw_settings()
     vim.g.netrw_hide = 1
   end
 end
-
--- count items in current netrw dir
 
 local function dir_item_count()
   local dir = vim.b.netrw_curdir
