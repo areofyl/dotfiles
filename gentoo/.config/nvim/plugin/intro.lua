@@ -27,11 +27,11 @@ intro.ns = vim.api.nvim_create_namespace('IntroOverlayNS')
 intro.group = vim.api.nvim_create_augroup('IntroOverlay', { clear = true })
 
 intro.text = {
-  { { '   _     __  ________   ________  ________ ', 'IntroTitle' } },
-  { { '  / \\   /  \\/    /   \\ /        \\/        \\', 'IntroTitle' } },
-  { { ' /   \\     /         /_/       //         /', 'IntroTitle' } },
-  { { '/     \\   /\\        //         /         / ', 'IntroTitle' } },
-  { { '\\_/    \\_/  \\______/ \\________/\\__/__/__/  ', 'IntroTitle' } },
+  { { '   _      _  ________  ________  ________   ________  ________ ', 'IntroTitle' } },
+  { { '  / \\    / \\/        \\/        \\/    /   \\ /        \\/        \\', 'IntroTitle' } },
+  { { ' /   \\     /        -/    /    /         /_/       //         /', 'IntroTitle' } },
+  { { '/     \\   /        _/         /\\        //         /         / ', 'IntroTitle' } },
+  { { '\\_/    \\_/\\________/\\________/  \\______/ \\________/\\__/__/__/  ', 'IntroTitle' } },
 }
 
 local function create_intro_buf()
@@ -78,7 +78,7 @@ local function render_intro()
     intro.buf = create_intro_buf()
   end
 
-  local width = 45
+  local width = 65
   local height = #intro.text
 
   local usable_width = vim.o.columns - 1
