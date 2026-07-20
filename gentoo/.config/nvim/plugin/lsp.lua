@@ -1,3 +1,5 @@
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+vim.lsp.config("*", { capabilities = capabilities })
 vim.lsp.enable({ "clangd", "pylsp", "ruff", "harper_ls" })
 
 vim.diagnostic.config({
@@ -69,10 +71,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
       map("n", "<leader>cl", vim.lsp.codelens.run, "Run code lens")
     end
 
-    -- native completion
-    if client:supports_method("textDocument/completion") then
-      vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
-    end
   end,
 })
 
@@ -85,26 +83,3 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end
   end,
 })
-
--- confirm completion with <CR>
-vim.keymap.set("i", "<CR>", function()
-  if vim.fn.pumvisible() == 1 then
-    return "<C-y>"
-  end
-  return "<CR>"
-end, { expr = true })
-
--- snippet jumping with Tab/S-Tab
-vim.keymap.set({ "i", "s" }, "<Tab>", function()
-  if vim.snippet.active({ direction = 1 }) then
-    return "<cmd>lua vim.snippet.jump(1)<CR>"
-  end
-  return "<Tab>"
-end, { expr = true })
-
-vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
-  if vim.snippet.active({ direction = -1 }) then
-    return "<cmd>lua vim.snippet.jump(-1)<CR>"
-  end
-  return "<S-Tab>"
-end, { expr = true })
