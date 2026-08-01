@@ -41,6 +41,7 @@ export XCURSOR_SIZE=24
 export GOPATH="$HOME/.local/share/go"
 export CARGO_HOME="$HOME/.local/share/cargo"
 export PATH="$HOME/.local/bin:$CARGO_HOME/bin:$HOME/bin:$PATH"
+export W3M_DIR="$HOME/.config/w3m"
 
 if [ -z "$XDG_RUNTIME_DIR" ]; then
     export XDG_RUNTIME_DIR="/run/user/$(id -u)"
