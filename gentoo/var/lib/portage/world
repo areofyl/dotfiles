@@ -55,7 +55,6 @@ net-dns/bind-tools
 net-irc/irssi
 net-misc/asahi-btsync
 net-misc/networkmanager
-net-news/newsboat
 net-print/cups
 net-print/cups-filters
 net-wireless/iw
@@ -77,11 +76,8 @@ sys-process/btop
 x11-apps/xprop
 x11-apps/xrandr
 x11-apps/xsetroot
-x11-base/xorg-server
 x11-misc/dmenu
 x11-misc/i3lock
-x11-misc/picom
 x11-misc/xdotool
 x11-terms/kitty
 x11-themes/papirus-icon-theme
-x11-wm/windowmaker
