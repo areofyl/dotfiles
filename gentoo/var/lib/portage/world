@@ -4,7 +4,6 @@ app-arch/p7zip
 app-arch/unzip
 app-arch/zip
 app-containers/podman
-app-editors/emacs
 app-editors/nano
 app-editors/neovim
 app-editors/vim
@@ -45,7 +44,6 @@ media-fonts/noto
 media-fonts/noto-cjk
 media-fonts/noto-emoji
 media-gfx/chafa
-media-gfx/feh
 media-gfx/imv
 media-gfx/scrot
 media-libs/asahi-audio
@@ -77,8 +75,6 @@ sys-process/btop
 x11-apps/xprop
 x11-apps/xrandr
 x11-apps/xsetroot
-x11-misc/dmenu
 x11-misc/i3lock
-x11-misc/xdotool
 x11-terms/kitty
 x11-themes/papirus-icon-theme
