@@ -57,4 +57,4 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 require("config.lazy")
-vim.cmd.colorscheme("substrata")
+vim.cmd.colorscheme("modus_vivendi")
