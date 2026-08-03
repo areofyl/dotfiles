@@ -12,7 +12,7 @@ vim.opt.wrap = false
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
-vim.opt.statusline = " %f %m%r%=%{%g:eldoc_stl%}%= %y %l:%c "
+vim.opt.statusline = " %f %m%r%=%{%v:lua.eldoc_statusline()%}%= %y %l:%c "
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
 vim.opt.completeopt = "menu,menuone,noselect,popup"
