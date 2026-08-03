@@ -115,7 +115,7 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = true, desc = "Follow link" })
 
     -- word count in statusline for markdown
-    vim.opt_local.statusline = " %f %m%r%= %{wordcount().words}w %y %l:%c "
+    vim.opt_local.statusline = " %f %m%r%=%{%g:eldoc_stl%}%= %{wordcount().words}w %y %l:%c "
 
     -- *<space> at start of line = indented sub-bullet
     -- -<space> at start of line = top-level bullet
