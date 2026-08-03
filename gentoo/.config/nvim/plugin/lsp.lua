@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
     map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
 
-    -- signature help fed into eldoc echo (replaces floating window)
+    -- signature help fed into statusline (replaces floating window)
     if client:supports_method("textDocument/signatureHelp") then
       vim.api.nvim_create_autocmd("InsertCharPre", {
         buffer = buf,
@@ -42,6 +42,26 @@ vim.api.nvim_create_autocmd("LspAttach", {
             vim.schedule(function()
               eldoc_signature(buf)
             end)
+          end
+        end,
+      })
+      -- refresh signature help as you type inside parens
+      vim.api.nvim_create_autocmd("TextChangedI", {
+        buffer = buf,
+        callback = function()
+          local line = vim.api.nvim_get_current_line()
+          local col = vim.fn.col(".") - 1
+          local depth = 0
+          for i = col, 1, -1 do
+            local ch = line:sub(i, i)
+            if ch == ")" then depth = depth + 1
+            elseif ch == "(" then
+              if depth == 0 then
+                eldoc_signature(buf)
+                return
+              end
+              depth = depth - 1
+            end
           end
         end,
       })
@@ -76,26 +96,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- eldoc: show hover + signature help in statusline
 
--- stored eldoc statusline string (with highlight codes baked in)
-vim.g.eldoc_stl = ""
+-- stored eldoc statusline parts
+_G._eldoc_parts = {}
 
-local function stl_escape(s)
-  return s:gsub("%%", "%%%%")
+function _G.eldoc_statusline()
+  if #_G._eldoc_parts == 0 then return "" end
+  local s = {}
+  for _, p in ipairs(_G._eldoc_parts) do
+    s[#s + 1] = ("%%#%s#%s"):format(p[2], p[1]:gsub("%%", "%%%%"))
+  end
+  s[#s + 1] = "%*"
+  return table.concat(s)
 end
 
 local function eldoc_set(parts)
-  -- parts = list of {text, hlgroup} pairs -> statusline string
-  if #parts == 0 then
-    vim.g.eldoc_stl = ""
-  else
-    local s = {}
-    for _, p in ipairs(parts) do
-      s[#s + 1] = ("%%#%s#%s"):format(p[2], stl_escape(p[1]))
-    end
-    s[#s + 1] = "%*"
-    vim.g.eldoc_stl = table.concat(s)
-  end
-  vim.cmd.redrawstatus()
+  _G._eldoc_parts = parts
+  vim.schedule(function()
+    vim.cmd.redrawstatus()
+  end)
 end
 
 local function strip_md(text)
@@ -381,12 +399,20 @@ vim.api.nvim_create_autocmd("CursorHold", {
   callback = eldoc_hover,
 })
 
--- clear eldoc when cursor moves (will be repopulated on next CursorHold)
+-- clear eldoc on normal mode cursor move (not insert — signature help lives there)
 vim.api.nvim_create_autocmd("CursorMoved", {
   callback = function()
-    if vim.g.eldoc_stl ~= "" then
-      vim.g.eldoc_stl = ""
-      vim.cmd.redrawstatus()
+    if #_G._eldoc_parts > 0 then
+      eldoc_set({})
+    end
+  end,
+})
+
+-- clear eldoc when leaving insert mode
+vim.api.nvim_create_autocmd("InsertLeave", {
+  callback = function()
+    if #_G._eldoc_parts > 0 then
+      eldoc_set({})
     end
   end,
 })
