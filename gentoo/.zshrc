@@ -22,7 +22,6 @@ alias airpods='bluetoothctl connect F0:04:E1:D6:E5:01'
 alias sudo='sudo -S'
 alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
 alias print='lp -d Canon_MF260_Series_UFRII_LT -o sides=two-sided-long-edge' 
-alias emacs='emacs -nw'
 
 # suppress accessibility bus (no screen reader needed)
 export NO_AT_BRIDGE=1
