@@ -1,0 +1,23 @@
+gui-apps/waybar tray network wifi
+# required by gui-apps/waybar-0.14.0::gentoo[tray]
+# required by gui-apps/waybar (argument)
+>=dev-libs/libdbusmenu-16.04.0-r4 gtk3
+# required by x11-libs/gtk+-2.24.33-r3::gentoo
+# required by x11-themes/gtk-engines-adwaita-3.28-r1::gentoo
+>=x11-libs/cairo-1.18.4-r1 X
+# required by www-client/firefox-bin-148.0.2::gentoo
+# required by www-client/firefox-bin (argument)
+>=x11-libs/gtk+-3.24.51 X
+# required by x11-libs/gtk+-3.24.51::gentoo
+# required by gui-libs/libdecor-0.2.5::gentoo[gtk]
+# required by media-libs/libsdl2-2.32.10::gentoo[wayland]
+# required by media-video/ffmpeg-8.1::gentoo[sdl]
+# required by www-client/firefox-bin-148.0.2::gentoo
+# required by www-client/firefox-bin (argument)
+>=media-libs/libepoxy-1.5.10-r3 X
+>=x11-libs/gtk+-3.24.51 X
+>=media-libs/libepoxy-1.5.10-r3 X
+>=dev-cpp/gtkmm-3.24.10 X
+# required by media-libs/asahi-audio-3.4::asahi
+# required by asahi-audio (argument)
+>=media-video/pipewire-1.6.2 lv2 extra
