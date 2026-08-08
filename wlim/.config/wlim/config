@@ -1,0 +1,12 @@
+hint_bg=#f0c836
+hint_fg=#222
+hint_fg_dim=#a08520
+hint_border=rgba(0,0,0,0.1)
+hint_shadow=0 2px 4px rgba(0,0,0,0.35)
+hint_font=Fantasque Sans Mono
+hint_font_size=12
+hint_font_weight=700
+hint_border_radius=3
+hint_padding_x=4
+hint_padding_y=1
+bar_position=top

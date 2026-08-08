@@ -1,0 +1,46 @@
+# fetch config
+# list fields to show (in this order)
+# remove or comment out to hide
+
+os
+host
+kernel
+uptime
+packages
+shell
+display
+wm
+theme
+icons
+font
+terminal
+cpu
+gpu
+memory
+swap
+disk
+ip
+battery
+locale
+colors
+
+# appearance
+# label_color=magenta   (red, green, yellow, blue, magenta, cyan, white)
+# separator=─           (character used for the title separator)
+# shading=.,-~:;=!*#$@  (characters for 3D shading ramp, supports UTF-8)
+
+# logo colors (override distro defaults)
+# logo_outer=magenta    (outer/heavy character color)
+# logo_inner=white      (inner/light character color)
+
+# 3d
+# light=top-left        (top-left, top-right, top, left, right, front, bottom-left, bottom-right)
+# spin=xy               (x, y, or xy)
+# speed=1.0             (rotation speed multiplier)
+# size=1.0              (logo scale, e.g. 2.0 for double size)
+# depth=1.0             (3D extrusion depth, e.g. 3.0 for chunkier look)
+# height=36             (override render height in rows)
+
+# extra disks (shows / by default, add more mount points)
+# disk=/home
+# disk=/data

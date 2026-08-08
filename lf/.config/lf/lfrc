@@ -1,0 +1,95 @@
+# ── lf ──
+
+# previewer
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/clean
+
+# shell
+set shell sh
+set shellopts '-eu'
+set ifs "\n"
+
+# ui
+set icons
+set hidden
+set drawbox
+set borderfmt "\033[38;2;46;54;66m"
+set cursorpreviewfmt "\033[38;2;90;100;112m"
+set promptfmt "\033[38;2;138;149;176;1m  \033[0m\033[38;2;196;204;212m%d\033[0m\033[38;2;90;100;112m%f\033[0m"
+set rulerfile ~/.config/lf/ruler.tmpl
+set timefmt "02 Jan 06 15:04"
+set errorfmt "\033[38;2;154;117;144m%s\033[0m"
+set truncatechar "…"
+set tabstop 4
+set scrolloff 5
+set info size:time
+set dircounts
+set sortby time
+set reverse
+set dirfirst
+set period 1
+set ratios 1:2:3
+
+# open files
+cmd open ${{
+    case "$(file --mime-type -Lb "$f")" in
+        text/*|application/json|application/xml|application/javascript)
+            nvim "$f";;
+        *)
+            xdg-open "$f" > /dev/null 2>&1 & disown;;
+    esac
+}}
+
+# mkdir
+cmd mkdir %{{
+    printf " directory name: "
+    read dir
+    mkdir -p "$dir"
+}}
+
+# touch
+cmd touch %{{
+    printf " file name: "
+    read name
+    touch "$name"
+}}
+
+# trash (move to trash instead of rm)
+cmd trash %{{
+    for f in $fx; do
+        mv "$f" ~/.local/share/Trash/files/ 2>/dev/null || rm -rf "$f"
+    done
+}}
+
+# bulk rename
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    [ -n "$fs" ] && fs="$(basename -a -- $fs)" || fs="$(ls)"
+    printf '%s\n' "$fs" > "$old"
+    printf '%s\n' "$fs" > "$new"
+    nvim "$new"
+    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
+    paste "$old" "$new" | while IFS="$(printf '\t')" read -r src dst; do
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
+        fi
+        mv -- "$src" "$dst"
+    done
+    rm -f "$old" "$new"
+    lf -remote "send $id reload"
+}}
+
+# ── keybindings ──
+map <enter> open
+map D trash
+map a touch
+map A mkdir
+map R bulk-rename
+map . set hidden!
+map dd cut
+map yy copy
+map pp paste
+map x $$f
+map X !$f
+map <c-r> reload

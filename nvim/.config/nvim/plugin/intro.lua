@@ -1,0 +1,171 @@
+if vim.fn.argc() > 0 then
+  return
+end
+
+local vim_version = vim.version()
+
+if vim_version.minor < 12 then
+  return
+end
+
+vim.opt.shortmess:append('I')
+
+local function set_intro_highlights()
+  vim.api.nvim_set_hl(0, "IntroN", { fg = "#8caaba" })
+  vim.api.nvim_set_hl(0, "IntroE", { fg = "#a3a0c2" })
+  vim.api.nvim_set_hl(0, "IntroO", { fg = "#7ab0a8" })
+  vim.api.nvim_set_hl(0, "IntroV", { fg = "#cf8164" })
+  vim.api.nvim_set_hl(0, "IntroI", { fg = "#c4a24d" })
+  vim.api.nvim_set_hl(0, "IntroM", { fg = "#c27a93" })
+end
+
+local intro = {
+  win = nil,
+  buf = nil,
+  ns = nil,
+  text = nil,
+  group = nil
+}
+
+intro.ns = vim.api.nvim_create_namespace('IntroOverlayNS')
+intro.group = vim.api.nvim_create_augroup('IntroOverlay', { clear = true })
+
+-- each row split into 6 segments: N E O V I M
+local cols = { 11, 21, 31, 42, 52 }
+local hls = { "IntroN", "IntroE", "IntroO", "IntroV", "IntroI", "IntroM" }
+local raw = {
+  '   _      _  ________  ________  ________   ________  ________ ',
+  '  / \\    / \\/        \\/        \\/    /   \\ /        \\/        \\',
+  ' /   \\     /        -/    /    /         /_/       //         /',
+  '/     \\   /        _/         /\\        //         /         / ',
+  '\\_/    \\_/\\________/\\________/  \\______/ \\________/\\__/__/__/  ',
+}
+intro.text = {}
+for _, line in ipairs(raw) do
+  local parts = {}
+  local prev = 1
+  for i, c in ipairs(cols) do
+    table.insert(parts, { line:sub(prev, c), hls[i] })
+    prev = c + 1
+  end
+  table.insert(parts, { line:sub(prev), hls[#hls] })
+  table.insert(intro.text, parts)
+end
+
+local function create_intro_buf()
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  for i, text in ipairs(intro.text) do
+    vim.api.nvim_buf_set_lines(buf, i - 1, i - 1, false, { '' })
+    vim.api.nvim_buf_set_extmark(buf, intro.ns, i - 1, 0, {
+      virt_text = text,
+      virt_text_pos = 'overlay',
+    })
+  end
+
+  return buf
+end
+
+local function create_intro_win(row, col, width, height)
+  local win = vim.api.nvim_open_win(intro.buf, false, {
+    relative = 'editor',
+    row = row,
+    col = col,
+    width = width,
+    height = height,
+    style = 'minimal',
+    border = 'none',
+    focusable = false,
+    noautocmd = true,
+  })
+
+  vim.wo[win].winhighlight = 'NormalFloat:Normal'
+
+  return win
+end
+
+local function hide_intro()
+  if intro.win and vim.api.nvim_win_is_valid(intro.win) then
+    vim.api.nvim_win_close(intro.win, true)
+    intro.win = nil
+  end
+end
+
+local function render_intro()
+  if not intro.buf or not vim.api.nvim_buf_is_valid(intro.buf) then
+    intro.buf = create_intro_buf()
+  end
+
+  local width = 65
+  local height = #intro.text
+
+  local usable_width = vim.o.columns - 1
+
+  if usable_width < width or vim.o.lines < height + 6 then
+    hide_intro()
+    return
+  end
+
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((usable_width - width) / 2) + 2
+
+  if not intro.win or not vim.api.nvim_win_is_valid(intro.win) then
+    intro.win = create_intro_win(row, col, width, height)
+    return
+  end
+
+  vim.api.nvim_win_set_config(intro.win, {
+    relative = 'editor',
+    row = row,
+    col = col,
+    width = width,
+    height = height,
+  })
+end
+
+local function cleanup_intro()
+  hide_intro()
+
+  if intro.group then
+    pcall(vim.api.nvim_del_augroup_by_id, intro.group)
+    intro.group = nil
+  end
+
+  if intro.buf and vim.api.nvim_buf_is_valid(intro.buf) then
+    if intro.ns then
+      vim.api.nvim_buf_clear_namespace(intro.buf, intro.ns, 0, -1)
+      intro.ns = nil
+    end
+
+    vim.api.nvim_buf_delete(intro.buf, { force = true })
+    intro.buf = nil
+  end
+
+  intro.win = nil
+  intro.text = nil
+end
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    set_intro_highlights()
+    render_intro()
+
+    vim.api.nvim_create_autocmd('VimResized', {
+      group = intro.group,
+      callback = render_intro,
+    })
+
+    vim.api.nvim_create_autocmd({
+      'InsertCharPre',
+      'BufReadPre',
+      'CursorMoved',
+    }, {
+      group = intro.group,
+      once = true,
+      callback = function()
+        vim.schedule(cleanup_intro)
+      end,
+    })
+  end,
+})

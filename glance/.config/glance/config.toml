@@ -1,0 +1,32 @@
+# glance daemon configuration
+
+# directories to watch for new files
+watch_dirs = ["~/Pictures/Screenshots", "~/Downloads"]
+
+# RTMIN+N signal to poke waybar on new file
+# Must not collide with other signal-based waybar modules.
+# RTMIN+8 is used by nimbus-tags-producer; glance uses RTMIN+9.
+signal_number = 9
+
+# auto-dismiss the widget after N seconds
+dismiss_seconds = 10
+
+# ignore files with these suffixes (partial downloads, etc.)
+ignore_suffixes = [".part", ".crdownload", ".tmp"]
+
+# pixels from top of screen to below waybar (popup appears here)
+bar_height = 57
+
+# number of files to remember in history
+history_size = 5
+
+# Menu placement (dwl has no cursor-pos IPC).
+#
+# Preferred on dwl: anchor the menu to the RIGHT edge of the screen with a
+# fixed pixel offset. This offset should equal the combined width of all
+# waybar modules to the right of the glance module (cpu + memory + power +
+# volume + network + bluetooth + battery). Tune once and forget.
+menu_right_offset = 650
+
+# (Unused when menu_right_offset is set, kept as a fallback.)
+menu_x_override = 1850

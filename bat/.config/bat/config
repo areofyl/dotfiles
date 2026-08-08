@@ -1,0 +1,3 @@
+# bat config — Nimbus
+# Palette source of truth: ~/.config/nimbus/palette.sh
+--theme="nimbus"

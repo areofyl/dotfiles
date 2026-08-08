@@ -1,0 +1,76 @@
+# directories
+di
+# symlinks
+ln
+# broken symlinks
+or
+# executables
+ex
+
+# files by extension
+*.c
+*.h
+*.rs
+*.go
+*.py
+*.js
+*.ts
+*.lua
+*.sh
+*.css
+*.html
+*.json
+*.toml
+*.yaml
+*.yml
+*.xml
+*.md
+*.txt
+*.conf
+*.cfg
+*.nix
+
+# images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.webp
+*.ico
+
+# video
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.webm
+
+# audio
+*.mp3
+*.flac
+*.ogg
+*.wav
+
+# archives
+*.tar
+*.gz
+*.zip
+*.7z
+*.xz
+*.bz2
+*.zst
+*.deb
+*.rpm
+
+# documents
+*.pdf
+
+# misc
+*.git
+*.gitignore
+*.lock
+
+# generic
+fi

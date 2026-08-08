@@ -1,0 +1,33 @@
+#!/bin/sh
+
+file="$1"
+w="$2"
+h="$3"
+x="$4"
+y="$5"
+
+case "$(file --mime-type -Lb "$file")" in
+    image/*)
+        kitty +kitten icat --silent --stdin no --transfer-mode file \
+            --place "${w}x${h}@${x}x${y}" "$file" < /dev/null > /dev/tty
+        exit 1
+        ;;
+    text/*|application/json|application/xml|application/javascript|application/x-shellscript)
+        bat --theme=nimbus --color=always --style=numbers,header-filename \
+            --line-range=:200 --terminal-width="$w" "$file"
+        ;;
+    application/gzip|application/x-tar|application/zip|application/x-xz|application/zstd|application/x-bzip2|application/x-7z-compressed)
+        tar tf "$file" 2>/dev/null || unzip -l "$file" 2>/dev/null || echo "archive: $(file --brief "$file")"
+        ;;
+    application/pdf)
+        echo "  $(file --brief "$file")"
+        ;;
+    *)
+        file --brief "$file"
+        echo ""
+        bat --theme=nimbus --color=always --style=numbers \
+            --line-range=:200 --terminal-width="$w" "$file" 2>/dev/null \
+            || head -200 "$file" 2>/dev/null \
+            || echo "no preview"
+        ;;
+esac
