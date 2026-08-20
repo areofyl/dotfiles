@@ -68,6 +68,8 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.spelllang = "en_us"
     vim.opt_local.spellcapcheck = ""
     vim.opt_local.conceallevel = 2
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
 
     -- tab/shift-tab to indent/unindent bullets
     vim.keymap.set("n", "<Tab>", ">>", { buffer = true })

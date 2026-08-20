@@ -12,6 +12,8 @@ return {
         unclosed_quotes = true,
         wrong_quotes = false,
         long_sentences = false,
+        sentence_length = false,
+        too_long = false,
         repeated_words = true,
         spaces = true,
         matcher = true,

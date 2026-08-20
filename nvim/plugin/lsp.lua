@@ -4,6 +4,16 @@ if ok then
 end
 vim.lsp.enable({ "clangd", "pylsp", "ruff", "harper_ls" })
 
+-- filter out harper sentence length diagnostics
+vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+  if result and result.diagnostics then
+    result.diagnostics = vim.tbl_filter(function(d)
+      return not d.message:match("sentence is %d+ words long")
+    end, result.diagnostics)
+  end
+  vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+end
+
 vim.diagnostic.config({
   virtual_text = { spacing = 4, prefix = "●" },
   severity_sort = true,

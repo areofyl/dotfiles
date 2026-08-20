@@ -1,32 +1,49 @@
-# glance daemon configuration
+# glance configuration
+# Copy to ~/.config/glance/config.toml
 
 # directories to watch for new files
-watch_dirs = ["~/Pictures/Screenshots", "~/Downloads"]
+watch_dirs = ["~/Pictures/screenshots", "~/Downloads"]
 
 # RTMIN+N signal to poke waybar on new file
-# Must not collide with other signal-based waybar modules.
-# RTMIN+8 is used by nimbus-tags-producer; glance uses RTMIN+9.
-signal_number = 9
+signal_number = 8
 
-# auto-dismiss the widget after N seconds
+# auto-dismiss the waybar widget after N seconds
 dismiss_seconds = 10
 
 # ignore files with these suffixes (partial downloads, etc.)
 ignore_suffixes = [".part", ".crdownload", ".tmp"]
 
-# pixels from top of screen to below waybar (popup appears here)
-bar_height = 57
+# pixels from top of screen to below waybar (menu appears here)
+bar_height = 39
+
+# horizontal position (global X pixel) to anchor the menu; omit to use cursor position
+menu_x = 2026
 
 # number of files to remember in history
 history_size = 5
 
-# Menu placement (dwl has no cursor-pos IPC).
-#
-# Preferred on dwl: anchor the menu to the RIGHT edge of the screen with a
-# fixed pixel offset. This offset should equal the combined width of all
-# waybar modules to the right of the glance module (cpu + memory + power +
-# volume + network + bluetooth + battery). Tune once and forget.
-menu_right_offset = 650
+# editor command for the Edit button (default: "swappy -f")
+# supports full commands with arguments, e.g. "gimp -n" or "swappy -f"
+# install swappy: sudo dnf install swappy (Fedora) / sudo pacman -S swappy (Arch)
+editor = "swappy -f"
 
-# (Unused when menu_right_offset is set, kept as a fallback.)
-menu_x_override = 1850
+# which action buttons to show in the dropdown menu
+# available: "drag", "open", "edit", "copy"
+actions = ["drag", "open", "edit", "copy"]
+
+# auto-dismiss the dropdown menu after N seconds (0 = never)
+menu_dismiss_seconds = 8
+
+# drag command: "builtin" for GTK4 native drag overlay, or an external tool
+# use "ripdrag --and-exit" for better browser compatibility (XWayland)
+# install ripdrag: cargo install ripdrag
+drag_command = "builtin"
+
+# menu appearance
+[menu_style]
+background = "rgba(30,30,46,0.95)"
+text_color = "#cdd6f4"
+secondary_color = "#a6adc8"
+button_background = "rgba(255,255,255,0.08)"
+button_hover = "rgba(255,255,255,0.15)"
+border_radius = 12

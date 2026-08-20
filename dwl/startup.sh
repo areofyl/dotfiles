@@ -6,14 +6,14 @@ pkill -x swaybg 2>/dev/null
 pkill -x waybar 2>/dev/null
 pkill -x swayidle 2>/dev/null
 pkill -f 'xdg-desktop-portal' 2>/dev/null
-pkill -f 'nimbus-tags-producer' 2>/dev/null
+pkill -f 'bar.sh produce-tags' 2>/dev/null
 pkill -f 'glance watch' 2>/dev/null
-pkill -f 'lock-listener' 2>/dev/null
+pkill -f 'lock.sh --listen' 2>/dev/null
 pkill -f 'gdbus.*login1.*session' 2>/dev/null
 pkill -f 'gdbus.*login1$' 2>/dev/null
 pkill -f 'lockscreen.py' 2>/dev/null
 pkill -f 'lock.sh' 2>/dev/null
-rm -f /tmp/dwl-status /tmp/dwl-locked
+rm -f /tmp/dwl-status "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/dwl-locked"
 
 # external display: force 2560x1440 if connected (preferred 4K@30 broken on apple-dcp)
 if wlr-randr 2>/dev/null | grep -q 'DP-1'; then
@@ -23,6 +23,20 @@ else
 fi
 
 sleep 1
+
+# monitor hotplug watcher (polls for DP-1)
+(
+    prev=""
+    while true; do
+        curr=$(wlr-randr 2>/dev/null | grep -c 'DP-1')
+        if [ "$curr" != "$prev" ] && [ "$curr" -gt 0 ]; then
+            sleep 0.5
+            wlr-randr --output eDP-1 --pos 0,0 --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0
+        fi
+        prev="$curr"
+        sleep 2
+    done
+) &
 
 # portal (file chooser, screenshare, etc.)
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY
@@ -44,10 +58,10 @@ swayidle \
     after-resume 'sleep 1 && wlr-randr --output eDP-1 --on --pos 0,0; wlr-randr 2>/dev/null | grep -q DP-1 && wlr-randr --output DP-1 --mode 3840x2160@30.000000 --pos 2560,0' &
 
 # listen for power button / loginctl lock-session (delay for session registration)
-(sleep 3 && /home/aarav/.config/custom-lock/lock-listener.sh) &
+(sleep 3 && /home/aarav/.config/custom-lock/lock.sh --listen) &
 
-# nimbus tags producer (writes /tmp/nimbus-tags-state, signals waybar)
-~/.config/waybar/nimbus-tags-producer.sh &
+# tag state producer (writes /tmp/dwl-tags-state, signals waybar)
+~/.config/waybar/bar.sh produce-tags &
 
 # glance file watcher (transient waybar widget for new screenshots/downloads)
 ~/.local/bin/glance watch &
