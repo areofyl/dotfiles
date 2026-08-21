@@ -96,7 +96,7 @@ static const Key keys[] = {
 	/* $mod+f: launch lf file manager */
 	{ MODKEY,                    XKB_KEY_f,           spawn,            SHCMD("kitty lf") },
 	/* $mod+b: launch ungoogled-chromium */
-	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium --password-store=basic") },
+	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium") },
 	/* matches sway: $mod+x exec swaylock */
 	{ MODKEY,                    XKB_KEY_x,           spawn,            SHCMD("/home/aarav/.config/custom-lock/lock.sh") },
 	{ MODKEY,                    XKB_KEY_c,           spawn,            SHCMD("/home/aarav/Projects/wlim/wlim") },
@@ -141,6 +141,7 @@ static const Key keys[] = {
 	{ 0, XKB_KEY_XF86AudioMute,         spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
 	{ 0, XKB_KEY_XF86AudioMicMute,      spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle") },
 	{ 0, XKB_KEY_XF86AudioPlay,         spawn, SHCMD("playerctl play-pause") },
+	{ 0, XKB_KEY_XF86AudioPause,        spawn, SHCMD("playerctl play-pause") },
 	{ 0, XKB_KEY_XF86AudioNext,         spawn, SHCMD("playerctl next") },
 	{ 0, XKB_KEY_XF86AudioPrev,         spawn, SHCMD("playerctl previous") },
 	{ 0, XKB_KEY_XF86AudioStop,         spawn, SHCMD("playerctl stop") },
