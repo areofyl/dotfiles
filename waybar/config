@@ -36,7 +36,7 @@
         "custom/tag10": { "exec": "~/.config/waybar/bar.sh tag eDP-1 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
         
         "clock": {
-            "interval": 1, 
+            "interval": 60,
             "format": "[{:%I:%M %p}]",
             "format-alt": "[{:%I:%M:%S %p - %A, %B %d, %Y}]",
             "tooltip-format": "<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
@@ -52,7 +52,7 @@
                 }
             }
         },
-        
+
         "wireplumber": {
             "format": "[{volume}%]",
             "format-muted": "[muted]",
@@ -61,7 +61,7 @@
             "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
             "tooltip": false
         },
-        
+
         "network": {
             "format-wifi": "[{essid}]",
             "format-ethernet": "[wired]",
@@ -70,14 +70,14 @@
             "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
             "tooltip-format-disconnected": "offline"
         },
-        
+
         "custom/bluetooth": {
             "exec": "if echo 'show' | bluetoothctl 2>/dev/null | grep -q 'Powered: yes'; then dev=$(echo 'info' | bluetoothctl 2>/dev/null | grep 'Name:' | head -1 | sed 's/.*Name: //' | sed 's/ - Find My//'); if [ -n \"$dev\" ]; then echo '{\"text\": \"['\"$dev\"']\", \"class\": \"connected\"}'; else echo '{\"text\": \"[bt]\", \"class\": \"on\"}'; fi; else echo '{\"text\": \"[--]\", \"class\": \"off\"}'; fi",
             "return-type": "json",
             "interval": 5,
             "tooltip": false
         },
-        
+
         "idle_inhibitor": {
             "format": "[{icon}]",
             "format-icons": {
@@ -86,7 +86,7 @@
             },
             "tooltip": false
         },
-        
+
         "custom/battery": {
             "exec": "~/.config/waybar/bar.sh battery",
             "return-type": "json",
@@ -159,7 +159,7 @@
             "interval": 5,
             "tooltip": true
         },
-        
+
         "custom/tag1":  { "exec": "~/.config/waybar/bar.sh tag DP-1 1",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
         "custom/tag2":  { "exec": "~/.config/waybar/bar.sh tag DP-1 2",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
         "custom/tag3":  { "exec": "~/.config/waybar/bar.sh tag DP-1 3",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
@@ -170,9 +170,9 @@
         "custom/tag8":  { "exec": "~/.config/waybar/bar.sh tag DP-1 8",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
         "custom/tag9":  { "exec": "~/.config/waybar/bar.sh tag DP-1 9",  "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
         "custom/tag10": { "exec": "~/.config/waybar/bar.sh tag DP-1 10", "return-type": "json", "signal": 8, "interval": "once", "tooltip": false },
-        
+
         "clock": {
-            "interval": 1,
+            "interval": 60,
             "format": "[{:%I:%M %p}]",
             "format-alt": "[{:%I:%M:%S %p - %A, %B %d, %Y}]",
             "tooltip-format": "<span font_family='FantasqueSansM Nerd Font Mono'>{calendar}</span>",
