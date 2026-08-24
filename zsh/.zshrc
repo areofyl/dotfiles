@@ -17,10 +17,23 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # aliases 
-alias airpods='bluetoothctl connect F0:04:E1:D6:E5:01'
+airpods() {
+  bluetoothctl connect F0:04:E1:D6:E5:01 2>/dev/null && return
+  echo "connect failed, power cycling..."
+  bluetoothctl power off 2>/dev/null
+  sleep 1
+  bluetoothctl power on 2>/dev/null
+  sleep 1
+  bluetoothctl connect F0:04:E1:D6:E5:01 2>/dev/null && return
+  echo "still failing, modprobing..."
+  sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377
+  sleep 2
+  bluetoothctl power on 2>/dev/null
+  sleep 1
+  bluetoothctl connect F0:04:E1:D6:E5:01
+}
 
 alias sudo='sudo -S'
-alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
 alias print='lp -d Canon_MF260_Series_UFRII_LT -o sides=two-sided-long-edge' 
 alias :q='exit'
 alias ka='killall'
@@ -31,6 +44,11 @@ export NO_AT_BRIDGE=1
 wifi() {
   sudo nmcli dev wifi connect "$1" password "$2"
   sudo nmcli con modify "$1" ipv4.dns "1.1.1.1 1.0.0.1" ipv4.ignore-auto-dns yes
+}
+
+pdf() {
+  f=$(find ~/Documents -name '*.pdf' | sed "s|$HOME/Documents/||" | fzf)
+  [ -n "$f" ] && setsid zathura ~/Documents/"$f" &>/dev/null && kill $PPID
 }
 
 export LANG="en_US.UTF-8"
