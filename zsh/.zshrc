@@ -17,21 +17,8 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # aliases 
-airpods() {
-  bluetoothctl connect F0:04:E1:D6:E5:01 2>/dev/null && return
-  echo "connect failed, power cycling..."
-  bluetoothctl power off 2>/dev/null
-  sleep 1
-  bluetoothctl power on 2>/dev/null
-  sleep 1
-  bluetoothctl connect F0:04:E1:D6:E5:01 2>/dev/null && return
-  echo "still failing, modprobing..."
-  sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377
-  sleep 2
-  bluetoothctl power on 2>/dev/null
-  sleep 1
-  bluetoothctl connect F0:04:E1:D6:E5:01
-}
+alias airpods='bluetoothctl connect F0:04:E1:D6:E5:01'
+alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm4377'
 
 alias sudo='sudo -S'
 alias print='lp -d Canon_MF260_Series_UFRII_LT -o sides=two-sided-long-edge' 
