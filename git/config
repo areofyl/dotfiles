@@ -9,3 +9,5 @@
 	email = areofyl@users.noreply.github.com
 [safe]
 	directory = /usr/src/linux-fairydust
+[credential]
+	helper = !gh auth git-credential
