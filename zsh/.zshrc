@@ -38,16 +38,6 @@ pdf() {
   [ -n "$f" ] && setsid zathura ~/Documents/"$f" &>/dev/null && kill $PPID
 }
 
-# nnn
-export NNN_OPTS="dHU"
-export NNN_COLORS="#c4ccd4"
-export NNN_FCOLORS="c1e20402006033f7c6d6abc4"
-export NNN_TRASH=1
-export NNN_FIFO=/tmp/nnn.fifo
-export NNN_PLUG='p:preview-tui'
-export NNN_OPENER="$HOME/.config/nnn/opener"
-alias n='nnn -P p'
-
 export EDITOR=nvim
 export VISUAL=nvim
 export LANG="en_US.UTF-8"

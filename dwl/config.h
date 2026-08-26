@@ -95,8 +95,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_d,           spawn,            {.v = menucmd} },
 	/* $mod+f: launch lf file manager */
 	{ MODKEY,                    XKB_KEY_f,           spawn,            SHCMD("kitty lf") },
-	{ MODKEY,                    XKB_KEY_p,           spawn,            SHCMD("f=$(find ~/Documents -name '*.pdf' -printf '%P\\n' | bemenu -i -c -W 0.4 -l 15 -p 'Document Picker:' --fn 'FantasqueSansM Nerd Font Mono 15' --tb '#1e1e1e' --tf '#ffffff' --fb '#1e1e1e' --ff '#ffffff' --nb '#1e1e1e' --nf '#ffffff' --hb '#333333' --hf '#ffffff' --sb '#333333' --sf '#ffffff') && [ -n \"$f\" ] && setsid zathura ~/Documents/\"$f\" &") },
 	/* $mod+b: launch ungoogled-chromium */
+	{ MODKEY,                    XKB_KEY_p,           spawn,            SHCMD("f=$(find ~/Documents -name '*.pdf' -printf '%P\\n' | bemenu -i -c -W 0.4 -l 15 -p 'Document Picker:' --fn 'FantasqueSansM Nerd Font Mono 15' --tb '#1e1e1e' --tf '#ffffff' --fb '#1e1e1e' --ff '#ffffff' --nb '#1e1e1e' --nf '#ffffff' --hb '#333333' --hf '#ffffff' --sb '#333333' --sf '#ffffff') && [ -n \"$f\" ] && setsid zathura ~/Documents/\"$f\" &") },
 	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium") },
 	/* matches sway: $mod+x exec swaylock */
 	{ MODKEY,                    XKB_KEY_x,           spawn,            SHCMD("/home/aarav/.config/custom-lock/lock.sh") },
