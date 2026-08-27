@@ -37,4 +37,5 @@ export VISUAL=nvim
 export LANG="en_US.UTF-8"
 export GOPATH="$HOME/.local/share/go"
 export CARGO_HOME="$HOME/.local/share/cargo"
+alias irssi='irssi --home=$HOME/.config/irssi'
 export PATH="$HOME/.deno/bin:$HOME/.local/bin:$CARGO_HOME/bin:$HOME/bin:$PATH"
