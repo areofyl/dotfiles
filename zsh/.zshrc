@@ -25,6 +25,10 @@ alias :q='exit'
 alias ka='killall'
 alias vim='nvim'
 
+background() {
+  f=$(ls ~/Pictures/wallpapers/ | bemenu -i -c -W 0.4 -l 10 -p 'Wallpaper:' --fn 'FantasqueSansM Nerd Font Mono 15' --tb '#1e1e1e' --tf '#ffffff' --fb '#1e1e1e' --ff '#ffffff' --nb '#1e1e1e' --nf '#ffffff' --hb '#333333' --hf '#ffffff' --sb '#333333' --sf '#ffffff') && [ -n "$f" ] && { pkill swaybg; sleep 0.2; swaybg -i ~/Pictures/wallpapers/"$f" -m fill &disown }
+}
+
 wifi() {
   sudo nmcli dev wifi connect "$1" password "$2"
   sudo nmcli con modify "$1" ipv4.dns "1.1.1.1 1.0.0.1" ipv4.ignore-auto-dns yes
