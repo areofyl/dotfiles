@@ -22,6 +22,19 @@ alias restart-bluetooth='sudo modprobe -r hci_bcm4377 && sudo modprobe hci_bcm43
 alias sudo='sudo -S'
 alias print='lp -d Brother_MFC-L3780CDW -o sides=two-sided-long-edge'
 alias :q='exit'
+corrupt() {
+  local C=~/Projects/corrupt/corrupt
+  local in="$1" out="$2"
+  $C bitplane r ff "$in" /tmp/c1.bmp && \
+  $C bitplane g aa /tmp/c1.bmp /tmp/c2.bmp && \
+  $C bitplane b 55 /tmp/c2.bmp /tmp/c3.bmp && \
+  $C channel brg /tmp/c3.bmp /tmp/c4.bmp && \
+  $C bitplane g f0 /tmp/c4.bmp /tmp/c5.bmp && \
+  $C bitplane r 0f /tmp/c5.bmp /tmp/c6.bmp && \
+  $C convolve emboss /tmp/c6.bmp /tmp/c7.bmp && \
+  $C convolve emboss /tmp/c7.bmp /tmp/c8.bmp && \
+  $C convolve edge /tmp/c8.bmp "$out"
+}
 alias ka='killall'
 alias vim='nvim'
 
