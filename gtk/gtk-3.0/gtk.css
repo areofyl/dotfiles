@@ -1,0 +1,231 @@
+/* ── Thunar — Modus Vivendi ── */
+
+/* Sidebar */
+.thunar .sidebar {
+    background: #1e1e1e;
+    border-right: none;
+}
+
+.thunar .sidebar row {
+    padding: 3px 10px;
+    min-height: 28px;
+    margin: 1px 6px;
+    border-radius: 6px;
+    color: #989898;
+    transition: 150ms ease;
+}
+
+.thunar .sidebar row:hover {
+    background: #2f3849;
+    color: #c6daff;
+}
+
+.thunar .sidebar row:selected {
+    background: alpha(#2f447f, 0.7);
+    color: #ffffff;
+}
+
+.thunar .sidebar row image {
+    color: #79a8ff;
+}
+
+.thunar .sidebar row:selected image {
+    color: #2fafff;
+}
+
+/* Main file area */
+.thunar .standard-view .view {
+    background: #000000;
+    color: #ffffff;
+    padding: 1px 0;
+}
+
+.thunar .standard-view .view:selected {
+    background: #7030af;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+.thunar .standard-view .view:hover {
+    background: alpha(#2f3849, 0.5);
+}
+
+/* Column headers */
+.thunar .standard-view header button {
+    background: #0f0f0f;
+    color: #989898;
+    border: none;
+    border-bottom: 1px solid #303030;
+    padding: 4px 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.thunar .standard-view header button:hover {
+    background: #1e1e1e;
+    color: #c6daff;
+}
+
+/* Toolbar */
+.thunar toolbar {
+    background: #1e1e1e;
+    border-bottom: 1px solid #303030;
+    padding: 2px 6px;
+    min-height: 36px;
+}
+
+.thunar toolbar button {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 8px;
+    min-height: 28px;
+    min-width: 28px;
+    color: #989898;
+    transition: 150ms ease;
+}
+
+.thunar toolbar button:hover {
+    background: #2f3849;
+    color: #ffffff;
+}
+
+.thunar toolbar button:active,
+.thunar toolbar button:checked {
+    background: alpha(#2f447f, 0.6);
+    color: #79a8ff;
+}
+
+/* Path bar */
+.thunar .path-bar button {
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    min-height: 24px;
+    color: #989898;
+}
+
+.thunar .path-bar button:hover {
+    background: #2f3849;
+    color: #ffffff;
+}
+
+.thunar .path-bar button:checked {
+    color: #79a8ff;
+}
+
+/* Location/search entry */
+.thunar .path-bar entry,
+.thunar toolbar entry {
+    background: #000000;
+    border: 1px solid #646464;
+    border-radius: 6px;
+    color: #ffffff;
+    padding: 4px 10px;
+    caret-color: #79a8ff;
+}
+
+.thunar .path-bar entry:focus,
+.thunar toolbar entry:focus {
+    border-color: #79a8ff;
+    box-shadow: 0 0 0 1px alpha(#79a8ff, 0.2);
+}
+
+/* Pane separator */
+.thunar paned > separator {
+    min-width: 1px;
+    background: #303030;
+}
+
+/* Status bar */
+.thunar statusbar {
+    background: #0f0f0f;
+    color: #989898;
+    padding: 3px 12px;
+    font-size: 0.85em;
+    border-top: 1px solid #303030;
+}
+
+/* Tabs */
+.thunar notebook {
+    background: #000000;
+}
+
+.thunar notebook tab {
+    background: transparent;
+    border: none;
+    padding: 4px 14px;
+    min-height: 24px;
+    color: #989898;
+    border-radius: 6px 6px 0 0;
+}
+
+.thunar notebook tab:checked {
+    background: #000000;
+    color: #ffffff;
+    border-bottom: 2px solid #2fafff;
+}
+
+.thunar notebook tab:hover:not(:checked) {
+    background: #1e1e1e;
+    color: #c6daff;
+}
+
+/* Scrollbars */
+.thunar scrollbar slider {
+    min-width: 4px;
+    min-height: 4px;
+    border-radius: 4px;
+    background: alpha(#646464, 0.5);
+}
+
+.thunar scrollbar slider:hover {
+    background: #646464;
+    min-width: 6px;
+}
+
+.thunar scrollbar trough {
+    background: transparent;
+}
+
+/* Context menu */
+.thunar menu {
+    background: #1e1e1e;
+    border: 1px solid #303030;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.thunar menu menuitem {
+    padding: 5px 12px;
+    border-radius: 4px;
+    color: #ffffff;
+    min-height: 24px;
+}
+
+.thunar menu menuitem:hover {
+    background: #2f447f;
+    color: #ffffff;
+}
+
+.thunar menu separator {
+    background: #303030;
+    min-height: 1px;
+    margin: 3px 8px;
+}
+
+/* Tooltip */
+.thunar tooltip {
+    background: #1e1e1e;
+    border: 1px solid #646464;
+    border-radius: 6px;
+    color: #ffffff;
+}
+
+/* Headerbar/titlebar */
+.thunar .titlebar,
+.thunar headerbar {
+    background: #1e1e1e;
+    border: none;
+}
