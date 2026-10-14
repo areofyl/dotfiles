@@ -5,13 +5,14 @@ end
 vim.lsp.enable({ "clangd", "pylsp", "ruff", "harper_ls" })
 
 -- filter out harper sentence length diagnostics
+local orig_publish = vim.lsp.handlers["textDocument/publishDiagnostics"]
 vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
   if result and result.diagnostics then
     result.diagnostics = vim.tbl_filter(function(d)
       return not d.message:match("sentence is %d+ words long")
     end, result.diagnostics)
   end
-  vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+  orig_publish(err, result, ctx, config)
 end
 
 vim.diagnostic.config({
@@ -38,8 +39,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gd", vim.lsp.buf.definition, "Go to definition")
     map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
     map("n", "gr", vim.lsp.buf.references, "References")
-    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-    map("n", "gy", vim.lsp.buf.type_definition, "Type definition")
 
     -- info
     map("n", "K", vim.lsp.buf.hover, "Hover")
@@ -130,9 +129,9 @@ local function eldoc_set(parts)
   end)
 end
 
-local function strip_md(text)
-  if not text or text == "" then return "" end
-  local out = {}
+local function split_md(text)
+  if not text or text == "" then return "", "" end
+  local code, prose = {}, {}
   local in_code = false
   for l in text:gmatch("[^\n]+") do
     if l:match("^```") then
@@ -140,17 +139,15 @@ local function strip_md(text)
     elseif not l:match("^%-%-%-$") then
       if in_code then
         l = l:gsub("^%s+", " "):gsub("%s+$", "")
+        if l ~= "" then code[#code + 1] = l end
       else
-        l = l:gsub("^#+%s*", "")
-        l = l:gsub("%*%*(.-)%*%*", "%1")
-        l = l:gsub("`(.-)`", "%1")
-        l = l:gsub("\\(.)", "%1")
+        l = l:gsub("^#+%s*", ""):gsub("%*%*(.-)%*%*", "%1"):gsub("`(.-)`", "%1"):gsub("\\(.)", "%1")
         l = l:gsub("^%s+", ""):gsub("%s+$", "")
+        if l ~= "" then prose[#prose + 1] = l end
       end
-      if l ~= "" then out[#out + 1] = l end
     end
   end
-  return table.concat(out, " ")
+  return table.concat(code, " "), table.concat(prose, " ")
 end
 
 -- signature help: parse and show with active param highlighted
@@ -193,8 +190,8 @@ eldoc_signature = function(bufnr)
     if sig.parameters and sig.parameters[active_idx + 1] then
       local pdoc = sig.parameters[active_idx + 1].documentation
       if pdoc then
-        local text = type(pdoc) == "string" and pdoc or (pdoc.value or "")
-        text = strip_md(text)
+        local raw = type(pdoc) == "string" and pdoc or (pdoc.value or "")
+        local _, text = split_md(raw)
         if text ~= "" then
           parts[#parts + 1] = { "  —  ", "NonText" }
           parts[#parts + 1] = { text, "Comment" }
@@ -206,181 +203,36 @@ eldoc_signature = function(bufnr)
   end)
 end -- eldoc_signature
 
--- C keyword/builtin reference
-local c_ref = {
-  ["if"] = "if (cond) { ... } — conditional branch",
-  ["else"] = "else { ... } — alternative branch, pairs with if",
-  ["for"] = "for (init; cond; step) { ... } — loop",
-  ["while"] = "while (cond) { ... } — loop while condition is true",
-  ["do"] = "do { ... } while (cond); — loop, body runs at least once",
-  ["switch"] = "switch (expr) { case val: ... } — multi-way branch",
-  ["case"] = "case value: — label inside switch",
-  ["default"] = "default: — fallback label inside switch",
-  ["return"] = "return expr; — return value from function",
-  ["break"] = "break; — exit loop or switch",
-  ["continue"] = "continue; — skip to next loop iteration",
-  ["goto"] = "goto label; — jump to label",
-  ["typedef"] = "typedef type alias; — define type alias",
-  ["struct"] = "struct name { fields }; — aggregate type",
-  ["union"] = "union name { fields }; — overlapping members",
-  ["enum"] = "enum name { A, B, C }; — named integer constants",
-  ["sizeof"] = "sizeof(type|expr) — size in bytes",
-  ["static"] = "static — internal linkage / persistent local storage",
-  ["extern"] = "extern — external linkage, defined elsewhere",
-  ["const"] = "const — read-only qualifier",
-  ["volatile"] = "volatile — prevent compiler optimization on variable",
-  ["inline"] = "inline — hint to inline function body",
-  ["register"] = "register — hint to store in CPU register",
-  ["void"] = "void — no type / no return value",
-  ["int"] = "int — integer type (typically 32-bit)",
-  ["char"] = "char — character type (1 byte)",
-  ["float"] = "float — single-precision floating-point",
-  ["double"] = "double — double-precision floating-point",
-  ["long"] = "long — at least 32-bit integer modifier",
-  ["short"] = "short — at least 16-bit integer modifier",
-  ["signed"] = "signed — signed integer modifier",
-  ["unsigned"] = "unsigned — unsigned integer modifier",
-  ["auto"] = "auto — automatic storage duration (default)",
-  ["_Bool"] = "_Bool — boolean type (C99), 0 or 1",
-  ["NULL"] = "NULL — null pointer constant ((void *)0)",
-  ["true"] = "true — boolean 1",
-  ["false"] = "false — boolean 0",
-  ["#include"] = "#include <header> or \"file\" — include header file",
-  ["#define"] = "#define NAME value — preprocessor macro",
-  ["#ifdef"] = "#ifdef NAME — compile if macro defined",
-  ["#ifndef"] = "#ifndef NAME — compile if macro not defined",
-  ["#endif"] = "#endif — end preprocessor conditional",
-  ["#if"] = "#if expr — compile if expression is true",
-  ["#elif"] = "#elif expr — else-if preprocessor branch",
-  ["#else"] = "#else — else preprocessor branch",
-  ["#pragma"] = "#pragma — compiler-specific directive",
-  ["#undef"] = "#undef NAME — undefine macro",
-  ["//"] = "// — single-line comment (C99+)",
-  ["/*"] = "/* ... */ — multi-line comment",
-}
-
-local function get_comment_above(bufnr, row)
-  if row <= 0 then return nil end
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, row, false)
-  local comments = {}
-  for i = #lines, 1, -1 do
-    local l = vim.trim(lines[i])
-    if l:match("^//") then
-      table.insert(comments, 1, l:gsub("^//[!/]?%s?", ""))
-    elseif l:match("%*/") then
-      for j = i, 1, -1 do
-        local bl = vim.trim(lines[j])
-        local stripped = bl:gsub("^/%*[%*!]?%s?", ""):gsub("^%*/?%s?", ""):gsub("%s*%*/$", "")
-        table.insert(comments, 1, stripped)
-        if lines[j]:match("/%*") then break end
-      end
-      break
-    else
-      break
-    end
-  end
-  if #comments == 0 then return nil end
-  local out = {}
-  for _, c in ipairs(comments) do
-    c = vim.trim(c)
-    if c ~= "" and c ~= "*" then out[#out + 1] = c end
-  end
-  return #out > 0 and table.concat(out, " ") or nil
-end
-
 local function parse_hover_text(text)
-  local sig_parts, doc_parts = {}, {}
-  local in_code = false
-  for l in text:gmatch("[^\n]+") do
-    if l:match("^```") then
-      in_code = not in_code
-    elseif l:match("^%-%-%-$") then
-    elseif in_code then
-      l = l:gsub("^%s+", " "):gsub("%s+$", "")
-      if l ~= "" then sig_parts[#sig_parts + 1] = l end
-    else
-      l = l:gsub("^#+%s*", ""):gsub("%*%*(.-)%*%*", "%1"):gsub("`(.-)`", "%1"):gsub("\\(.)", "%1")
-      l = l:gsub("^%s+", ""):gsub("%s+$", "")
-      if l ~= "" then doc_parts[#doc_parts + 1] = l end
-    end
-  end
+  local code, prose = split_md(text)
   local parts = {}
-  if #sig_parts > 0 then
-    parts[#parts + 1] = { table.concat(sig_parts, " "), "Function" }
+  if code ~= "" then
+    parts[#parts + 1] = { code, "Function" }
   end
-  if #doc_parts > 0 then
+  if prose ~= "" then
     if #parts > 0 then parts[#parts + 1] = { "  —  ", "NonText" } end
-    parts[#parts + 1] = { table.concat(doc_parts, " "), "Comment" }
+    parts[#parts + 1] = { prose, "Comment" }
   end
   eldoc_set(parts)
 end
 
 local function eldoc_hover()
   local bufnr = vim.api.nvim_get_current_buf()
-  local word = vim.fn.expand("<cword>")
   local clients = vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/hover" })
 
-  local function try_fallback()
-    if c_ref[word] then
-      eldoc_set({ { word, "Function" }, { "  —  ", "NonText" }, { c_ref[word], "Comment" } })
-      return
-    end
-    local line = vim.api.nvim_get_current_line()
-    local pp = line:match("^%s*(#%w+)")
-    if pp and c_ref[pp] then
-      eldoc_set({ { pp, "Function" }, { "  —  ", "NonText" }, { c_ref[pp], "Comment" } })
-      return
-    end
-    local prefix = line:sub(1, vim.fn.col("."))
-    if prefix:match("/%*") and c_ref["/*"] then
-      eldoc_set({ { "/*", "Function" }, { "  —  ", "NonText" }, { c_ref["/*"], "Comment" } })
-      return
-    end
-    if prefix:match("//") and c_ref["//"] then
-      eldoc_set({ { "//", "Function" }, { "  —  ", "NonText" }, { c_ref["//"], "Comment" } })
-      return
-    end
-    local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-    local comment = get_comment_above(bufnr, row)
-    if comment and word ~= "" then
-      eldoc_set({ { word, "Function" }, { "  —  ", "NonText" }, { comment, "Comment" } })
-      return
-    end
-    eldoc_set({})
-  end
-
   if #clients == 0 then
-    try_fallback()
+    eldoc_set({})
     return
   end
 
   local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
   vim.lsp.buf_request(bufnr, "textDocument/hover", params, function(err, result)
     if err or not result or not result.contents then
-      if word == "" then eldoc_set({}); return end
-      local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-      for i = 0, #lines - 1 do
-        if i ~= row then
-          local s = lines[i + 1]:find(word, 1, true)
-          if s then
-            local p2 = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
-            p2.position = { line = i, character = s - 1 }
-            vim.lsp.buf_request(bufnr, "textDocument/hover", p2, function(e2, r2)
-              if e2 or not r2 or not r2.contents then try_fallback(); return end
-              local t = type(r2.contents) == "string" and r2.contents or r2.contents.value
-              if not t or t == "" then try_fallback(); return end
-              parse_hover_text(t)
-            end)
-            return
-          end
-        end
-      end
-      try_fallback()
+      eldoc_set({})
       return
     end
     local text = type(result.contents) == "string" and result.contents or result.contents.value
-    if not text or text == "" then try_fallback(); return end
+    if not text or text == "" then eldoc_set({}); return end
     parse_hover_text(text)
   end)
 end
@@ -413,17 +265,8 @@ vim.api.nvim_create_autocmd("CursorHold", {
   callback = eldoc_hover,
 })
 
--- clear eldoc on normal mode cursor move (not insert — signature help lives there)
-vim.api.nvim_create_autocmd("CursorMoved", {
-  callback = function()
-    if #_G._eldoc_parts > 0 then
-      eldoc_set({})
-    end
-  end,
-})
-
--- clear eldoc when leaving insert mode
-vim.api.nvim_create_autocmd("InsertLeave", {
+-- clear eldoc on cursor move or leaving insert
+vim.api.nvim_create_autocmd({ "CursorMoved", "InsertLeave" }, {
   callback = function()
     if #_G._eldoc_parts > 0 then
       eldoc_set({})

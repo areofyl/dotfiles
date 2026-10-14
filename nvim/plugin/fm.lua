@@ -10,27 +10,22 @@ local debounce_timer = nil
 local au_group = vim.api.nvim_create_augroup("FM", { clear = true })
 local cursor_memory = {} -- dir -> entry name to restore cursor on
 
-local image_exts = {
-  png = true, jpg = true, jpeg = true, gif = true,
-  bmp = true, webp = true, svg = true, ico = true,
-  tiff = true, tif = true,
+local ext_type = {
+  png = "image", jpg = "image", jpeg = "image", gif = "image",
+  bmp = "image", webp = "image", svg = "image", ico = "image",
+  tiff = "image", tif = "image",
+  mp4 = "video", mkv = "video", webm = "video", avi = "video",
+  mov = "video", flv = "video", wmv = "video", m4v = "video",
+  mp3 = "audio", flac = "audio", ogg = "audio", wav = "audio", m4a = "audio",
+  pdf = "pdf",
+  doc = "office", docx = "office", xls = "office", xlsx = "office",
+  ppt = "office", pptx = "office", odt = "office", ods = "office", odp = "office",
+  zip = "archive", tar = "archive", gz = "archive", bz2 = "archive",
+  xz = "archive", zst = "archive", ["7z"] = "archive", rar = "archive",
+  deb = "archive", rpm = "archive",
 }
 
-local video_exts = {
-  mp4 = true, mkv = true, webm = true, avi = true,
-  mov = true, flv = true, wmv = true, m4v = true,
-}
-
-local external_exts = {
-  png = true, jpg = true, jpeg = true, gif = true, bmp = true,
-  webp = true, svg = true, ico = true, tiff = true, tif = true,
-  pdf = true,
-  mp4 = true, mkv = true, webm = true, avi = true, mov = true,
-  flv = true, wmv = true, m4v = true,
-  mp3 = true, flac = true, ogg = true, wav = true, m4a = true,
-  doc = true, docx = true, xls = true, xlsx = true, ppt = true, pptx = true,
-  odt = true, ods = true, odp = true,
-}
+local media_types = { image = true, video = true, audio = true, pdf = true }
 
 local function ext_of(path)
   local e = path:match("%.(%w+)$")
@@ -40,20 +35,6 @@ end
 -- highlights
 
 local hl_ns = vim.api.nvim_create_namespace("fm_hl")
-
-local media_exts = {
-  png = true, jpg = true, jpeg = true, gif = true, bmp = true,
-  webp = true, svg = true, ico = true, tiff = true, tif = true,
-  mp4 = true, mkv = true, webm = true, avi = true, mov = true,
-  flv = true, wmv = true, m4v = true,
-  mp3 = true, flac = true, ogg = true, wav = true, m4a = true,
-  pdf = true,
-}
-
-local archive_exts = {
-  zip = true, tar = true, gz = true, bz2 = true, xz = true,
-  zst = true, ["7z"] = true, rar = true, deb = true, rpm = true,
-}
 
 local function setup_hl()
   -- derive FmDir from Directory but add bold
@@ -99,13 +80,15 @@ local function highlight_entries(buf, dir, entries)
       local ext = entry:match("%.(%w+)$")
       ext = ext and ext:lower()
 
+      local etype = ext and ext_type[ext]
+
       if is_link then
         vim.api.nvim_buf_set_extmark(buf, hl_ns, row, 0, { end_col = #entry, hl_group = "FmLink" })
       elseif entry:match("^%.") then
         vim.api.nvim_buf_set_extmark(buf, hl_ns, row, 0, { end_col = #entry, hl_group = "FmDotfile" })
-      elseif ext and media_exts[ext] then
+      elseif etype and media_types[etype] then
         vim.api.nvim_buf_set_extmark(buf, hl_ns, row, 0, { end_col = #entry, hl_group = "FmMedia" })
-      elseif ext and archive_exts[ext] then
+      elseif etype == "archive" then
         vim.api.nvim_buf_set_extmark(buf, hl_ns, row, 0, { end_col = #entry, hl_group = "FmArchive" })
       elseif is_exec then
         vim.api.nvim_buf_set_extmark(buf, hl_ns, row, 0, { end_col = #entry, hl_group = "FmExec" })
@@ -176,19 +159,6 @@ local function file_info(path)
   local perms = ("%o"):format(stat.mode % 512)
   local mtime = os.date("%Y-%m-%d %H:%M", stat.mtime.sec)
   return perms .. "  " .. size_str .. "  " .. mtime .. link
-end
-
-local function list_dir_entries(path)
-  local entries = {}
-  local handle = vim.uv.fs_scandir(path)
-  if not handle then return entries end
-  while true do
-    local name, typ = vim.uv.fs_scandir_next(handle)
-    if not name then break end
-    table.insert(entries, typ == "directory" and name .. "/" or name)
-  end
-  table.sort(entries)
-  return entries
 end
 
 -- preview pane
@@ -313,7 +283,7 @@ local function show_preview(dir, entry)
 
   if kind == "dir" then
     if not reset_preview_buf() then return end
-    local ok, entries = pcall(list_dir_entries, path)
+    local ok, entries = pcall(scan_dir, path)
     if not ok then entries = {} end
     pcall(function()
       vim.wo[preview_win].statusline = (" %s/ (%d) "):format(name, #entries)
@@ -321,7 +291,7 @@ local function show_preview(dir, entry)
     vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false,
       #entries > 0 and entries or { "[empty]" })
 
-  elseif image_exts[ext or ""] then
+  elseif ext_type[ext or ""] == "image" then
     if vim.fn.executable("chafa") == 0 then
       if not reset_preview_buf() then return end
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "need chafa for image preview" })
@@ -341,7 +311,7 @@ local function show_preview(dir, entry)
     preview_term({ "sh", "-c", ("pdftoppm -f 1 -l 1 -r 72 -png %s > %s && chafa --format=symbols --work=1 --animate=off --polite=on --size=%dx%d %s; rm -f %s"):format(
       vim.fn.shellescape(path), vim.fn.shellescape(tmp), w, h, vim.fn.shellescape(tmp), vim.fn.shellescape(tmp)) })
 
-  elseif video_exts[ext or ""] then
+  elseif ext_type[ext or ""] == "video" then
     if vim.fn.executable("ffmpeg") == 0 or vim.fn.executable("chafa") == 0 then
       if not reset_preview_buf() then return end
       vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "need ffmpeg + chafa for video preview" })
@@ -588,7 +558,7 @@ local function fm_open(dir)
       fm_open(path)
     else
       local ext = ext_of(path)
-      if ext and external_exts[ext] then
+      if ext and ext_type[ext] and ext_type[ext] ~= "archive" then
         vim.fn.jobstart({ "xdg-open", path }, { detach = true })
       else
         close_preview()
@@ -609,8 +579,12 @@ local function fm_open(dir)
 
   -- q quit
   map("n", "q", function()
-    close_preview()
-    vim.api.nvim_buf_delete(buf, { force = true })
+    local all_wins = vim.api.nvim_list_wins()
+    vim.notify("wins: " .. #all_wins .. " pw: " .. tostring(preview_win) .. " previewing: " .. tostring(previewing))
+    for _, w in ipairs(all_wins) do
+      local b = vim.api.nvim_win_get_buf(w)
+      vim.notify("  win " .. w .. " buf " .. b .. " name=" .. vim.api.nvim_buf_get_name(b))
+    end
   end)
 
   -- gd trash
@@ -688,41 +662,6 @@ local function fm_open(dir)
     end
   end)
 
-  -- gx flatten subdir
-  map("n", "gx", function()
-    local entry = get_entry_under_cursor()
-    if not entry or not entry:match("/$") then
-      vim.notify("Not a directory", vim.log.levels.WARN)
-      return
-    end
-    local subdir_name = entry:gsub("/$", "")
-    if vim.fn.confirm("Flatten " .. subdir_name .. "/?", "&Yes\n&No") ~= 1 then return end
-    local subdir_path = dir .. "/" .. subdir_name
-    local contents = scan_dir(subdir_path)
-    if #contents == 0 then
-      vim.fn.delete(subdir_path, "d")
-      vim.notify("Removed empty directory: " .. subdir_name)
-    else
-      local moved = 0
-      for _, e in ipairs(contents) do
-        local old = subdir_path .. "/" .. e:gsub("/$", "")
-        local new = dir .. "/" .. e:gsub("/$", "")
-        if vim.uv.fs_stat(new) then
-          vim.notify("Skipped (already exists): " .. e, vim.log.levels.WARN)
-        else
-          if vim.uv.fs_rename(old, new) then
-            moved = moved + 1
-          else
-            vim.notify("Failed to move: " .. e, vim.log.levels.ERROR)
-          end
-        end
-      end
-      vim.fn.delete(subdir_path, "rf")
-      vim.notify(moved .. " file(s) released from " .. subdir_name)
-    end
-    fm_refresh(buf, dir)
-  end)
-
   -- ? help
   map("n", "?", function()
     local help = {
@@ -739,7 +678,6 @@ local function fm_open(dir)
       "  gs      cycle sort (name/time/size)",
       "  gh      toggle hidden files",
       "  gp      toggle preview",
-      "  gx      flatten subdir",
       "  gy      yank file to clipboard",
       "",
       "  :w      apply renames (edit names in buffer)",

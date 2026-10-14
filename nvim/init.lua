@@ -19,6 +19,7 @@ vim.opt.expandtab = true
 vim.opt.statusline = " %f %m%r%=%{%v:lua.eldoc_statusline()%}%= %y %l:%c "
 vim.opt.signcolumn = "yes"
 vim.opt.completeopt = "menu,menuone,noselect,popup"
+vim.opt.fillchars = "eob: "
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.cursorline = true

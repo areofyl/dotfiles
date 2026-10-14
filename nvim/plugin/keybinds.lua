@@ -1,38 +1,5 @@
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
--- compile & run
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c", "cpp" },
-  callback = function()
-    vim.opt_local.makeprg = "cc %:S -o %:r:S"
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
-  callback = function()
-    vim.opt_local.makeprg = "python3 %:S"
-  end,
-})
-
-vim.keymap.set("n", "<leader>m", "<cmd>make<CR>", { desc = "Make" })
-
-vim.api.nvim_create_user_command("Mr", function()
-  local has_makefile = vim.fn.filereadable("Makefile") == 1
-  local cmd
-  if has_makefile and vim.fn.system("grep -q '^run:' Makefile && echo y"):match("y") then
-    cmd = "make run"
-  else
-    local ft = vim.bo.filetype
-    if ft == "python" then
-      cmd = "python3 " .. vim.fn.expand("%:S")
-    else
-      cmd = "./" .. vim.fn.expand("%:r")
-    end
-  end
-  vim.cmd("vertical botright split | term " .. cmd)
-end, {})
-
 -- markdown markup highlights
 vim.api.nvim_set_hl(0, "@markup.italic", { italic = true })
 vim.api.nvim_set_hl(0, "@markup.strong", { bold = true })

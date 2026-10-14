@@ -1,170 +1,79 @@
-if vim.fn.argc() > 0 then
-  return
-end
+if vim.fn.argc() > 0 then return end
 
-local vim_version = vim.version()
+vim.opt.shortmess:append("I")
 
-if vim_version.minor < 12 then
-  return
-end
+local ns = vim.api.nvim_create_namespace("intro")
+local group = vim.api.nvim_create_augroup("Intro", { clear = true })
 
-vim.opt.shortmess:append('I')
+local saved = {}
 
-local function set_intro_highlights()
-  vim.api.nvim_set_hl(0, "IntroN", { fg = "#8caaba" })
-  vim.api.nvim_set_hl(0, "IntroE", { fg = "#a3a0c2" })
-  vim.api.nvim_set_hl(0, "IntroO", { fg = "#7ab0a8" })
-  vim.api.nvim_set_hl(0, "IntroV", { fg = "#cf8164" })
-  vim.api.nvim_set_hl(0, "IntroI", { fg = "#c4a24d" })
-  vim.api.nvim_set_hl(0, "IntroM", { fg = "#c27a93" })
-end
+local function render()
+  local buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
 
-local intro = {
-  win = nil,
-  buf = nil,
-  ns = nil,
-  text = nil,
-  group = nil
-}
+  local text = "nvim?"
+  local win_h = vim.api.nvim_win_get_height(0)
+  local win_w = vim.api.nvim_win_get_width(0)
+  local row = math.floor(win_h / 2)
+  local col = math.floor((win_w - #text) / 2)
 
-intro.ns = vim.api.nvim_create_namespace('IntroOverlayNS')
-intro.group = vim.api.nvim_create_augroup('IntroOverlay', { clear = true })
-
--- each row split into 6 segments: N E O V I M
-local cols = { 11, 21, 31, 42, 52 }
-local hls = { "IntroN", "IntroE", "IntroO", "IntroV", "IntroI", "IntroM" }
-local raw = {
-  '   _      _  ________  ________  ________   ________  ________ ',
-  '  / \\    / \\/        \\/        \\/    /   \\ /        \\/        \\',
-  ' /   \\     /        -/    /    /         /_/       //         /',
-  '/     \\   /        _/         /\\        //         /         / ',
-  '\\_/    \\_/\\________/\\________/  \\______/ \\________/\\__/__/__/  ',
-}
-intro.text = {}
-for _, line in ipairs(raw) do
-  local parts = {}
-  local prev = 1
-  for i, c in ipairs(cols) do
-    table.insert(parts, { line:sub(prev, c), hls[i] })
-    prev = c + 1
+  local lines = {}
+  for _ = 1, row do
+    table.insert(lines, { { "" } })
   end
-  table.insert(parts, { line:sub(prev), hls[#hls] })
-  table.insert(intro.text, parts)
-end
+  lines[#lines] = { { string.rep(" ", col) .. text, "NonText" } }
 
-local function create_intro_buf()
-  local buf = vim.api.nvim_create_buf(false, true)
-
-  for i, text in ipairs(intro.text) do
-    vim.api.nvim_buf_set_lines(buf, i - 1, i - 1, false, { '' })
-    vim.api.nvim_buf_set_extmark(buf, intro.ns, i - 1, 0, {
-      virt_text = text,
-      virt_text_pos = 'overlay',
-    })
-  end
-
-  return buf
-end
-
-local function create_intro_win(row, col, width, height)
-  local win = vim.api.nvim_open_win(intro.buf, false, {
-    relative = 'editor',
-    row = row,
-    col = col,
-    width = width,
-    height = height,
-    style = 'minimal',
-    border = 'none',
-    focusable = false,
-    noautocmd = true,
-  })
-
-  vim.wo[win].winhighlight = 'NormalFloat:Normal'
-
-  return win
-end
-
-local function hide_intro()
-  if intro.win and vim.api.nvim_win_is_valid(intro.win) then
-    vim.api.nvim_win_close(intro.win, true)
-    intro.win = nil
-  end
-end
-
-local function render_intro()
-  if not intro.buf or not vim.api.nvim_buf_is_valid(intro.buf) then
-    intro.buf = create_intro_buf()
-  end
-
-  local width = 65
-  local height = #intro.text
-
-  local usable_width = vim.o.columns - 1
-
-  if usable_width < width or vim.o.lines < height + 6 then
-    hide_intro()
-    return
-  end
-
-  local row = math.floor((vim.o.lines - height) / 2)
-  local col = math.floor((usable_width - width) / 2) + 2
-
-  if not intro.win or not vim.api.nvim_win_is_valid(intro.win) then
-    intro.win = create_intro_win(row, col, width, height)
-    return
-  end
-
-  vim.api.nvim_win_set_config(intro.win, {
-    relative = 'editor',
-    row = row,
-    col = col,
-    width = width,
-    height = height,
+  vim.api.nvim_buf_set_extmark(buf, ns, 0, 0, {
+    virt_lines = lines,
   })
 end
 
-local function cleanup_intro()
-  hide_intro()
+local function hide_ui()
+  saved.number = vim.wo.number
+  saved.relativenumber = vim.wo.relativenumber
+  saved.signcolumn = vim.wo.signcolumn
+  saved.cursorline = vim.wo.cursorline
+  saved.statusline = vim.o.statusline
+  saved.fillchars = vim.o.fillchars
 
-  if intro.group then
-    pcall(vim.api.nvim_del_augroup_by_id, intro.group)
-    intro.group = nil
-  end
-
-  if intro.buf and vim.api.nvim_buf_is_valid(intro.buf) then
-    if intro.ns then
-      vim.api.nvim_buf_clear_namespace(intro.buf, intro.ns, 0, -1)
-      intro.ns = nil
-    end
-
-    vim.api.nvim_buf_delete(intro.buf, { force = true })
-    intro.buf = nil
-  end
-
-  intro.win = nil
-  intro.text = nil
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+  vim.wo.signcolumn = "no"
+  vim.wo.cursorline = false
+  vim.o.statusline = " "
+  vim.o.fillchars = "eob: "
 end
 
-vim.api.nvim_create_autocmd('VimEnter', {
+local function restore_ui()
+  vim.wo.number = saved.number
+  vim.wo.relativenumber = saved.relativenumber
+  vim.wo.signcolumn = saved.signcolumn
+  vim.wo.cursorline = saved.cursorline
+  vim.o.statusline = saved.statusline
+  vim.o.fillchars = saved.fillchars
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = group,
   once = true,
   callback = function()
-    set_intro_highlights()
-    render_intro()
+    hide_ui()
+    render()
 
-    vim.api.nvim_create_autocmd('VimResized', {
-      group = intro.group,
-      callback = render_intro,
+    vim.api.nvim_create_autocmd("VimResized", {
+      group = group,
+      callback = render,
     })
 
-    vim.api.nvim_create_autocmd({
-      'InsertCharPre',
-      'BufReadPre',
-      'CursorMoved',
-    }, {
-      group = intro.group,
+    vim.api.nvim_create_autocmd({ "InsertCharPre", "BufReadPre", "CursorMoved" }, {
+      group = group,
       once = true,
       callback = function()
-        vim.schedule(cleanup_intro)
+        vim.schedule(function()
+          vim.api.nvim_buf_clear_namespace(vim.api.nvim_get_current_buf(), ns, 0, -1)
+          restore_ui()
+          pcall(vim.api.nvim_del_augroup_by_id, group)
+        end)
       end,
     })
   end,

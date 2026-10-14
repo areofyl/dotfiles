@@ -8,6 +8,7 @@ return {
     "--function-arg-placeholders",
     "--all-scopes-completion",
     "--pch-storage=memory",
+    "--fallback-style=none",
   },
   filetypes = { "c", "cpp", "objc", "objcpp" },
 }
