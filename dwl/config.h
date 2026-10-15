@@ -91,14 +91,16 @@ static const char *menucmd[] = { "/home/aarav/bin/launcher", NULL };
 static const Key keys[] = {
 	/* modifier                  key                  function          argument */
 
+	/* $mod+`: menu */
+	{ MODKEY,                    XKB_KEY_grave,       spawn,            SHCMD("/home/aarav/.local/bin/menu") },
 	/* matches sway: $mod+Return exec $term */
 	{ MODKEY,                    XKB_KEY_Return,      spawn,            {.v = termcmd} },
 	/* matches sway: $mod+d exec wmenu-run */
 	{ MODKEY,                    XKB_KEY_d,           spawn,            {.v = menucmd} },
 	/* $mod+f: launch lf file manager */
 	{ MODKEY,                    XKB_KEY_f,           spawn,            SHCMD("kitty lf") },
-	/* $mod+b: launch ungoogled-chromium */
-	{ MODKEY,                    XKB_KEY_p,           spawn,            SHCMD("f=$(find ~/Documents -name '*.pdf' -printf '%P\\n' | bemenu -i -c -W 0.4 -l 15 -p 'Document Picker:' --fn 'FantasqueSansM Nerd Font Mono 15' --tb '#1e1e1e' --tf '#ffffff' --fb '#1e1e1e' --ff '#ffffff' --nb '#1e1e1e' --nf '#ffffff' --hb '#333333' --hf '#ffffff' --sb '#333333' --sf '#ffffff') && [ -n \"$f\" ] && setsid zathura ~/Documents/\"$f\" &") },
+	/* $mod+p: document picker */
+	{ MODKEY,                    XKB_KEY_p,           spawn,            SHCMD("/home/aarav/.local/bin/documents") },
 	{ MODKEY,                    XKB_KEY_b,           spawn,            SHCMD("/home/aarav/.local/bin/ungoogled-chromium") },
 	/* matches sway: $mod+x exec swaylock */
 	{ MODKEY,                    XKB_KEY_x,           spawn,            SHCMD("/home/aarav/.config/custom-lock/lock.sh") },
@@ -111,6 +113,9 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_F,           togglefullscreen, {0} },
 	/* matches sway: $mod+space floating toggle */
 	{ MODKEY,                    XKB_KEY_space,       togglefloating,   {0} },
+
+	/* $mod+g: toggle gaps */
+	{ MODKEY,                    XKB_KEY_g,           togglegaps,       {0} },
 
 	/* window focus (vim keys) */
 	{ MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },

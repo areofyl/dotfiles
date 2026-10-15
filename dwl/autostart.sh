@@ -8,6 +8,9 @@ export XCURSOR_SIZE=24
 export XDG_CURRENT_DESKTOP=sway
 export GTK_USE_PORTAL=1
 
+# bemenu theming
+export BEMENU_OPTS="-i -c -W 0.4 -l 15 --binding vim --fn 'FantasqueSansM Nerd Font Mono 15' --tb '#1e1e1e' --tf '#ffffff' --fb '#1e1e1e' --ff '#ffffff' --nb '#1e1e1e' --nf '#ffffff' --hb '#333333' --hf '#ffffff' --sb '#333333' --sf '#ffffff'"
+
 # clean up stale state
 pkill -f 'tail.*dwl-status' 2>/dev/null
 pkill -f 'cat /tmp/dwl-status' 2>/dev/null
