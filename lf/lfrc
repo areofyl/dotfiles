@@ -6,7 +6,7 @@ set cleaner ~/.config/lf/clean
 
 # shell
 set shell sh
-set shellopts '-eu'
+set shellopts '-efu'
 set ifs "\n"
 
 # ui
@@ -31,52 +31,34 @@ set period 1
 set ratios 1:2:3
 
 # open files
-cmd open ${{
-    case "$(file --mime-type -Lb "$f")" in
-        text/*|application/json|application/xml|application/javascript)
-            nvim "$f";;
-        *)
-            xdg-open "$f" > /dev/null 2>&1 & disown;;
-    esac
+cmd open &{{
+    xdg-open "$f" > /dev/null 2>&1
 }}
 
 # mkdir
 cmd mkdir %{{
     printf " directory name: "
-    read dir
-    mkdir -p "$dir"
+    IFS= read -r dir
+    [ -n "$dir" ] || exit 0
+    mkdir -p -- "$dir"
 }}
 
 # touch
 cmd touch %{{
     printf " file name: "
-    read name
-    touch "$name"
+    IFS= read -r name
+    [ -n "$name" ] || exit 0
+    touch -- "$name"
 }}
 
-# trash (move to trash instead of rm)
+# trash with restore metadata; failures never fall back to deletion
 cmd trash %{{
-    for f in $fx; do
-        mv "$f" ~/.local/share/Trash/files/ 2>/dev/null || rm -rf "$f"
-    done
+    ~/.config/lf/trash
 }}
 
 # bulk rename
 cmd bulk-rename ${{
-    old="$(mktemp)"
-    new="$(mktemp)"
-    [ -n "$fs" ] && fs="$(basename -a -- $fs)" || fs="$(ls)"
-    printf '%s\n' "$fs" > "$old"
-    printf '%s\n' "$fs" > "$new"
-    nvim "$new"
-    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
-    paste "$old" "$new" | while IFS="$(printf '\t')" read -r src dst; do
-        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
-            continue
-        fi
-        mv -- "$src" "$dst"
-    done
-    rm -f "$old" "$new"
+    ~/.config/lf/bulk-rename
     lf -remote "send $id reload"
 }}
 

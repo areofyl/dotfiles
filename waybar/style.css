@@ -31,21 +31,21 @@ tooltip label {
     padding: 6px 8px;
 }
 
-/* ===== Left: dwl tags — terminal style ===== */
+/* ===== Left: dwl tags ===== */
 
 #custom-tag1, #custom-tag2, #custom-tag3,
 #custom-tag4, #custom-tag5, #custom-tag6,
 #custom-tag7, #custom-tag8, #custom-tag9, #custom-tag10 {
     padding: 0 2px;
     margin: 0;
-    border-radius: 0;
     background: transparent;
-    color: #8a95b0;
+    color: #5a6470;
     min-width: 0;
 }
 
 #custom-tag1 { margin-left: 6px; }
 
+/* Hidden (empty) */
 #custom-tag1.hidden, #custom-tag2.hidden, #custom-tag3.hidden,
 #custom-tag4.hidden, #custom-tag5.hidden, #custom-tag6.hidden,
 #custom-tag7.hidden, #custom-tag8.hidden,
@@ -70,7 +70,6 @@ tooltip label {
 #custom-tag7.selected, #custom-tag8.selected,
 #custom-tag9.selected, #custom-tag10.selected {
     color: #8a95b0;
-    background: transparent;
 }
 
 /* Urgent */
@@ -79,7 +78,6 @@ tooltip label {
 #custom-tag7.urgent, #custom-tag8.urgent,
 #custom-tag9.urgent, #custom-tag10.urgent {
     color: #9a7590;
-    background: transparent;
 }
 
 /* ===== Center: clock ===== */
@@ -89,31 +87,32 @@ tooltip label {
     padding: 0 14px;
 }
 
-/* ===== Right: terminal modules ===== */
+/* ===== Right: modules ===== */
 
 #custom-glance,
 #wireplumber,
 #network,
 #custom-bluetooth,
-#custom-battery {
+#custom-battery,
+#idle_inhibitor {
     padding: 0 8px;
     background: transparent;
 }
 
-/* ── Wireplumber ── */
+/* -- Wireplumber -- */
 #wireplumber              { color: #c4ccd4; }
 #wireplumber.muted        { color: #5a6470; }
 
-/* ── Network ── */
+/* -- Network -- */
 #network                  { color: #90a098; }
 #network.disconnected     { color: #5a6470; }
 
-/* ── Bluetooth ── */
-#custom-bluetooth         { color: #8a95b0; }
-#custom-bluetooth.connected { color: #8a95b0; }
-#custom-bluetooth.off     { color: #5a6470; }
+/* -- Bluetooth -- */
+#custom-bluetooth             { color: #8a95b0; }
+#custom-bluetooth.connected   { color: #8a95b0; }
+#custom-bluetooth.off         { color: #5a6470; }
 
-/* ── Battery ── */
+/* -- Battery -- */
 #custom-battery                  { color: #c4ccd4; }
 #custom-battery.good             { color: #90a098; }
 #custom-battery.medium           { color: #8a95b0; }
@@ -121,12 +120,12 @@ tooltip label {
 #custom-battery.critical         { color: #9a7590; font-weight: bold; }
 #custom-battery.charging         { color: #90a098; }
 
-/* ── Idle Inhibitor ── */
+/* -- Idle Inhibitor -- */
 #idle_inhibitor            { padding: 0 10px; }
 #idle_inhibitor.deactivated { color: #5a6470; }
 #idle_inhibitor.activated   { color: #8a95b0; }
 
-/* ── Glance ── */
+/* -- Glance -- */
 #custom-glance            { color: #c4ccd4; }
 #custom-glance.active     { color: #8a95b0; }
 #custom-glance.empty {

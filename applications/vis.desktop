@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Vis
+Comment=Edit text and source files
+Exec=kitty vis %F
+TryExec=vis
+Terminal=false
+Icon=accessories-text-editor
+Categories=Utility;TextEditor;
+MimeType=text/plain;text/english;text/markdown;text/x-markdown;text/x-c;text/x-csrc;text/x-chdr;text/x-c++;text/x-c++src;text/x-c++hdr;text/x-python;text/x-python3;text/x-python2;text/x-lua;text/x-shellscript;application/x-shellscript;text/x-makefile;text/x-cmake;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;text/x-rust;text/x-go;application/json;application/json5;application/javascript;text/javascript;application/xml;text/xml;application/toml;application/yaml;text/yaml;

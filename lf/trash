@@ -1,0 +1,28 @@
+#!/bin/sh
+set -efu
+
+# lf separates selected paths with newlines. Disable globbing before splitting.
+IFS='
+'
+if [ -z "${fx:-}" ]; then
+    printf '%s\n' 'No files selected.' >&2
+    exit 1
+fi
+
+if command -v trash-put >/dev/null 2>&1; then
+    trash_one() { trash-put -- "$1"; }
+elif command -v gio >/dev/null 2>&1; then
+    trash_one() { gio trash -- "$1"; }
+else
+    printf '%s\n' 'Trash requires trash-put or gio; no files were deleted.' >&2
+    exit 1
+fi
+
+status=0
+for path in $fx; do
+    if ! trash_one "$path"; then
+        printf 'Could not trash: %s\n' "$path" >&2
+        status=1
+    fi
+done
+exit "$status"

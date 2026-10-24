@@ -1,33 +1,58 @@
 #!/bin/sh
 
-file="$1"
+# Absolute paths keep leading '-' in filenames from becoming tool options.
+case "$1" in
+    /*) file="$1" ;;
+    *) file="$PWD/$1" ;;
+esac
 w="$2"
 h="$3"
 x="$4"
 y="$5"
 
-case "$(file --mime-type -Lb "$file")" in
+mime=$(file --mime -Lb -- "$file")
+type=${mime%%;*}
+
+text_preview() {
+    bat --paging=never --theme=nimbus --color=always --style=numbers,header-filename \
+        --line-range=:200 --terminal-width="$w" -- "$file" 2>/dev/null \
+        || { head -c 32768 -- "$file" | head -n 200 | cat -v; }
+}
+
+archive_preview() {
+    printf 'archive: %s\n' "$(file --brief -- "$file")"
+    if command -v bsdtar >/dev/null 2>&1; then
+        bsdtar -tf "$file" 2>/dev/null
+    else
+        case "$type" in
+            application/zip) unzip -l "$file" 2>/dev/null ;;
+            application/x-7z-compressed)
+                if command -v 7z >/dev/null 2>&1; then 7z l -- "$file" 2>/dev/null; fi ;;
+            *) tar -tf "$file" 2>/dev/null ;;
+        esac
+    fi
+}
+
+case "$type" in
     image/*)
-        kitty +kitten icat --silent --stdin no --transfer-mode file \
-            --place "${w}x${h}@${x}x${y}" "$file" < /dev/null > /dev/tty
-        exit 1
-        ;;
-    text/*|application/json|application/xml|application/javascript|application/x-shellscript)
-        bat --theme=nimbus --color=always --style=numbers,header-filename \
-            --line-range=:200 --terminal-width="$w" "$file"
+        if [ -n "${KITTY_WINDOW_ID:-}" ] && \
+            kitty +kitten icat --silent --stdin no --transfer-mode file \
+                --place "${w}x${h}@${x}x${y}" "$file" < /dev/null > /dev/tty; then
+            exit 1
+        fi
+        file --brief -- "$file"
         ;;
     application/gzip|application/x-tar|application/zip|application/x-xz|application/zstd|application/x-bzip2|application/x-7z-compressed)
-        tar tf "$file" 2>/dev/null || unzip -l "$file" 2>/dev/null || echo "archive: $(file --brief "$file")"
+        archive_preview | head -c 32768 | head -n 200 | cat -v
         ;;
     application/pdf)
-        echo "  $(file --brief "$file")"
+        file --brief -- "$file"
         ;;
     *)
-        file --brief "$file"
-        echo ""
-        bat --theme=nimbus --color=always --style=numbers \
-            --line-range=:200 --terminal-width="$w" "$file" 2>/dev/null \
-            || head -200 "$file" 2>/dev/null \
-            || echo "no preview"
+        case "$mime" in
+            *charset=binary) file --brief -- "$file" ;;
+            *charset=*) text_preview ;;
+            *) file --brief -- "$file" ;;
+        esac
         ;;
 esac

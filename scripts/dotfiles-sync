@@ -1,0 +1,24 @@
+#!/bin/sh
+# Save one daily checkpoint, then upload all local commits, even on clean runs.
+set -eu
+
+repo_dir=$(CDPATH= cd -- "$(dirname -- "$(readlink -f -- "$0")")/.." && pwd)
+state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles
+mkdir -p -- "$state_dir"
+exec 9>"$state_dir/sync.lock"
+flock -n 9 || exit 0
+
+cd -- "$repo_dir"
+today=$(date +%F)
+last_commit_day=$(git log -1 --format=%cs 2>/dev/null || true)
+git add -A
+if ! git diff --cached --quiet || [ "$last_commit_day" != "$today" ]; then
+    git commit --allow-empty -m "sync $today"
+else
+    printf 'Checkpoint already saved for %s; checking remote backup.\n' "$today"
+fi
+
+# Never prompt in the timer. Keep errors visible in the service journal.
+GIT_TERMINAL_PROMPT=0 git push origin HEAD:main
+date -Is > "$state_dir/last-success"
+printf '%s\n' 'Dotfiles backup uploaded successfully.'

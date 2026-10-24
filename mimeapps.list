@@ -1,0 +1,77 @@
+[Default Applications]
+# Images → imv
+image/png=imv.desktop
+image/jpeg=imv.desktop
+image/gif=imv.desktop
+image/webp=imv.desktop
+image/bmp=imv.desktop
+image/tiff=imv.desktop
+image/svg+xml=imv.desktop
+
+# PDF → zathura
+application/pdf=org.pwmt.zathura.desktop
+
+# Video → mpv
+video/mp4=mpv.desktop
+video/x-matroska=mpv.desktop
+video/webm=mpv.desktop
+video/x-msvideo=mpv.desktop
+video/quicktime=mpv.desktop
+
+# Audio → mpv
+audio/mpeg=mpv.desktop
+audio/ogg=mpv.desktop
+audio/flac=mpv.desktop
+audio/wav=mpv.desktop
+audio/x-wav=mpv.desktop
+audio/mp4=mpv.desktop
+
+# Web → ungoogled chromium
+x-scheme-handler/http=ungoogled-chromium.desktop
+x-scheme-handler/https=ungoogled-chromium.desktop
+text/html=ungoogled-chromium.desktop
+
+# DOCX → docx2pdf (convert and open in zathura)
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=docx2pdf.desktop
+
+# EPUB → zathura
+application/epub+zip=org.pwmt.zathura.desktop
+
+# Text and source code → Vis (in kitty)
+text/plain=vis.desktop
+text/english=vis.desktop
+text/markdown=vis.desktop
+text/x-markdown=vis.desktop
+text/x-c=vis.desktop
+text/x-csrc=vis.desktop
+text/x-chdr=vis.desktop
+text/x-c++=vis.desktop
+text/x-c++src=vis.desktop
+text/x-c++hdr=vis.desktop
+text/x-python=vis.desktop
+text/x-python3=vis.desktop
+text/x-python2=vis.desktop
+text/x-lua=vis.desktop
+text/x-shellscript=vis.desktop
+application/x-shellscript=vis.desktop
+text/x-makefile=vis.desktop
+text/x-cmake=vis.desktop
+text/x-java=vis.desktop
+text/x-moc=vis.desktop
+text/x-pascal=vis.desktop
+text/x-tcl=vis.desktop
+text/x-tex=vis.desktop
+text/x-rust=vis.desktop
+text/x-go=vis.desktop
+application/json=vis.desktop
+application/json5=vis.desktop
+application/javascript=vis.desktop
+text/javascript=vis.desktop
+application/xml=vis.desktop
+text/xml=vis.desktop
+application/toml=vis.desktop
+application/yaml=vis.desktop
+text/yaml=vis.desktop
+inode/directory=lf.desktop
+x-scheme-handler/about=ungoogled-chromium.desktop
+x-scheme-handler/unknown=ungoogled-chromium.desktop

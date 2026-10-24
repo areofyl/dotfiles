@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Edit selected filenames in Vis, then rename without overwriting files."""
+
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+import tempfile
+
+
+def absolute(path):
+    # Preserve the final symlink instead of resolving its target.
+    return Path(os.path.abspath(path))
+
+
+def exists(path):
+    return os.path.lexists(path)
+
+
+def move(source, destination):
+    # No copying across filesystems: a failed move leaves its source intact.
+    subprocess.run(
+        ["mv", "--no-copy", "--update=none-fail", "-T", "--", str(source), str(destination)],
+        check=True,
+    )
+
+
+def validate(operations):
+    sources = {source for source, _ in operations}
+    destinations = [destination for _, destination in operations]
+    if len(sources) != len(operations) or len(set(destinations)) != len(destinations):
+        raise ValueError("Duplicate source or destination; nothing renamed.")
+    for source, destination in operations:
+        if not exists(source):
+            raise ValueError(f"Missing source: {source}")
+        if exists(destination) and destination not in sources:
+            raise ValueError(f"Destination already exists: {destination}")
+        for parent in destination.parents:
+            if exists(parent) and not parent.is_dir():
+                raise ValueError(f"Destination parent is not a directory: {parent}")
+        for old, new in operations:
+            for path in (old, new):
+                if source in path.parents or destination in path.parents:
+                    raise ValueError("Overlapping directory moves must be done separately.")
+
+
+def apply(operations):
+    validate(operations)
+    staging = {}
+    staged, committed = [], []
+    try:
+        for index, (source, destination) in enumerate(operations):
+            parent = source.parent
+            if parent not in staging:
+                staging[parent] = Path(tempfile.mkdtemp(prefix=".lf-rename-", dir=parent))
+            temporary = staging[parent] / str(index)
+            move(source, temporary)
+            staged.append((source, temporary, destination))
+        for source, temporary, destination in staged:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            move(temporary, destination)
+            committed.append((source, temporary, destination))
+    except (Exception, KeyboardInterrupt):
+        # Vacate final names first, so swaps can also be rolled back.
+        recovered = True
+        for _, temporary, destination in reversed(committed):
+            try:
+                move(destination, temporary)
+            except (OSError, subprocess.CalledProcessError):
+                recovered = False
+        for source, temporary, _ in reversed(staged):
+            if exists(temporary):
+                try:
+                    move(temporary, source)
+                except (OSError, subprocess.CalledProcessError):
+                    recovered = False
+        if recovered:
+            print("Rename failed; original names restored.", file=sys.stderr)
+        else:
+            print("Rollback incomplete. Check original/destination paths and recovery directories:",
+                  *staging.values(), sep="\n", file=sys.stderr)
+        raise
+    finally:
+        for directory in staging.values():
+            try:
+                directory.rmdir()
+            except OSError:
+                pass  # Preserve any recovery files instead of deleting them.
+
+
+def main():
+    selected = os.environ.get("fs", "")
+    # Keep the existing behavior: without a selection, edit non-hidden entries.
+    names = selected.split("\n") if selected else sorted(
+        name for name in os.listdir() if not name.startswith(".")
+    )
+    if not names:
+        return
+    if any(not name or "\n" in name or "\r" in name for name in names):
+        raise ValueError("Empty names and names containing newlines are unsupported.")
+    sources = [absolute(name) for name in names]
+    display = [os.path.relpath(source) for source in sources]
+    with tempfile.TemporaryDirectory(prefix="lf-rename-") as directory:
+        listing = Path(directory) / "names"
+        listing.write_text("\n".join(display) + "\n", errors="surrogateescape")
+        subprocess.run(["vis", str(listing)], check=True)
+        edited = listing.read_text(errors="surrogateescape")
+        if edited.endswith("\n"):
+            edited = edited[:-1]
+        targets = edited.split("\n")
+        if len(targets) != len(sources) or any(not name or "\r" in name for name in targets):
+            raise ValueError("Keep one nonempty filename per line; nothing renamed.")
+        operations = [(source, absolute(target)) for source, target in zip(sources, targets)
+                      if source != absolute(target)]
+        if not operations:
+            print("No changes.")
+            return
+        apply(operations)
+        print(f"Renamed {len(operations)} entries.")
+
+
+def interrupted(signum, frame):
+    raise InterruptedError("Rename interrupted.")
+
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, interrupted)
+    signal.signal(signal.SIGHUP, interrupted)
+    try:
+        main()
+    except (OSError, ValueError, subprocess.CalledProcessError, KeyboardInterrupt) as error:
+        print(f"Bulk rename: {error}", file=sys.stderr)
+        sys.exit(1)
