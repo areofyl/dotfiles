@@ -12,9 +12,9 @@ end
 local function output(command)
 	local h = io.popen(command)
 	if not h then return nil end
-	local value = h:read("*l")
+	local value = h:read("*a")
 	local ok = h:close()
-	if ok == true or ok == 0 then return value end
+	if ok == true or ok == 0 then return value:gsub("\n$", "") end
 end
 
 local function exists(path)

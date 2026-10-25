@@ -11,7 +11,7 @@ Clone the repo to `~/.config/vis/plugins/`.
 
 Append the following line to your `visrc.lua`:
 
-	local colorizer = require('plugins/vis-colorizer')
+	local colorizer = require('plugins/colorizer')
 	colorizer.three = false -- (optional) diables three digit hex colors
 	colorizer.six   = true  -- (enabled by default) six digit hex colors
 

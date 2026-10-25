@@ -15,73 +15,86 @@
 -- vis-lspc found in the LICENSE file. If not, see <https://www.gnu.org/licenses/>.
 --
 -- vis-lspc default bindings
-vis:map(vis.modes.NORMAL, '<F2>', function()
+local lspc = ...
+
+local function map(mode, key, action, help)
+  vis:map(mode, key, function(...)
+    if lspc.key_filter and not lspc.key_filter(mode, key) then return true end
+    local win = vis.win
+    if not win or not win.file or not win.file.path or not lspc.ls_map[win.syntax] then
+      return
+    end
+    return action(...)
+  end, help)
+end
+
+map(vis.modes.NORMAL, '<F2>', function()
   vis:command('lspc-start-server')
 end, 'lspc: start lsp server')
 
-vis:map(vis.modes.NORMAL, '<F3>', function()
+map(vis.modes.NORMAL, '<F3>', function()
   vis:command('lspc-open')
 end, 'lspc: open current file')
 
-vis:map(vis.modes.NORMAL, '<C-]>', function()
+map(vis.modes.NORMAL, '<C-]>', function()
   vis:command('lspc-definition')
 end, 'lspc: jump to definition')
 
-vis:map(vis.modes.NORMAL, '<C-t>', function()
+map(vis.modes.NORMAL, '<C-t>', function()
   vis:command('lspc-back')
 end, 'lspc: go back position stack')
 
-vis:map(vis.modes.NORMAL, '<C- >', function()
+map(vis.modes.NORMAL, '<C- >', function()
   vis:command('lspc-completion')
 end, 'lspc: completion')
 
-vis:map(vis.modes.INSERT, '<C- >', function()
+map(vis.modes.INSERT, '<C- >', function()
   vis:command('lspc-completion')
   vis.mode = vis.modes.INSERT
 end, 'lspc: completion')
 
 -- bindings inspired by nvim
 -- https://github.com/neovim/nvim-lspconfig
-vis:map(vis.modes.NORMAL, 'gD', function()
+map(vis.modes.NORMAL, 'gD', function()
   vis:command('lspc-declaration')
 end, 'lspc: jump to declaration')
 
-vis:map(vis.modes.NORMAL, 'gd', function()
+map(vis.modes.NORMAL, 'gd', function()
   vis:command('lspc-definition')
 end, 'lspc: jump to definition')
 
-vis:map(vis.modes.NORMAL, 'gi', function()
+map(vis.modes.NORMAL, 'gi', function()
   vis:command('lspc-implementation')
 end, 'lspc: jump to implementation')
 
-vis:map(vis.modes.NORMAL, 'gr', function()
+map(vis.modes.NORMAL, 'gr', function()
   vis:command('lspc-references')
 end, 'lspc: show references')
 
-vis:map(vis.modes.NORMAL, ' D', function()
+map(vis.modes.NORMAL, ' D', function()
   vis:command('lspc-typeDefinition')
 end, 'lspc: jump to type definition')
 
-vis:map(vis.modes.NORMAL, ' e', function()
+map(vis.modes.NORMAL, ' d', function()
   vis:command('lspc-show-diagnostics')
 end, 'lspc: show diagnostic of current line')
 
-vis:map(vis.modes.NORMAL, ' n', function()
+map(vis.modes.NORMAL, ' n', function()
   vis:command('lspc-next-diagnostic')
 end, 'lspc: jump to the next available diagnostic')
 
-vis:map(vis.modes.NORMAL, ' N', function()
+map(vis.modes.NORMAL, ' N', function()
   vis:command('lspc-prev-diagnostic')
 end, 'lspc: jump to the previous available diagnostic')
 
-vis:map(vis.modes.NORMAL, 'K', function()
+map(vis.modes.NORMAL, 'K', function()
   vis:command('lspc-hover')
 end, 'lspc: hover over current position')
 
-vis:map(vis.modes.NORMAL, '<C-K>', function()
+map(vis.modes.NORMAL, '<C-K>', function()
   vis:command('lspc-signature-help')
 end, 'lspc: signature help')
 
-vis:map(vis.modes.NORMAL, ' o', function()
+map(vis.modes.NORMAL, ' o', function()
   vis:command('lspc-navigate-symbols')
 end, 'lspc: symbol navigation window')

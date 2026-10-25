@@ -1,0 +1,4 @@
+# Disable desktop notification activation for this user.
+[D-BUS Service]
+Name=org.freedesktop.Notifications
+Exec=/usr/bin/false

@@ -51,7 +51,7 @@ Their configuration can be found in [`supported_servers.lua`](https://gitlab.com
 ## Installation
 
 1. Clone this repository into your `vis` plugins directory
-2. Load the plugin in your `visrc.lua` with `require('plugins/vis-lspc')`
+2. Load the plugin in your `visrc.lua` with `require('plugins/lspc')`
 
 Alternatively, a plugin manager like [vis-plug](https://github.com/erf/vis-plug) can be used to install `vis-lspc`.
 
@@ -71,7 +71,7 @@ Alternatively, a plugin manager like [vis-plug](https://github.com/erf/vis-plug)
 	<gr> - show references
 	< D> - jump to type definition
 	<C-t> - go back in the jump history
-	< e> - show diagnostics of current line
+	< d> - show diagnostics of current line (Space e opens the file browser)
 	< n> - jump to the next available diagnostic
 	< N> - jump to the previous available diagnostic
 	<K> - hover over current position
@@ -124,7 +124,7 @@ Alternatively, a plugin manager like [vis-plug](https://github.com/erf/vis-plug)
 
 ### Available configuration options
 
-The module table returned by `require('plugins/vis-lspc')` can be used to configure
+The module table returned by `require('plugins/lspc')` can be used to configure
 some aspects of `vis-lspc`.
 
 Available options are:

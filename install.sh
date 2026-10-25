@@ -35,6 +35,8 @@ link "$repo_dir/gtk/gtk-4.0" "$HOME/.config/gtk-4.0"
 link "$repo_dir/zsh/.zshrc" "$HOME/.zshrc"
 link "$repo_dir/mimeapps.list" "$HOME/.config/mimeapps.list"
 link "$repo_dir/applications/vis.desktop" "$HOME/.local/share/applications/vis.desktop"
+link "$repo_dir/dbus-1/services/org.freedesktop.Notifications.service" \
+    "$HOME/.local/share/dbus-1/services/org.freedesktop.Notifications.service"
 link "$repo_dir/scripts/dotfiles-sync" "$HOME/.local/bin/dotfiles-sync"
 for unit in dotfiles-sync.service dotfiles-sync.timer; do
     link "$repo_dir/systemd/user/$unit" "$HOME/.config/systemd/user/$unit"

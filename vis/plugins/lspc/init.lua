@@ -1271,6 +1271,9 @@ end
 -- register a file as open with a language server and setup close and save event handlers
 -- A file must be opened before any textDocument functions can be used with it.
 local function lspc_open(ls, win, file)
+  if not file.path then
+    return 'Save the file before using a language server'
+  end
   -- already opened
   if ls:is_file_opened(file) then
     return file.path .. ' already open in ' .. ls.name
@@ -1535,6 +1538,9 @@ local function lspc_goto_next_diagnostic(win, reverse)
 end
 
 local function lspc_show_diagnostic(win, line)
+  if not win.file.path then
+    return '[No Name] has no diagnostics available'
+  end
   if not lspc.open_files[win.file.path] then
     vis:command('lspc-open')
   end
@@ -2124,5 +2130,5 @@ vis:option_register('lspc-diagnostic-style-hint', 'string', function(value)
   lspc.diagnostic_styles.hint = value
 end, 'Style for diagnostic hints')
 
-dofile(source_path .. 'bindings.lua')
+assert(loadfile(source_path .. 'bindings.lua'))(lspc)
 return lspc

@@ -9,29 +9,6 @@ local M = {
   three = false,
 }
 
-local styleIdStack = {}
-
-M.styleIdIterator = function()
-	local i = 0
-	local MAX_STYLE_ID = 64 -- UI_STYLE_LEXER_MAX = 64
-	return function()
-		i = i + 1
-		if i <= MAX_STYLE_ID then
-			return i
-		end
-		return nil
-	end
-end
-
-M.initStyleIds = function()
-	styleIdStack = {}
-		for i in M.styleIdIterator() do
-			table.insert(styleIdStack, i)
-	end
-end
-
-M.initStyleIds()
-
 M.extract_hex_colors = function(input_string)
 	local pattern = "#([0-9a-fA-F]+)"
 	local matches = {}
@@ -39,12 +16,15 @@ M.extract_hex_colors = function(input_string)
 	local init = 1
 	local match_end = 0
 	while true do
+		local match_start, hex
 		match_start, match_end, hex = string.find(input_string, pattern, init + match_end)
 		-- TODO: add better validation
 		if match_start == nil or hex == nil then
 			break
 		end
-		if (hex:len() == 3 and M.three)  or (hex:len() == 6 and M.six) then
+		local following = input_string:sub(match_end + 1, match_end + 1)
+		if not following:match('[%w_]') and
+			((hex:len() == 3 and M.three) or (hex:len() == 6 and M.six)) then
 			table.insert(matches, {
 				starts = match_start,
 				ends = match_end,
@@ -58,6 +38,13 @@ end
 
 M.draw = function(win, colors)
 	local offset = win.viewport['bytes'].start
+	-- Keep lexer styles and the LSP diagnostic style (the maximum ID) intact.
+	local lexer = win.syntax and vis.lexers.load(win.syntax, nil, true)
+	local style_ids = {}
+	for id = win.STYLE_LEXER_MAX - 1, 1, -1 do
+		if not lexer or not lexer._TAGS[id] then style_ids[#style_ids + 1] = id end
+	end
+	local color_styles = {}
 	for i, color in ipairs(colors) do
 		local fg = M.text_colors.light
 
@@ -75,14 +62,14 @@ M.draw = function(win, colors)
 			fg = M.text_colors.dark
 		end
 
-		local id = table.remove(styleIdStack)
-
 		local style = "fore:" .. fg .. ",back:#" .. color.hex
-		if not win:style_define(id, style) then
-			break
+		local id = color_styles[color.hex]
+		if not id then
+			id = table.remove(style_ids)
+			if not id or not win:style_define(id, style) then break end
+			color_styles[color.hex] = id
 		end
 		win:style(id, color.starts - 1 + offset, color.ends - 1 + offset)
-		table.insert(styleIdStack, id)
 		if color.ends >= win.viewport['bytes'].finish then
 			break
 		end

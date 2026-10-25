@@ -1,5 +1,5 @@
 -- Validate a batch, stage its sources, then commit or roll back.
-local fs = require('plugins/vis-fm/fs')
+local fs = require('plugins/fm/fs')
 local esc, run, output = fs.esc, fs.run, fs.output
 local exists, move = fs.exists, fs.move
 
