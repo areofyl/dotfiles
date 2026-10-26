@@ -2,7 +2,7 @@ require('vis')
 
 -- the best config possible don't you dare insult
 
-local plugins = require('config/plugins')
+require('config/plugins')
 local statusline = require('config/statusline')
 
 vis.events.subscribe(vis.events.INIT, function()
@@ -12,7 +12,7 @@ end)
 
 -- emacs influence with the modus vivendi :)
 
-vis.events.subscribe(vis.events.WIN_OPEN, function(win)
+vis.events.subscribe(vis.events.WIN_OPEN, function()
 	vis:command("set tabwidth 4")
 	vis:command("set number")
 	vis:command("set relativenumbers")
@@ -22,6 +22,4 @@ end)
 
 vis:map(vis.modes.VISUAL, " y", '"+y')
 
-vis.events.subscribe(vis.events.WIN_STATUS, function(win)
-	statusline(win, plugins.fm)
-end)
+vis.events.subscribe(vis.events.WIN_STATUS, statusline)

@@ -1,6 +1,6 @@
 local fm = require('plugins/fm')
-require('plugins/autoclose')
-require('plugins/complete-filename')
+local autoclose = require('plugins/autoclose')
+autoclose.enabled = function() return not fm.active() end
 
 local colorizer = require('plugins/colorizer')
 colorizer.three = true
